@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FICHA VEICULAR</title>
+
+<style>
+
+/* CONFIGURAÇÃO A4 */
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  text-align: center;
+  margin: 6px 0 10px 0;
+  font-size: 16px;
+}
+
+.titulo {
+  background: #000;
+  color: #fff;
+  padding: 5px 8px;
+  margin-top: 14px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* GRID */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 30px;
+  row-gap: 10px;
+  margin-top: 8px;
+}
+
+.campo {
+  width: 100%;
+}
+
+.campo.full {
+  grid-column: 1 / 3;
+}
+
+.campo label {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.linha {
+  width: 100%;
+  border-bottom: 1px solid #000;
+  height: 18px;   /* REDUZIDO PARA CABER NA PÁGINA */
+  margin-top: 4px;
+}
+
+/* TABELA DESPESAS */
+.tabela-despesas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.tabela-despesas th {
+  background: #f2f2f2;
+  border: 1px solid #000;
+  padding: 4px;
+  font-size: 11px;
+}
+
+.tabela-despesas td {
+  border: 1px solid #000;
+  height: 28px;   /* ALTURA IDEAL PARA CABER NA PRIMEIRA PÁGINA */
+}
+
+.total-despesa {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* QUEBRA CONTROLADA */
+.page-break {
+  page-break-before: always;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>FICHA DE CONTROLE VEICULAR</h2>
+
+<div class="titulo">DADOS DO VEÍCULO</div>
+
+<div class="grid-2">
+  <div class="campo">
+    <label>Placa</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Tipo</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Marca</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Modelo</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Ano Fabricação</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Ano Modelo</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Cor</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Combustível</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Valor Compra</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Valor Pretendido</label>
+    <div class="linha"></div>
+  </div>
+</div>
+
+<div class="titulo">PROPRIETÁRIO</div>
+
+<div class="grid-2">
+  <div class="campo">
+    <label>Nome</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Telefone</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>CPF/CNPJ</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>RG</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo full">
+    <label>Endereço</label>
+    <div class="linha"></div>
+  </div>
+</div>
+
+<div class="titulo">CONTROLE DE DESPESAS</div>
+
+<table class="tabela-despesas">
+  <tr>
+    <th style="width:15%">Data</th>
+    <th style="width:20%">Tipo</th>
+    <th style="width:45%">Descrição</th>
+    <th style="width:20%">Valor</th>
+  </tr>
+
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td></td><td></td><td></td></tr>
+</table>
+
+<br>
+<strong>Total Despesas:</strong> ___________________________________________
+</div>
+
+<div class="page-break"></div>
+<div class="titulo">FICHA DE VENDA</div>
+
+<div class="grid-2">
+  <div class="campo">
+    <label>Data da Venda</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Valor da Venda</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Forma de Pagamento</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Parcelas</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Entrada</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Banco / Financeira</label>
+    <div class="linha"></div>
+  </div>
+</div>
+
+<div class="titulo">COMPRADOR</div>
+
+<div class="grid-2">
+  <div class="campo">
+    <label>Nome</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Telefone</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>CPF/CNPJ</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo full">
+    <label>Endereço</label>
+    <div class="linha"></div>
+  </div>
+</div>
+
+<div class="titulo">COMISSÃO</div>
+
+<div class="grid-2">
+  <div class="campo">
+    <label>Vendedor Loja</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Tipo Comissão</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Valor Comissão</label>
+    <div class="linha"></div>
+  </div>
+</div>
+
+<div class="titulo">RESUMO FINANCEIRO</div>
+
+<div class="grid-2">
+  <div class="campo">
+    <label>Total Compra</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Total Despesas</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Comissão</label>
+    <div class="linha"></div>
+  </div>
+
+  <div class="campo">
+    <label>Lucro Líquido</label>
+    <div class="linha"></div>
+  </div>
+</div>
+
+<br><br>
+
+<div class="campo full">
+  <label>Assinatura Responsável</label>
+  <div class="linha" style="height:40px;"></div>
+</div>
+</body>
+</html>

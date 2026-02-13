@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>AutoControle — Sistema de Gestão Veicular</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+body{
+  font-family:Segoe UI, Arial;
+  background:#eef2f7;
+  margin:0;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:30px;
+}
+
+.card{
+  background:#ffffff;
+  padding:25px;
+  border-radius:14px;
+  margin-bottom:25px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+h2{
+  margin-bottom:15px;
+  color:#1e293b;
+}
+
+small{
+  color:#64748b;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  font-size:14px;
+}
+
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:#2563eb;
+  box-shadow:0 0 0 2px rgba(37,99,235,.15);
+}
+
+button{
+  background:#16a34a;
+  color:white;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  margin-top:15px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#15803d;
+}
+
+.tabs{
+  display:flex;
+  gap:15px;
+  margin-bottom:30px;
+}
+
+.tabs button{
+  background:#2563eb;
+  border-radius:10px;
+}
+
+.tabs button:hover{
+  background:#1d4ed8;
+}
+
+.badge{
+  display:inline-block;
+  background:#e2e8f0;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+  margin-bottom:10px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+}
+@media print {
+  button { display:none; }
+}
+@media print {
+  button {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+}
+button {
+  width:100%;
+  padding:12px;
+  font-size:16px;
+  margin-bottom:10px;
+}
+input, select {
+  width:100%;
+  padding:10px;
+  font-size:16px;
+  margin-bottom:10px;
+}
+
+</style>
+</head>
+
+<body>
+<div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
+  <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
+    <h2>Login AutoControle</h2>
+    <input id="login_usuario" placeholder="Usuário">
+    <input id="login_senha" type="password" placeholder="Senha">
+    <button onclick="fazerLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- CAPA (TELA INICIAL) -->
+<div id="capa" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;">
+  <div style="max-width:780px;width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+      <div style="width:56px;height:56px;border-radius:14px;background:#16a34a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;">
+        AC
+      </div>
+      <div>
+        <div style="font-size:28px;font-weight:800;line-height:1.1;">AutoControle</div>
+        <div style="opacity:.85;margin-top:4px;">Sistema de Gestão Veicular</div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;opacity:.92;line-height:1.6;">
+      <b>Criado por:</b> PROMETHEUS EROPRO Soluções Inteligentes LTDA<br>
+      <b>Responsável:</b> Edgar Rocha Oliveira<br>
+      <b>Contato:</b> 28 99969-2303 • assistentes.prometheus@gmail.com
+    </div>
+
+    <button onclick="entrarSistema()" style="margin-top:18px;width:100%;background:#16a34a;border:none;color:#fff;padding:14px;border-radius:12px;font-weight:800;cursor:pointer;">
+      Entrar no Sistema
+    </button>
+
+    <div style="margin-top:10px;font-size:12px;opacity:.7;">
+      Última atualização: <span id="capaAtualizacao"></span>
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+<div class="card" style="margin-bottom:20px;text-align:center;">
+  
+  <h1 style="margin:0;font-size:26px;">
+    AutoControle — Sistema de Gestão Veicular
+  </h1>
+
+  <h2 id="nomeLojaTopo" style="margin:8px 0 4px 0;font-size:20px;color:#16a34a;">
+  </h2>
+
+  <small style="font-size:14px;color:#64748b;">
+    Tecnologia com ConsciêncIA gera resultado
+  </small>
+
+</div>
+
+<div class="tabs">
+  <button onclick="abrirAba('abaVeiculo')">Veículo (Entrada)</button>
+  <button onclick="abrirAba('abaDespesas')">Despesas</button>
+  <button onclick="abrirAba('abaVenda')">Venda</button>
+  <button onclick="acessarProprietario()">Painel Proprietário</button>
+  <button onclick="abrirAba('abaRelatorio')">Relatórios</button>
+  <button onclick="window.open('ficha_entrada.html','_blank')">
+Imprimir Ficha em Branco
+</button>
+
+
+</div>
+
+<!-- =======================
+  ABA VEÍCULO (ENTRADA)
+======================= -->
+<div id="abaVeiculo" class="aba" style="display:block">
+  <div class="card">
+
+
+    <h2>Entrada do Veículo</h2>
+    <small>Cadastro do veículo + dono no documento + vendedor (pode ser diferente).</small>
+
+    <hr>
+    <div class="badge">Dados do Veículo</div>
+    <div class="grid">
+      <input id="v_placa" placeholder="Placa">
+      <input id="v_marca" placeholder="Marca">
+      <input id="v_modelo" placeholder="Modelo">
+      <input id="v_ano_fabricacao" placeholder="Ano Fabricação">
+      <input id="v_ano_modelo" placeholder="Ano Modelo">
+      <input id="v_cor" placeholder="Cor">
+      <input id="v_combustivel" placeholder="Combustível">
+      <input id="v_chassi" placeholder="Chassi">
+      <input id="v_renavam" placeholder="Renavam">
+      <input id="v_valor_compra" placeholder="Valor da Compra (R$)">
+      <input id="v_valor_venda" placeholder="Valor para Venda (R$)">
+<div class="campo">
+  <label>Tipo de Veículo</label>
+  <select id="tipo_veiculo">
+    <option value="">Selecione</option>
+    <option value="MOTO">Moto</option>
+    <option value="CARRO">Carro</option>
+    <option value="CAMIONETE">Camionete</option> 
+    <option value="CAMINHAO">Caminhão</option>
+    <option value="QUADRICICLO">Quadriciclo</option>
+  </select>
+</div>
+
+    </div>
+
+    <hr>
+    <div class="badge">Dono no Documento (Proprietário Atual)</div>
+<div class="grid">
+  <input id="p_nome" placeholder="Nome Proprietário">
+  <input id="p_cpf" placeholder="CPF/CNPJ Proprietário">
+  <input id="p_rg" placeholder="RG Proprietário">
+
+  <div>
+    <label>Data de Nascimento do Proprietário</label>
+    <input id="p_nascimento" type="date">
+  </div>
+
+  <input id="p_telefone" placeholder="Telefone">
+  <input id="p_email" placeholder="Email">
+  <input id="p_endereco" placeholder="Endereço" style="grid-column: 1 / -1;">
+
+<input id="p_cidade" placeholder="Cidade">
+<input id="p_estado" placeholder="UF">
+
+<div>
+  <label>Data de Entrada no Estoque</label>
+  
+</div>
+
+
+  <div>
+    <label>Data de Entrada do Veículo no Estoque</label>
+    <input id="p_inicio" type="date">
+  </div>
+</div>
+    <hr>
+    <div class="badge">Vendedor Anterior (Quem vendeu para a loja)</div>
+    <div class="grid">
+      <input id="va_nome" placeholder="Nome Vendedor Anterior">
+      <input id="va_doc" placeholder="CPF/CNPJ Vendedor">
+      <input id="va_telefone" placeholder="Telefone">
+      <input id="va_email" placeholder="Email">
+      <input id="va_endereco" placeholder="Endereço">
+      <input id="va_cidade" placeholder="Cidade">
+      <input id="va_estado" placeholder="Estado">
+      <div>
+  <label>Data da Compra do Veículo pela Loja</label>
+  <input id="va_data" type="date">
+</div>
+
+    </div>
+
+    <button onclick="salvarEntrada()">Salvar Entrada do Veículo</button>
+  </div>
+</div>
+
+<!-- =======================
+  ABA DESPESA
+======================= -->
+<div id="abaDespesas" class="aba" style="display:none;">
+
+ <div class="card">
+    <h2>Lançar Despesa</h2>
+    <small>Você pode lançar quantas despesas quiser para o mesmo veículo.</small>
+    <div class="grid">
+      <select id="d_id_veiculo"></select>
+      <div>
+  <label>Data da Despesa</label>
+  <input id="d_data" type="date">
+</div>
+
+      <input id="d_tipo" placeholder="Tipo (Ex: oficina, IPVA, transferência)">
+      <input id="d_desc" placeholder="Descrição">
+      <input id="d_valor" placeholder="Valor (R$)">
+    <select id="d_forma">
+  <option value="">Forma Pagamento</option>
+  <option>Dinheiro</option>
+  <option>Pix</option>
+  <option>Cartão</option>
+  <option>Boleto</option>
+</select>
+
+<input id="d_comprovante" placeholder="Comprovante (URL / nº NF / texto)">
+</div>
+    <button onclick="lancarDespesa()">Lançar Despesa</button>
+  </div>
+</div>
+
+
+<!-- =======================
+  ABA VENDA
+======================= -->
+<div id="abaVenda" class="aba" style="display:none;">
+
+  <div class="card">
+    <h2>Registrar Venda</h2>
+    <small>Obrigatório ter comprador. Se não houver despesas, o sistema pergunta se deseja continuar.</small>
+
+    <hr>
+
+    <!-- Seleção Veículo e Vendedor -->
+    <div class="badge">Selecionar veículo e vendedor</div>
+    <div class="grid">
+      <select id="vd_id_veiculo"></select>
+
+      <select id="vd_vendedor_loja"></select>
+
+      <select id="vd_tipo_comissao">
+        <option value="PERCENTUAL">Comissão por %</option>
+        <option value="FIXO">Comissão fixa (R$)</option>
+      </select>
+
+      <input id="vd_percentual" placeholder="% Comissão (se percentual)">
+      <input id="vd_valor_comissao" placeholder="Valor Comissão (se fixa)">
+    </div>
+
+    <hr>
+
+    <!-- Cadastro Vendedor Loja -->
+    <div class="badge">Cadastrar vendedor da loja</div>
+    <div class="grid">
+      <input id="vl_nome" placeholder="Nome do vendedor">
+      <input id="vl_cpf" placeholder="CPF do vendedor">
+      <input id="vl_tel" placeholder="Telefone">
+      <input id="vl_email" placeholder="Email">
+      <input id="vl_cargo" placeholder="Cargo (ex: vendedor)">
+      <input id="vl_valor_comissao" placeholder="Comissão padrão (R$ ou %)">
+      <select id="vl_tipo_comissao">
+        <option value="PERCENTUAL">Padrão: %</option>
+        <option value="FIXO">Padrão: R$</option>
+      </select>
+    </div>
+
+    <button onclick="cadastrarVendedorLoja()">Salvar Vendedor</button>
+
+    <hr>
+
+    <!-- Dados da Venda -->
+    <div class="badge">Dados da venda</div>
+    <div class="grid">
+      <div>
+        <label>Data da Venda</label>
+        <input id="vd_data" type="date">
+      </div>
+
+      <input id="vd_valor_venda" placeholder="Valor da Venda (R$)">
+
+      <select id="vd_forma_pag">
+        <option value="">Forma Pagamento</option>
+        <option>Dinheiro</option>
+        <option>Pix</option>
+        <option>Cartão</option>
+        <option>Financiamento</option>
+      </select>
+
+      <select id="vd_condicao">
+        <option value="AVISTA">À vista</option>
+        <option value="PARCELADO">Parcelado</option>
+        <option value="FINANCIADO">Financiado</option>
+      </select>
+
+      <input id="vd_entrada" placeholder="Entrada (R$)">
+      <input id="vd_parcelas" placeholder="Nº Parcelas">
+      <input id="vd_valor_parcela" placeholder="Valor Parcela (R$)">
+      <input id="vd_banco" placeholder="Banco (se financiado)">
+      <input id="vd_valor_financiado" placeholder="Valor Financiado (R$)">
+    </div>
+
+    <hr>
+
+    <!-- Comprador -->
+    <div class="badge">Comprador</div>
+    <div class="grid">
+      <input id="c_nome" placeholder="Nome Comprador">
+      <input id="c_doc" placeholder="CPF/CNPJ Comprador">
+      <input id="c_telefone" placeholder="Telefone">
+      <input id="c_email" placeholder="Email">
+      <input id="c_endereco" placeholder="Endereço">
+      <input id="c_cidade" placeholder="Cidade">
+      <input id="c_estado" placeholder="Estado">
+    </div>
+
+    <textarea id="vd_obs" placeholder="Observações"></textarea>
+
+    <button onclick="registrarVenda()">Registrar Venda</button>
+
+  </div>
+</div>
+<div id="abaProprietario" class="aba" style="display:none;">
+
+  <div class="card">
+    <h2>Painel do Proprietário</h2>
+    <small>Visão exclusiva de resultados financeiros.</small>
+
+    <div class="grid">
+      <div>
+        <label>Total Investido em Estoque</label>
+        <input id="pr_total_investido" readonly>
+      </div>
+
+      <div>
+        <label>Total Despesas</label>
+        <input id="pr_total_despesas" readonly>
+      </div>
+
+      <div>
+        <label>Total Vendas</label>
+        <input id="pr_total_vendas" readonly>
+      </div>
+
+      <div>
+        <label>Lucro Líquido Geral</label>
+        <input id="pr_lucro_total" readonly>
+      </div>
+    </div>
+
+    <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
+<hr style="margin:25px 0;">
+<h3>Relatório de Estoque Atual</h3>
+<div id="relatorioEstoqueProprietario"></div>
+
+<hr style="margin:25px 0;">
+<h3>Relatório de Despesas</h3>
+<div id="relatorioDespesasProprietario"></div>
+
+<hr style="margin:25px 0;">
+
+<hr style="margin:25px 0;">
+<div class="grid" style="margin-bottom:15px;">
+  <div>
+    <label>Data Inicial</label>
+    <input type="date" id="filtro_data_inicio">
+  </div>
+
+  <div>
+    <label>Data Final</label>
+    <input type="date" id="filtro_data_fim">
+  </div>
+
+  <div style="display:flex;align-items:flex-end;">
+    <button onclick="carregarRelatorioVendasFiltrado()">Filtrar</button>
+  </div>
+</div>
+
+<h3>Relatório de Vendas por Vendedor</h3>
+<div id="relatorioVendasProprietario"></div>
+
+<button onclick="imprimirRelatorio()">Imprimir Relatório</button>
+</div>
+
+<div id="abaRelatorio" class="aba" style="display:none;">
+
+  <div class="card">
+    <h2>Relatório de Estoque</h2>
+    <div id="relatorioEstoque"></div>
+
+   <button onclick="imprimirRelatorio()">Imprimir</button>
+  </div>
+
+</div>
+<script>
+/* ========= CONFIG ========= */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyDSdfY9ILeSHuqg08mo1ruDA1DzgkN7CKDIswZFwXeoa4d9064m_KrxVI_o1j1_AMn/exec";
+
+/* ========= HELPERS ========= */
+
+function v(id){
+  const el=document.getElementById(id);
+  return el ? (el.value||"").trim() : "";
+}
+function num(x){
+  if(!x) return 0;
+  return Number(String(x).replace(/\./g,'').replace(',','.')) || 0;
+}
+function jsonp(params, callback){
+
+  if(CLIENTE_ID){
+    params.cliente_id = CLIENTE_ID;
+  }
+
+
+  const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*1000);
+  params.callback = cbName;
+
+  const query = new URLSearchParams(params).toString();
+  const script = document.createElement("script");
+
+  window[cbName] = function(data){
+    callback(data);
+    delete window[cbName];
+    document.body.removeChild(script);
+  };
+
+  script.src = GAS_URL + "?" + query;
+
+  document.body.appendChild(script);
+}
+function setSelect(el, items, placeholder){
+  el.innerHTML = "";
+  const op0 = document.createElement("option");
+  op0.value = "";
+  op0.textContent = placeholder || "Selecione";
+  el.appendChild(op0);
+
+  items.forEach(it=>{
+    const op = document.createElement("option");
+    op.value = it.value;
+    op.textContent = it.label;
+    el.appendChild(op);
+  });
+}
+
+/* ========= LOAD LISTAS ========= */
+function carregarListas(){
+  jsonp({action:"listarVeiculosEstoque"}, (r)=>{
+    if(!r.ok) return console.warn(r.msg||"Erro listarVeiculos");
+    const items = (r.itens||[]).map(x=>({value:x.id, label:`${x.placa} — ${x.marca} ${x.modelo} (${x.status})`}));
+    setSelect(document.getElementById("d_id_veiculo"), items, "Selecionar veículo (estoque)");
+    setSelect(document.getElementById("vd_id_veiculo"), items, "Selecionar veículo (estoque)");
+  });
+
+  jsonp({action:"listarVendedoresLojaAtivos"}, (r)=>{
+    if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
+    const items = (r.itens||[]).map(x=>({value:x.id, label:`${x.nome} (${x.cargo || "vendedor"})`}));
+    setSelect(document.getElementById("vd_vendedor_loja"), items, "Selecionar vendedor da loja");
+  });
+}
+function entrarSistema(){
+  document.getElementById("capa").style.display = "none";
+}
+
+(function(){
+  const d = new Date();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yyyy = d.getFullYear();
+  const el = document.getElementById("capaAtualizacao");
+  if(el) el.textContent = mm + "/" + yyyy;
+})();
+
+/* ========= AÇÕES ========= */
+function salvarEntrada(){
+
+  const payload = {
+    action:"cadastrarEntrada",
+
+    placa: v("v_placa"),
+    marca: v("v_marca"),
+    modelo: v("v_modelo"),
+    ano_fabricacao: v("v_ano_fabricacao"),
+    ano_modelo: v("v_ano_modelo"),
+    cor: v("v_cor"),
+    combustivel: v("v_combustivel"),
+    chassi: v("v_chassi"),
+    renavam: v("v_renavam"),
+    valor_compra: num(v("v_valor_compra")),
+    valor_venda: num(v("v_valor_venda")),
+    tipo_veiculo: v("tipo_veiculo"),
+
+    p_nome:v("p_nome"),
+    p_doc:v("p_cpf"),
+    p_rg:v("p_rg"),
+    p_nascimento:v("p_nascimento"),
+    p_telefone:v("p_telefone"),
+    p_email:v("p_email"),
+    p_endereco:v("p_endereco"),
+    p_cidade:v("p_cidade"),
+    p_estado:v("p_estado"),
+    p_inicio:v("p_inicio"),
+
+    va_nome:v("va_nome"),
+    va_doc:v("va_doc"),
+    va_telefone:v("va_telefone"),
+    va_email:v("va_email"),
+    va_endereco:v("va_endereco"),
+    va_cidade:v("va_cidade"),
+    va_estado:v("va_estado"),
+    va_data: v("va_data")
+  };
+
+  jsonp(payload, (r)=>{
+    if(r.ok){
+      alert("Entrada salva! ID veículo: " + r.id_veiculo);
+      limparFormularioEntrada();
+      carregarListas();
+    } else alert("Erro: " + (r.msg||""));
+  });
+}
+function lancarDespesa(){
+  const payload = {
+    action:"lancarDespesa",
+    id_veiculo:v("d_id_veiculo"),
+    data_despesa:v("d_data"),
+    tipo_despesa:v("d_tipo"),
+    descricao_despesa:v("d_desc"),
+    valor_despesa:num(v("d_valor")),
+    forma_pagamento:v("d_forma"),
+    comprovante:v("d_comprovante")
+  };
+
+  if(!payload.id_veiculo) return alert("Selecione o veículo.");
+  if(!payload.data_despesa) return alert("Informe a data da despesa.");
+  if(!payload.tipo_despesa) return alert("Informe o tipo da despesa.");
+  if(!payload.valor_despesa) return alert("Informe o valor da despesa.");
+
+  jsonp(payload, (r)=>{
+    if(r.ok){
+      alert("Despesa lançada!");
+      limparFormularioDespesa();
+    } else alert("Erro: " + (r.msg||""));
+  });
+}
+
+function cadastrarVendedorLoja(){
+  const payload = {
+    action:"cadastrarVendedorLoja",
+    nome_vendedor_loja: v("vl_nome"),
+    cpf_vendedor_loja: v("vl_cpf"),
+    telefone_vendedor_loja: v("vl_tel"),
+    email_vendedor_loja: v("vl_email"),
+    cargo: v("vl_cargo"),
+    valor_comissao_padrao: num(v("vl_valor_comissao")),
+    tipo_comissao_padrao: v("vl_tipo_comissao")
+  };
+
+  if(!payload.nome_vendedor_loja) return alert("Informe o nome do vendedor.");
+  if(!payload.cpf_vendedor_loja) return alert("Informe o CPF do vendedor.");
+
+  jsonp(payload, (r)=>{
+    if(r.ok){
+      alert("Vendedor cadastrado!");
+      limparFormularioVendedor();
+      carregarListas();
+    } else alert("Erro: " + (r.msg||""));
+  });
+}
+
+function registrarVenda(){
+  const id_veiculo = v("vd_id_veiculo");
+  if(!id_veiculo) return alert("Selecione o veículo.");
+
+  const comprador_nome = v("c_nome");
+  const comprador_doc = v("c_doc");
+  if(!comprador_nome || !comprador_doc) return alert("Sem comprador não existe venda.");
+
+  jsonp({action:"totalDespesasVeiculo", id_veiculo}, (r)=>{
+    if(!r.ok) return alert("Erro ao checar despesas.");
+    const total = Number(r.total||0);
+
+    if(total === 0){
+      if(!confirm("Veículo sem despesas. Deseja continuar?")) return;
+    }
+    enviarVenda();
+  });
+}
+
+function enviarVenda(){
+  const tipo_comissao = v("vd_tipo_comissao");
+  const percent = num(v("vd_percentual"));
+  const valorCom = num(v("vd_valor_comissao"));
+
+  if(tipo_comissao === "PERCENTUAL" && !percent) return alert("Informe o % de comissão.");
+  if(tipo_comissao === "FIXO" && !valorCom) return alert("Informe o valor fixo da comissão.");
+  if(!v("vd_data")) return alert("Informe a data da venda.");
+  if(!num(v("vd_valor_venda"))) return alert("Informe o valor da venda.");
+
+  const payload = {
+    action:"registrarVenda",
+    id_veiculo:v("vd_id_veiculo"),
+
+    data_venda:v("vd_data"),
+    valor_venda:num(v("vd_valor_venda")),
+    forma_pagamento:v("vd_forma_pag"),
+    condicao_pagamento:v("vd_condicao"),
+
+    entrada:num(v("vd_entrada")),
+    numero_parcelas:v("vd_parcelas"),
+    valor_parcela:num(v("vd_valor_parcela")),
+
+    banco_financiamento:v("vd_banco"),
+    valor_financiado:num(v("vd_valor_financiado")),
+
+    comprador_nome:v("c_nome"),
+    comprador_doc:v("c_doc"),
+    comprador_telefone:v("c_telefone"),
+    comprador_email:v("c_email"),
+    comprador_endereco:v("c_endereco"),
+    comprador_cidade:v("c_cidade"),
+    comprador_estado:v("c_estado"),
+
+    vendedor_loja_id:v("vd_vendedor_loja"),
+
+    tipo_comissao,
+    percentual_comissao:percent,
+    valor_comissao_fixo:valorCom,
+
+    observacoes:v("vd_obs")
+  };
+
+  jsonp(payload, (rr)=>{
+    if(rr.ok){
+      alert("Venda registrada! ID: " + (rr.id_venda || "(não retornou)") +
+            "\nLucro líquido: R$ " + (rr.lucro_liquido||0));
+      limparFormularioVenda();
+      carregarListas();
+    } else {
+      alert("Erro: " + (rr.msg||""));
+    }
+  });
+}
+
+/* ===== LIMPEZAS ===== */
+function limparFormularioEntrada(){
+  document.querySelectorAll("#abaVeiculo input").forEach(el=>el.value="");
+  document.getElementById("tipo_veiculo").selectedIndex = 0;
+}
+
+function limparFormularioDespesa(){
+  document.getElementById("d_data").value = "";
+  document.getElementById("d_tipo").value = "";
+  document.getElementById("d_desc").value = "";
+  document.getElementById("d_valor").value = "";
+  document.getElementById("d_forma").selectedIndex = 0;
+  document.getElementById("d_comprovante").value = "";
+}
+function limparFormularioVendedor(){
+  document.querySelectorAll("#abaVenda #vl_nome, #abaVenda #vl_cpf, #abaVenda #vl_tel, #abaVenda #vl_email, #abaVenda #vl_cargo, #abaVenda #vl_valor_comissao")
+    .forEach(el=>el.value="");
+  document.getElementById("vl_tipo_comissao").selectedIndex = 0;
+}
+function limparFormularioVenda(){
+  document.querySelectorAll("#abaVenda input, #abaVenda textarea, #abaVenda select")
+    .forEach(el=>{
+      if(el.tagName === "SELECT") el.selectedIndex = 0;
+      else el.value = "";
+    });
+}
+function carregarPainelProprietario(){
+
+  // ===== RESUMO FINANCEIRO =====
+  jsonp({action:"resumoFinanceiro"}, (r)=>{
+    if(!r.ok) return alert("Erro ao carregar resumo.");
+
+    document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
+    document.getElementById("pr_total_despesas").value = r.total_despesas || 0;
+    document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
+    document.getElementById("pr_lucro_total").value = r.lucro_realizado || 0;
+  });
+
+  // ===== RELATÓRIO ESTOQUE =====
+  jsonp({action:"relatorioEstoque"}, (r)=>{
+    if(!r.ok) return;
+
+    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+    html += `
+    <tr>
+      <th>Placa</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Ano Fab</th>
+      <th>Ano Mod</th>
+      <th>Cor</th>
+      <th>Tipo</th>
+      <th>Valor Venda</th>
+      <th>Data Entrada</th>
+    </tr>`;
+
+    r.itens.forEach(v=>{
+      html += `
+      <tr>
+        <td>${v.placa}</td>
+        <td>${v.marca}</td>
+        <td>${v.modelo}</td>
+        <td>${v.ano_fabricacao || ""}</td>
+        <td>${v.ano_modelo || ""}</td>
+        <td>${v.cor || ""}</td>
+        <td>${v.tipo_veiculo || ""}</td>
+        <td>R$ ${v.valor_venda || 0}</td>
+        <td>${v.data_entrada || ""}</td>
+      </tr>`;
+    });
+
+    html += "</table>";
+    document.getElementById("relatorioEstoqueProprietario").innerHTML = html;
+  });
+
+  // ===== RELATÓRIO DESPESAS =====
+  jsonp({action:"relatorioDespesasGeral"}, (r)=>{
+    if(!r.ok) return;
+
+    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+    html += `
+    <tr>
+      <th>Veículo</th>
+      <th>Data</th>
+      <th>Tipo</th>
+      <th>Valor</th>
+    </tr>`;
+
+    r.itens.forEach(d=>{
+      html += `
+      <tr>
+        <td>${d.placa}</td>
+        <td>${d.data_despesa}</td>
+        <td>${d.tipo_despesa}</td>
+        <td>R$ ${d.valor_despesa}</td>
+      </tr>`;
+    });
+
+    html += "</table>";
+    document.getElementById("relatorioDespesasProprietario").innerHTML = html;
+  });
+
+  // ===== RELATÓRIO VENDAS POR VENDEDOR =====
+  jsonp({action:"relatorioVendasPorVendedor"}, (r)=>{
+    if(!r.ok) return;
+
+    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+    html += `
+<tr>
+  <th>Vendedor</th>
+  <th>Data</th>
+  <th>Valor Venda</th>
+  <th>Lucro</th>
+</tr>`;
+
+    r.itens.forEach(v=>{
+      html += `
+      <tr>
+       <td>${v.vendedor_nome}</td>
+<td>${v.data_venda}</td>
+<td>R$ ${v.valor_venda}</td>
+<td>R$ ${v.lucro}</td>
+
+      </tr>`;
+    });
+
+    html += "</table>";
+    document.getElementById("relatorioVendasProprietario").innerHTML = html;
+  });
+}
+function carregarRelatorioVendasFiltrado(){
+
+  const dataInicio = document.getElementById("filtro_data_inicio").value;
+  const dataFim = document.getElementById("filtro_data_fim").value;
+
+  jsonp({
+    action:"relatorioVendasPorVendedor",
+    data_inicio:dataInicio,
+    data_fim:dataFim
+  }, (r)=>{
+
+    if(!r.ok) return alert("Erro ao filtrar vendas.");
+
+    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+    html += `
+    <tr>
+      <th>Vendedor</th>
+      <th>Data</th>
+      <th>Valor Venda</th>
+      <th>Lucro</th>
+    </tr>`;
+
+    r.itens.forEach(v=>{
+      html += `
+      <tr>
+        <td>${v.vendedor_nome}</td>
+        <td>${v.data_venda}</td>
+        <td>R$ ${v.valor_venda}</td>
+        <td>R$ ${v.lucro}</td>
+      </tr>`;
+    });
+
+    html += "</table>";
+
+    document.getElementById("relatorioVendasProprietario").innerHTML = html;
+
+  });
+}
+
+function acessarProprietario(){
+  const senha = prompt("Informe a senha do proprietário:");
+  if(!senha) return;
+
+  jsonp({action:"validarSenhaProprietario", senha}, (r)=>{
+    if(r.ok){
+      abrirAba('abaProprietario');
+    } else {
+      alert("Senha incorreta.");
+    }
+  });
+}
+
+function abrirAba(id){
+  document.querySelectorAll(".aba").forEach(el=>{
+    el.style.display = "none";
+  });
+  document.getElementById(id).style.display = "block";
+
+  if(id === "abaRelatorio"){
+    carregarRelatorios();
+  }
+}
+
+function imprimirRelatorio(){
+  window.print();
+}
+function carregarRelatorios(){
+
+  jsonp({action:"relatorioEstoque"}, (r)=>{
+    if(!r.ok) return;
+
+    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+html += `
+<tr>
+  <th>Placa</th>
+  <th>Marca</th>
+  <th>Modelo</th>
+  <th>Ano Fab</th>
+  <th>Ano Mod</th>
+  <th>Cor</th>
+  <th>Tipo</th>
+  <th>Valor Venda</th>
+  <th>Data Entrada</th>
+</tr>
+`;
+
+
+    r.itens.forEach(v=>{
+  html += `
+<tr>
+  <td>${v.placa}</td>
+  <td>${v.marca}</td>
+  <td>${v.modelo}</td>
+  <td>${v.ano_fabricacao}</td>
+  <td>${v.ano_modelo}</td>
+  <td>${v.cor}</td>
+  <td>${v.tipo_veiculo}</td>
+  <td>R$ ${v.valor_venda}</td>
+  <td>${v.data_entrada}</td>
+</tr>
+`;
+});
+
+    html += "</table>";
+    document.getElementById("relatorioEstoque").innerHTML = html;
+  });
+
+}
+
+function abrirFichaBranca(){
+  window.open("ficha_branca.html", "_blank");
+}
+let CLIENTE_ID = "";
+let PERFIL = "";
+
+function fazerLogin(){
+
+  const usuario = v("login_usuario");
+  const senha = v("login_senha");
+
+  if(!usuario || !senha) return alert("Informe usuário e senha.");
+
+  jsonp({
+    action:"loginUsuario",
+    usuario,
+    senha
+  }, (r)=>{
+
+if(r.ok){
+
+  CLIENTE_ID = r.cliente_id;
+  PERFIL = r.perfil;
+
+  localStorage.setItem("cliente_id", r.cliente_id);
+  localStorage.setItem("nome_loja", r.nome_loja || "AutoControle");
+
+  document.getElementById("nomeLojaTopo").innerText =
+  r.nome_loja || "Loja";
+
+  document.getElementById("telaLogin").style.display = "none";
+
+  carregarListas();
+    } else {
+      alert(r.msg || "Erro login");
+    }
+
+  });
+}
+// ===== RESTORE AUTOMÁTICO COMPLETO =====
+window.addEventListener("DOMContentLoaded", function(){
+
+  const clienteSalvo = localStorage.getItem("cliente_id");
+  const nomeSalvo = localStorage.getItem("nome_loja");
+
+  if(clienteSalvo){
+    CLIENTE_ID = clienteSalvo;
+    document.getElementById("telaLogin").style.display = "none";
+    carregarListas();
+  }
+
+  if(nomeSalvo){
+    document.getElementById("nomeLojaTopo").innerText = nomeSalvo;
+  }
+
+});
+
+
+</script>
+
+</body>
+</html>
