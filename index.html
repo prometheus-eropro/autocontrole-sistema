@@ -160,12 +160,26 @@ td{
     color:black;
   }
 }
+#telaLogin,
+#capa{
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+}
+
+#telaLogin > div,
+#capa > div{
+  background:#1e293b;
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
 
 </style>
 </head>
 
 <body>
-<div id="telaLogin" style="position:fixed;inset:0;background:#eef2f7;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
+<div id="telaLogin" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
+
   <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
   <img src="logo.png" style="height:35px;">
@@ -179,7 +193,8 @@ td{
 </div>
 
 <!-- CAPA (TELA INICIAL) -->
-<div id="capa" style="position:fixed;inset:0;background:#eef2f7;color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;">
+<div id="capa" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;">
+
   <div style="max-width:780px;width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;">
     <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
       <div style="width:56px;height:56px;border-radius:14px;background:#16a34a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;">
