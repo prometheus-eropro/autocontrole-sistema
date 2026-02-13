@@ -1046,6 +1046,32 @@ window.addEventListener("DOMContentLoaded", function(){
 });
 
 
+
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyDSdfY9ILeSHuqg08mo1ruDA1DzgkN7CKDIswZFwXeoa4d9064m_KrxVI_o1j1_AMn/exec";
+
+function fazerLogin(){
+
+  const usuario = document.querySelector("input[type=text]").value;
+  const senha = document.querySelector("input[type=password]").value;
+
+  console.log("Tentando login:", usuario, senha);
+
+  fetch(`${GAS_URL}?action=loginUsuario&usuario=${usuario}&senha=${senha}`)
+    .then(r => r.json())
+    .then(data => {
+      console.log("Resposta do GAS:", data);
+
+      if(data.ok){
+        alert("Login OK");
+      } else {
+        alert(data.msg);
+      }
+    })
+    .catch(err => {
+      console.error("Erro:", err);
+    });
+}
+
 </script>
 
 </body>
