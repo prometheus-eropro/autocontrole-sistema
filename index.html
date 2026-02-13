@@ -538,7 +538,8 @@ Imprimir Ficha em Branco
 <h3>Relatório de Vendas por Vendedor</h3>
 <div id="relatorioVendasProprietario"></div>
 
-<button onclick="imprimirRelatorio()">Imprimir Relatório</button>
+<button onclick="window.print()">Imprimir</button>
+
 </div>
 
 <div id="abaRelatorio" class="aba" style="display:none;">
@@ -565,12 +566,16 @@ function num(x){
   if(!x) return 0;
   return Number(String(x).replace(/\./g,'').replace(',','.')) || 0;
 }
+
 function jsonp(params, callback){
 
-  if(CLIENTE_ID){
-    params.cliente_id = CLIENTE_ID;
-  }
+  // sempre tenta pegar o cliente_id salvo
+  const saved = localStorage.getItem("cliente_id") || "";
+  const cid = (CLIENTE_ID && String(CLIENTE_ID).trim()) ? CLIENTE_ID : saved;
 
+  if(cid){
+    params.cliente_id = cid;
+  }
 
   const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*1000);
   params.callback = cbName;
@@ -579,15 +584,23 @@ function jsonp(params, callback){
   const script = document.createElement("script");
 
   window[cbName] = function(data){
-    callback(data);
+    try { callback(data); }
+    finally {
+      delete window[cbName];
+      if(script && script.parentNode) script.parentNode.removeChild(script);
+    }
+  };
+
+  script.onerror = function(){
+    alert("Falha ao chamar o GAS (script.onerror). Verifique URL do GAS ou permissão do WebApp.");
     delete window[cbName];
-    document.body.removeChild(script);
+    if(script && script.parentNode) script.parentNode.removeChild(script);
   };
 
   script.src = GAS_URL + "?" + query;
-
   document.body.appendChild(script);
 }
+
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
@@ -831,7 +844,11 @@ function carregarPainelProprietario(){
 
   // ===== RESUMO FINANCEIRO =====
   jsonp({action:"resumoFinanceiro"}, (r)=>{
-    if(!r.ok) return alert("Erro ao carregar resumo.");
+  if(!r || !r.ok){
+    console.log("RESUMO ERRO:", r);
+    return alert("Erro ao carregar resumo: " + (r?.msg || "sem msg do GAS"));
+  }
+
 
     document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
     document.getElementById("pr_total_despesas").value = r.total_despesas || 0;
