@@ -140,7 +140,11 @@ input, select {
 <body>
 <div id="telaLogin" style="position:fixed;inset:0;background:#eef2f7;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
   <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
-    <h2>Login AutoControle</h2>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+  <img src="logo.png" style="height:35px;">
+  <h2>Login AutoControle</h2>
+</div>
+
     <input id="login_usuario" placeholder="Usuário">
     <input id="login_senha" type="password" placeholder="Senha">
     <button onclick="fazerLogin()">Entrar</button>
@@ -1045,32 +1049,6 @@ window.addEventListener("DOMContentLoaded", function(){
 
 });
 
-
-
-
-
-function fazerLogin(){
-
-  const usuario = document.querySelector("input[type=text]").value;
-  const senha = document.querySelector("input[type=password]").value;
-
-  console.log("Tentando login:", usuario, senha);
-
-  fetch(`${GAS_URL}?action=loginUsuario&usuario=${usuario}&senha=${senha}`)
-    .then(r => r.json())
-    .then(data => {
-      console.log("Resposta do GAS:", data);
-
-      if(data.ok){
-        alert("Login OK");
-      } else {
-        alert(data.msg);
-      }
-    })
-    .catch(err => {
-      console.error("Erro:", err);
-    });
-}
 
 </script>
 
