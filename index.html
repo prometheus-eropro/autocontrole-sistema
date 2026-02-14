@@ -505,6 +505,26 @@ Imprimir Ficha em Branco
 
 <hr style="margin:25px 0;">
 <h3>Relatório de Despesas</h3>
+<div class="form-row" style="display:flex; gap:15px; align-items:end; margin-bottom:15px;">
+
+  <div style="flex:1;">
+    <label>Data Inicial</label>
+    <input type="date" id="dataInicioFiltro">
+  </div>
+
+  <div style="flex:1;">
+    <label>Data Final</label>
+    <input type="date" id="dataFimFiltro">
+  </div>
+
+  <div>
+    <button onclick="filtrarDespesas()" class="btn-success">
+      Filtrar
+    </button>
+  </div>
+
+</div>
+
 <div id="relatorioDespesasProprietario"></div>
 
 <hr style="margin:25px 0;">
@@ -522,8 +542,9 @@ Imprimir Ficha em Branco
   </div>
 
   <div style="display:flex;align-items:flex-end;">
-    <button onclick="filtrarPainelProprietario()">Filtrar</button>
-
+    <button onclick="filtrarPeriodo()" class="btn-success">
+    Filtrar
+</button>
   </div>
 </div>
 
@@ -1158,7 +1179,35 @@ function filtrarPainelProprietario(){
   carregarRelatorioVendasFiltrado();
   carregarRelatorioDespesasFiltrado();
 }
+function filtrarPeriodo() {
 
+  const dataInicio = document.getElementById("dataInicioFiltro").value;
+  const dataFim = document.getElementById("dataFimFiltro").value;
+
+  if (!dataInicio || !dataFim) {
+    alert("Informe a data inicial e final");
+    return;
+  }
+
+  jsonp({
+    action: "resumoPorPeriodo",
+    data_inicio: dataInicio,
+    data_fim: dataFim
+  }, function(res){
+
+    if(!res || !res.ok){
+      alert("Erro ao filtrar período");
+      return;
+    }
+
+    document.getElementById("pr_total_investido").value = res.totalInvestido || 0;
+    document.getElementById("pr_total_despesas").value = res.totalDespesas || 0;
+    document.getElementById("pr_total_vendas").value = res.totalVendas || 0;
+    document.getElementById("pr_lucro_total").value = res.lucro || 0;
+
+  });
+
+}
 </script>
 
 </body>
