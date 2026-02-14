@@ -316,15 +316,8 @@ Imprimir Ficha em Branco
 <input id="p_estado" placeholder="UF">
 
 <div>
-  <label>Data de Entrada no Estoque</label>
-  
-</div>
-
-
-  <div>
-    <label>Data de Entrada do Veículo no Estoque</label>
-    <input id="p_inicio" type="date">
-  </div>
+  <label>Data de Entrada do Veículo no Estoque</label>
+  <input id="p_inicio" type="date">
 </div>
     <hr>
     <div class="badge">Vendedor Anterior (Quem vendeu para a loja)</div>
@@ -895,7 +888,15 @@ function carregarPainelProprietario(){
   });
 
   // ===== RELATÓRIO DESPESAS =====
-  jsonp({action:"relatorioDespesasGeral"}, (r)=>{
+  const dataInicio = document.getElementById("filtro_data_inicio").value;
+const dataFim = document.getElementById("filtro_data_fim").value;
+
+jsonp({
+  action:"relatorioDespesasGeral",
+  data_inicio:dataInicio,
+  data_fim:dataFim
+}, (r)=>{
+
     if(!r.ok) return;
 
     let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
