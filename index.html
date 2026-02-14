@@ -319,6 +319,7 @@ Imprimir Ficha em Branco
   <label>Data de Entrada do Veículo no Estoque</label>
   <input id="p_inicio" type="date">
 </div>
+</div>
     <hr>
     <div class="badge">Vendedor Anterior (Quem vendeu para a loja)</div>
     <div class="grid">
@@ -329,10 +330,7 @@ Imprimir Ficha em Branco
       <input id="va_endereco" placeholder="Endereço">
       <input id="va_cidade" placeholder="Cidade">
       <input id="va_estado" placeholder="Estado">
-      <div>
-  <label>Data da Compra do Veículo pela Loja</label>
-  <input id="va_data" type="date">
-</div>
+     
 
     </div>
 
@@ -524,7 +522,8 @@ Imprimir Ficha em Branco
   </div>
 
   <div style="display:flex;align-items:flex-end;">
-    <button onclick="carregarRelatorioVendasFiltrado()">Filtrar</button>
+    <button onclick="filtrarPainelProprietario()">Filtrar</button>
+
   </div>
 </div>
 
@@ -559,6 +558,12 @@ function v(id){
 function num(x){
   if(!x) return 0;
   return Number(String(x).replace(/\./g,'').replace(',','.')) || 0;
+}
+function toBRDate(iso){ // "2026-02-13" -> "13/02/2026"
+  if(!iso) return "";
+  const [y,m,d] = String(iso).split("-");
+  if(!y || !m || !d) return "";
+  return `${d}/${m}/${y}`;
 }
 
 function jsonp(params, callback){
@@ -674,8 +679,7 @@ function salvarEntrada(){
     va_endereco:v("va_endereco"),
     va_cidade:v("va_cidade"),
     va_estado:v("va_estado"),
-    va_data: v("va_data")
-  };
+      };
 
   jsonp(payload, (r)=>{
     if(r.ok){
@@ -951,9 +955,9 @@ jsonp({
   });
 }
 function carregarRelatorioVendasFiltrado(){
-
   const dataInicio = document.getElementById("filtro_data_inicio").value;
   const dataFim = document.getElementById("filtro_data_fim").value;
+
 
   jsonp({
     action:"relatorioVendasPorVendedor",
@@ -986,6 +990,40 @@ function carregarRelatorioVendasFiltrado(){
 
     document.getElementById("relatorioVendasProprietario").innerHTML = html;
 
+  });
+}
+function carregarRelatorioDespesasFiltrado(){
+  const dataInicio = document.getElementById("filtro_data_inicio").value;
+  const dataFim = document.getElementById("filtro_data_fim").value;
+
+  jsonp({
+    action:"relatorioDespesasGeral",
+    data_inicio: toBRDate(dataInicio),
+    data_fim: toBRDate(dataFim)
+  }, (r)=>{
+    if(!r.ok) return alert("Erro ao filtrar despesas.");
+
+    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+    html += `
+      <tr>
+        <th>Veículo</th>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+      </tr>`;
+
+    (r.itens||[]).forEach(d=>{
+      html += `
+        <tr>
+          <td>${d.placa}</td>
+          <td>${d.data_despesa}</td>
+          <td>${d.tipo_despesa}</td>
+          <td>R$ ${d.valor_despesa}</td>
+        </tr>`;
+    });
+
+    html += "</table>";
+    document.getElementById("relatorioDespesasProprietario").innerHTML = html;
   });
 }
 
@@ -1116,6 +1154,10 @@ window.addEventListener("DOMContentLoaded", function(){
 
 });
 
+function filtrarPainelProprietario(){
+  carregarRelatorioVendasFiltrado();
+  carregarRelatorioDespesasFiltrado();
+}
 
 </script>
 
