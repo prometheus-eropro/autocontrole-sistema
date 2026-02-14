@@ -178,6 +178,9 @@ td{
 }
 
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#16a34a">
+
 </head>
 
 <body>
@@ -500,6 +503,26 @@ Imprimir Ficha em Branco
 
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
 <hr style="margin:25px 0;">
+<hr style="margin:25px 0;">
+
+<h3>Filtrar Lucro / Resumo por Período</h3>
+<div style="display:flex; gap:15px; align-items:end; margin-bottom:15px; flex-wrap:wrap;">
+
+  <div style="flex:1; min-width:220px;">
+    <label>Data Inicial</label>
+    <input type="date" id="lucro_data_inicio">
+  </div>
+
+  <div style="flex:1; min-width:220px;">
+    <label>Data Final</label>
+    <input type="date" id="lucro_data_fim">
+  </div>
+
+  <div>
+    <button onclick="filtrarLucroResumo()" class="btn-success">Filtrar</button>
+  </div>
+
+</div>
 
 <h3>Filtrar Resultado por Período</h3>
 
@@ -1260,6 +1283,26 @@ function filtrarLucroPeriodo(){
 
   });
 
+}
+function filtrarLucroResumo(){
+  const di = document.getElementById("lucro_data_inicio").value;
+  const df = document.getElementById("lucro_data_fim").value;
+
+  if(!di || !df) return alert("Informe data inicial e final.");
+
+  jsonp({ action:"resumoFinanceiro", data_inicio: di, data_fim: df }, (r)=>{
+    if(!r || !r.ok) return alert("Erro ao filtrar resumo: " + (r?.msg || ""));
+
+    document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
+    document.getElementById("pr_total_despesas").value  = r.total_despesas || 0;
+    document.getElementById("pr_total_vendas").value    = r.total_vendido || 0;
+    document.getElementById("pr_lucro_total").value     = r.lucro_realizado || 0;
+  });
+}
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("Service Worker registrado"))
+    .catch(err => console.log("Erro SW:", err));
 }
 
 </script>
