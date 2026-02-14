@@ -500,6 +500,30 @@ Imprimir Ficha em Branco
 
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
 <hr style="margin:25px 0;">
+
+<h3>Filtrar Resultado por Período</h3>
+
+<div style="display:flex; gap:15px; align-items:end; margin-bottom:15px;">
+
+  <div style="flex:1;">
+    <label>Data Inicial</label>
+    <input type="date" id="lucro_data_inicio">
+  </div>
+
+  <div style="flex:1;">
+    <label>Data Final</label>
+    <input type="date" id="lucro_data_fim">
+  </div>
+
+  <div>
+    <button onclick="filtrarLucroPeriodo()">
+      Filtrar
+    </button>
+  </div>
+
+</div>
+
+<hr style="margin:25px 0;">
 <h3>Relatório de Estoque Atual</h3>
 <div id="relatorioEstoqueProprietario"></div>
 
@@ -1208,6 +1232,36 @@ function filtrarPeriodo() {
   });
 
 }
+function filtrarLucroPeriodo(){
+
+  const dataInicio = document.getElementById("lucro_data_inicio").value;
+  const dataFim = document.getElementById("lucro_data_fim").value;
+
+  if(!dataInicio || !dataFim){
+    alert("Informe as duas datas.");
+    return;
+  }
+
+  jsonp({
+    action:"resumoPorPeriodo",
+    data_inicio:dataInicio,
+    data_fim:dataFim
+  }, function(res){
+
+    if(!res || !res.ok){
+      alert("Erro ao buscar período.");
+      return;
+    }
+
+    document.getElementById("pr_total_investido").value = res.totalInvestido || 0;
+    document.getElementById("pr_total_despesas").value = res.totalDespesas || 0;
+    document.getElementById("pr_total_vendas").value = res.totalVendas || 0;
+    document.getElementById("pr_lucro_total").value = res.lucro || 0;
+
+  });
+
+}
+
 </script>
 
 </body>
