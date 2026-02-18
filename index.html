@@ -555,34 +555,44 @@ function setSelect(el, items, placeholder){
 
 /* ========= LOAD LISTAS ========= */
 function carregarListas(){
+
+  // ===== VEÍCULOS =====
   jsonp({action:"listarVeiculosEstoque"}, (r)=>{
     if(!r.ok) return console.warn(r.msg||"Erro listarVeiculos");
-    const items = (r.itens||[]).map(x=>({value:x.id, label:`${x.placa} — ${x.marca} ${x.modelo} (${x.status})`}));
+
+    const items = (r.itens||[]).map(x=>({
+      value:x.id,
+      label:`${x.placa} — ${x.marca} ${x.modelo} (${x.status})`
+    }));
+
     setSelect(document.getElementById("d_id_veiculo"), items, "Selecionar veículo (estoque)");
     setSelect(document.getElementById("vd_id_veiculo"), items, "Selecionar veículo (estoque)");
   });
 
+  // ===== VENDEDORES =====
   jsonp({action:"listarVendedoresLojaAtivos"}, (r)=>{
-  if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
+    if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
 
-  const items = (r.itens||[]).map(x=>({
-    value:x.id,
-    label:`${x.nome} (${x.cargo || "vendedor"})`
-  }));
+    const items = (r.itens||[]).map(x=>({
+      value:x.id,
+      label:`${x.nome} (${x.cargo || "vendedor"})`
+    }));
 
-  setSelect(
-    document.getElementById("vd_vendedor_loja"),
-    items,
-    "Selecionar vendedor da venda"
-  );
+    // venda
+    setSelect(
+      document.getElementById("vd_vendedor_loja"),
+      items,
+      "Selecionar vendedor da loja"
+    );
 
-  setSelect(
-    document.getElementById("comp_vendedor_loja"),
-    items,
-    "Selecionar funcionário da compra"
-  );
-
-});
+    // compra
+    setSelect(
+      document.getElementById("comp_vendedor_loja"),
+      items,
+      "Selecionar funcionário da compra"
+    );
+  });
+}
 function entrarSistema(){
   document.getElementById("capa").style.display = "none";
 }
