@@ -3,94 +3,54 @@
 <head>
 <meta charset="UTF-8" />
 <title>AutoControle — Sistema de Gestão Veicular</title>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-<link rel="apple-touch-icon" href="favicon.png">
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <style>
-
-/* ===== RESET ===== */
-*{
-  box-sizing:border-box;
-}
-
 body{
-  font-family:'Segoe UI', Arial, sans-serif;
+  font-family:Segoe UI, Arial;
+  background:#eef2f7;
   margin:0;
-  background:#f4f6f9;
-  color:#1e293b;
 }
 
-/* ===== CONTAINER ===== */
 .container{
   max-width:1200px;
   margin:auto;
   padding:30px;
 }
 
-/* ===== CARD ===== */
 .card{
   background:#ffffff;
-  padding:28px;
+  padding:25px;
   border-radius:14px;
   margin-bottom:25px;
-  box-shadow:0 8px 24px rgba(0,0,0,.08);
-  border:1px solid #e5e7eb;
-}
-
-/* ===== TITULOS ===== */
-h1{
-  margin:0;
-  font-size:26px;
-  color:#0f172a;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
 
 h2{
   margin-bottom:15px;
-  color:#16a34a;
-}
-
-h3{
-  margin-bottom:10px;
-  color:#0f172a;
+  color:#1e293b;
 }
 
 small{
   color:#64748b;
 }
 
-/* ===== BADGE ===== */
-.badge{
-  display:inline-block;
-  background:#ecfdf5;
-  color:#16a34a;
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:13px;
-  margin-bottom:10px;
-  border:1px solid #bbf7d0;
-}
-
-/* ===== INPUTS ===== */
 input,select,textarea{
   width:100%;
   padding:12px;
   margin-top:6px;
   border-radius:8px;
   border:1px solid #d1d5db;
-  background:#ffffff;
   font-size:14px;
-  transition:0.2s;
 }
 
 input:focus,select:focus,textarea:focus{
   outline:none;
-  border-color:#16a34a;
-  box-shadow:0 0 0 2px rgba(22,163,74,.15);
+  border-color:#2563eb;
+  box-shadow:0 0 0 2px rgba(37,99,235,.15);
 }
 
-/* ===== BOTÕES ===== */
 button{
   background:#16a34a;
   color:white;
@@ -100,98 +60,72 @@ button{
   font-weight:bold;
   margin-top:15px;
   cursor:pointer;
-  transition:0.2s;
 }
 
 button:hover{
   background:#15803d;
-  box-shadow:0 6px 18px rgba(22,163,74,.25);
 }
 
-/* ===== TABS ===== */
 .tabs{
   display:flex;
   gap:15px;
   margin-bottom:30px;
-  flex-wrap:wrap;
 }
 
 .tabs button{
   background:#2563eb;
+  border-radius:10px;
 }
 
 .tabs button:hover{
   background:#1d4ed8;
 }
 
-/* ===== GRID ===== */
+.badge{
+  display:inline-block;
+  background:#e2e8f0;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+  margin-bottom:10px;
+}
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:18px;
+  gap:15px;
 }
+@media print {
+  button { display:none; }
+}
+@media print {
+  button {
+    display: none;
+  }
 
-/* ===== TABELAS ===== */
-table{
+  body {
+    background: white;
+  }
+}
+button {
   width:100%;
-  border-collapse:collapse;
-  background:#ffffff;
-  margin-top:10px;
+  padding:12px;
+  font-size:16px;
+  margin-bottom:10px;
 }
-
-th{
-  background:#f1f5f9;
+input, select {
+  width:100%;
   padding:10px;
-  text-align:left;
-  border-bottom:2px solid #e2e8f0;
-  font-weight:600;
-}
-
-td{
-  padding:8px;
-  border-bottom:1px solid #e2e8f0;
-}
-
-/* ===== LOGIN E CAPA ===== */
-#telaLogin,
-#capa{
-  background:#f4f6f9;
-}
-
-#telaLogin > div,
-#capa > div{
-  background:#ffffff;
-  border-radius:18px;
-  padding:30px;
-  box-shadow:0 20px 60px rgba(0,0,0,.12);
-  border:1px solid #e5e7eb;
-}
-
-/* ===== PRINT ===== */
-@media print{
-  button{
-    display:none;
-  }
-  body{
-    background:white;
-  }
+  font-size:16px;
+  margin-bottom:10px;
 }
 
 </style>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#16a34a">
-
 </head>
 
 <body>
-<div id="telaLogin" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
-
+<div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
   <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
-  <img src="logo.png" style="height:35px;">
-  <h2>Login AutoControle</h2>
-</div>
-
+    <h2>Login AutoControle</h2>
     <input id="login_usuario" placeholder="Usuário">
     <input id="login_senha" type="password" placeholder="Senha">
     <button onclick="fazerLogin()">Entrar</button>
@@ -199,8 +133,7 @@ td{
 </div>
 
 <!-- CAPA (TELA INICIAL) -->
-<div id="capa" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;">
-
+<div id="capa" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;">
   <div style="max-width:780px;width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;">
     <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
       <div style="width:56px;height:56px;border-radius:14px;background:#16a34a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;">
@@ -232,12 +165,9 @@ td{
 <div class="container">
 <div class="card" style="margin-bottom:20px;text-align:center;">
   
-  <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
-  <img src="logo.png" style="height:35px;">
   <h1 style="margin:0;font-size:26px;">
     AutoControle — Sistema de Gestão Veicular
   </h1>
-</div>
 
   <h2 id="nomeLojaTopo" style="margin:8px 0 4px 0;font-size:20px;color:#16a34a;">
   </h2>
@@ -319,9 +249,15 @@ Imprimir Ficha em Branco
 <input id="p_estado" placeholder="UF">
 
 <div>
-  <label>Data de Entrada do Veículo no Estoque</label>
-  <input id="p_inicio" type="date">
+  <label>Data de Entrada no Estoque</label>
+  
 </div>
+
+
+  <div>
+    <label>Data de Entrada do Veículo no Estoque</label>
+    <input id="p_inicio" type="date">
+  </div>
 </div>
     <hr>
     <div class="badge">Vendedor Anterior (Quem vendeu para a loja)</div>
@@ -333,9 +269,29 @@ Imprimir Ficha em Branco
       <input id="va_endereco" placeholder="Endereço">
       <input id="va_cidade" placeholder="Cidade">
       <input id="va_estado" placeholder="Estado">
-     
+      <div>
+  <label>Data da Compra do Veículo pela Loja</label>
+  <input id="va_data" type="date">
+</div>
 
     </div>
+<hr>
+<div class="badge">Funcionário da Loja (Compra)</div>
+<div class="grid">
+
+<select id="comp_vendedor_loja">
+  <option value="">Selecione o funcionário</option>
+</select>
+
+<select id="comp_tipo_comissao">
+  <option value="PERCENTUAL">Comissão %</option>
+  <option value="FIXO">Comissão Fixa (R$)</option>
+</select>
+
+<input id="comp_percentual" placeholder="% Comissão (se percentual)">
+<input id="comp_valor_comissao" placeholder="Valor Comissão (se fixa)">
+
+</div>
 
     <button onclick="salvarEntrada()">Salvar Entrada do Veículo</button>
   </div>
@@ -503,75 +459,11 @@ Imprimir Ficha em Branco
 
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
 <hr style="margin:25px 0;">
-<hr style="margin:25px 0;">
-
-<h3>Filtrar Lucro / Resumo por Período</h3>
-<div style="display:flex; gap:15px; align-items:end; margin-bottom:15px; flex-wrap:wrap;">
-
-  <div style="flex:1; min-width:220px;">
-    <label>Data Inicial</label>
-    <input type="date" id="lucro_data_inicio">
-  </div>
-
-  <div style="flex:1; min-width:220px;">
-    <label>Data Final</label>
-    <input type="date" id="lucro_data_fim">
-  </div>
-
-  <div>
-    <button onclick="filtrarLucroResumo()" class="btn-success">Filtrar</button>
-  </div>
-
-</div>
-
-<h3>Filtrar Resultado por Período</h3>
-
-<div style="display:flex; gap:15px; align-items:end; margin-bottom:15px;">
-
-  <div style="flex:1;">
-    <label>Data Inicial</label>
-    <input type="date" id="lucro_data_inicio">
-  </div>
-
-  <div style="flex:1;">
-    <label>Data Final</label>
-    <input type="date" id="lucro_data_fim">
-  </div>
-
-  <div>
-    <button onclick="filtrarLucroPeriodo()">
-      Filtrar
-    </button>
-  </div>
-
-</div>
-
-<hr style="margin:25px 0;">
 <h3>Relatório de Estoque Atual</h3>
 <div id="relatorioEstoqueProprietario"></div>
 
 <hr style="margin:25px 0;">
 <h3>Relatório de Despesas</h3>
-<div class="form-row" style="display:flex; gap:15px; align-items:end; margin-bottom:15px;">
-
-  <div style="flex:1;">
-    <label>Data Inicial</label>
-    <input type="date" id="dataInicioFiltro">
-  </div>
-
-  <div style="flex:1;">
-    <label>Data Final</label>
-    <input type="date" id="dataFimFiltro">
-  </div>
-
-  <div>
-    <button onclick="filtrarDespesas()" class="btn-success">
-      Filtrar
-    </button>
-  </div>
-
-</div>
-
 <div id="relatorioDespesasProprietario"></div>
 
 <hr style="margin:25px 0;">
@@ -589,19 +481,15 @@ Imprimir Ficha em Branco
   </div>
 
   <div style="display:flex;align-items:flex-end;">
-    <button onclick="filtrarPeriodo()" class="btn-success">
-    Filtrar
-</button>
+    <button onclick="carregarRelatorioVendasFiltrado()">Filtrar</button>
   </div>
 </div>
 
 <h3>Relatório de Vendas por Vendedor</h3>
 <div id="relatorioVendasProprietario"></div>
 
-<button onclick="window.print()">Imprimir</button>
-
+<button onclick="imprimirRelatorio()">Imprimir Relatório</button>
 </div>
-</div> <!-- 🔥 FECHAMENTO QUE ESTAVA FALTANDO -->
 
 <div id="abaRelatorio" class="aba" style="display:none;">
 
@@ -627,22 +515,12 @@ function num(x){
   if(!x) return 0;
   return Number(String(x).replace(/\./g,'').replace(',','.')) || 0;
 }
-function toBRDate(iso){ // "2026-02-13" -> "13/02/2026"
-  if(!iso) return "";
-  const [y,m,d] = String(iso).split("-");
-  if(!y || !m || !d) return "";
-  return `${d}/${m}/${y}`;
-}
-
 function jsonp(params, callback){
 
-  // sempre tenta pegar o cliente_id salvo
-  const saved = localStorage.getItem("cliente_id") || "";
-  const cid = (CLIENTE_ID && String(CLIENTE_ID).trim()) ? CLIENTE_ID : saved;
-
-  if(cid){
-    params.cliente_id = cid;
+  if(CLIENTE_ID){
+    params.cliente_id = CLIENTE_ID;
   }
+
 
   const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*1000);
   params.callback = cbName;
@@ -651,23 +529,15 @@ function jsonp(params, callback){
   const script = document.createElement("script");
 
   window[cbName] = function(data){
-    try { callback(data); }
-    finally {
-      delete window[cbName];
-      if(script && script.parentNode) script.parentNode.removeChild(script);
-    }
-  };
-
-  script.onerror = function(){
-    alert("Falha ao chamar o GAS (script.onerror). Verifique URL do GAS ou permissão do WebApp.");
+    callback(data);
     delete window[cbName];
-    if(script && script.parentNode) script.parentNode.removeChild(script);
+    document.body.removeChild(script);
   };
 
   script.src = GAS_URL + "?" + query;
+
   document.body.appendChild(script);
 }
-
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
@@ -693,11 +563,26 @@ function carregarListas(){
   });
 
   jsonp({action:"listarVendedoresLojaAtivos"}, (r)=>{
-    if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
-    const items = (r.itens||[]).map(x=>({value:x.id, label:`${x.nome} (${x.cargo || "vendedor"})`}));
-    setSelect(document.getElementById("vd_vendedor_loja"), items, "Selecionar vendedor da loja");
-  });
-}
+  if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
+
+  const items = (r.itens||[]).map(x=>({
+    value:x.id,
+    label:`${x.nome} (${x.cargo || "vendedor"})`
+  }));
+
+  setSelect(
+    document.getElementById("vd_vendedor_loja"),
+    items,
+    "Selecionar vendedor da venda"
+  );
+
+  setSelect(
+    document.getElementById("comp_vendedor_loja"),
+    items,
+    "Selecionar funcionário da compra"
+  );
+
+});
 function entrarSistema(){
   document.getElementById("capa").style.display = "none";
 }
@@ -727,7 +612,13 @@ function salvarEntrada(){
     renavam: v("v_renavam"),
     valor_compra: num(v("v_valor_compra")),
     valor_venda: num(v("v_valor_venda")),
-    tipo_veiculo: v("tipo_veiculo"),
+    comprador_loja_id: v("comp_vendedor_loja"),
+tipo_comissao_compra: v("comp_tipo_comissao"),
+valor_comissao_compra:
+  v("comp_tipo_comissao") === "PERCENTUAL"
+  ? (num(v("v_valor_compra")) * num(v("comp_percentual"))) / 100
+  : num(v("comp_valor_comissao")),
+tipo_veiculo: v("tipo_veiculo"),
 
     p_nome:v("p_nome"),
     p_doc:v("p_cpf"),
@@ -747,7 +638,8 @@ function salvarEntrada(){
     va_endereco:v("va_endereco"),
     va_cidade:v("va_cidade"),
     va_estado:v("va_estado"),
-      };
+    va_data: v("va_data")
+  };
 
   jsonp(payload, (r)=>{
     if(r.ok){
@@ -910,11 +802,7 @@ function carregarPainelProprietario(){
 
   // ===== RESUMO FINANCEIRO =====
   jsonp({action:"resumoFinanceiro"}, (r)=>{
-  if(!r || !r.ok){
-    console.log("RESUMO ERRO:", r);
-    return alert("Erro ao carregar resumo: " + (r?.msg || "sem msg do GAS"));
-  }
-
+    if(!r.ok) return alert("Erro ao carregar resumo.");
 
     document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
     document.getElementById("pr_total_despesas").value = r.total_despesas || 0;
@@ -960,15 +848,7 @@ function carregarPainelProprietario(){
   });
 
   // ===== RELATÓRIO DESPESAS =====
-  const dataInicio = document.getElementById("filtro_data_inicio").value;
-const dataFim = document.getElementById("filtro_data_fim").value;
-
-jsonp({
-  action:"relatorioDespesasGeral",
-  data_inicio:dataInicio,
-  data_fim:dataFim
-}, (r)=>{
-
+  jsonp({action:"relatorioDespesasGeral"}, (r)=>{
     if(!r.ok) return;
 
     let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
@@ -1023,9 +903,9 @@ jsonp({
   });
 }
 function carregarRelatorioVendasFiltrado(){
+
   const dataInicio = document.getElementById("filtro_data_inicio").value;
   const dataFim = document.getElementById("filtro_data_fim").value;
-
 
   jsonp({
     action:"relatorioVendasPorVendedor",
@@ -1058,40 +938,6 @@ function carregarRelatorioVendasFiltrado(){
 
     document.getElementById("relatorioVendasProprietario").innerHTML = html;
 
-  });
-}
-function carregarRelatorioDespesasFiltrado(){
-  const dataInicio = document.getElementById("filtro_data_inicio").value;
-  const dataFim = document.getElementById("filtro_data_fim").value;
-
-  jsonp({
-    action:"relatorioDespesasGeral",
-    data_inicio: toBRDate(dataInicio),
-    data_fim: toBRDate(dataFim)
-  }, (r)=>{
-    if(!r.ok) return alert("Erro ao filtrar despesas.");
-
-    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
-    html += `
-      <tr>
-        <th>Veículo</th>
-        <th>Data</th>
-        <th>Tipo</th>
-        <th>Valor</th>
-      </tr>`;
-
-    (r.itens||[]).forEach(d=>{
-      html += `
-        <tr>
-          <td>${d.placa}</td>
-          <td>${d.data_despesa}</td>
-          <td>${d.tipo_despesa}</td>
-          <td>R$ ${d.valor_despesa}</td>
-        </tr>`;
-    });
-
-    html += "</table>";
-    document.getElementById("relatorioDespesasProprietario").innerHTML = html;
   });
 }
 
@@ -1222,88 +1068,6 @@ window.addEventListener("DOMContentLoaded", function(){
 
 });
 
-function filtrarPainelProprietario(){
-  carregarRelatorioVendasFiltrado();
-  carregarRelatorioDespesasFiltrado();
-}
-function filtrarPeriodo() {
-
-  const dataInicio = document.getElementById("dataInicioFiltro").value;
-  const dataFim = document.getElementById("dataFimFiltro").value;
-
-  if (!dataInicio || !dataFim) {
-    alert("Informe a data inicial e final");
-    return;
-  }
-
-  jsonp({
-    action: "resumoPorPeriodo",
-    data_inicio: dataInicio,
-    data_fim: dataFim
-  }, function(res){
-
-    if(!res || !res.ok){
-      alert("Erro ao filtrar período");
-      return;
-    }
-
-    document.getElementById("pr_total_investido").value = res.totalInvestido || 0;
-    document.getElementById("pr_total_despesas").value = res.totalDespesas || 0;
-    document.getElementById("pr_total_vendas").value = res.totalVendas || 0;
-    document.getElementById("pr_lucro_total").value = res.lucro || 0;
-
-  });
-
-}
-function filtrarLucroPeriodo(){
-
-  const dataInicio = document.getElementById("lucro_data_inicio").value;
-  const dataFim = document.getElementById("lucro_data_fim").value;
-
-  if(!dataInicio || !dataFim){
-    alert("Informe as duas datas.");
-    return;
-  }
-
-  jsonp({
-    action:"resumoPorPeriodo",
-    data_inicio:dataInicio,
-    data_fim:dataFim
-  }, function(res){
-
-    if(!res || !res.ok){
-      alert("Erro ao buscar período.");
-      return;
-    }
-
-    document.getElementById("pr_total_investido").value = res.totalInvestido || 0;
-    document.getElementById("pr_total_despesas").value = res.totalDespesas || 0;
-    document.getElementById("pr_total_vendas").value = res.totalVendas || 0;
-    document.getElementById("pr_lucro_total").value = res.lucro || 0;
-
-  });
-
-}
-function filtrarLucroResumo(){
-  const di = document.getElementById("lucro_data_inicio").value;
-  const df = document.getElementById("lucro_data_fim").value;
-
-  if(!di || !df) return alert("Informe data inicial e final.");
-
-  jsonp({ action:"resumoFinanceiro", data_inicio: di, data_fim: df }, (r)=>{
-    if(!r || !r.ok) return alert("Erro ao filtrar resumo: " + (r?.msg || ""));
-
-    document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
-    document.getElementById("pr_total_despesas").value  = r.total_despesas || 0;
-    document.getElementById("pr_total_vendas").value    = r.total_vendido || 0;
-    document.getElementById("pr_lucro_total").value     = r.lucro_realizado || 0;
-  });
-}
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js")
-    .then(() => console.log("Service Worker registrado"))
-    .catch(err => console.log("Erro SW:", err));
-}
 
 </script>
 
