@@ -571,28 +571,26 @@ function carregarListas(){
 
   // ===== VENDEDORES =====
   jsonp({action:"listarVendedoresLojaAtivos"}, (r)=>{
-    if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
+  if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
 
-    const items = (r.itens||[]).map(x=>({
-      value:x.id,
-      label:`${x.nome} (${x.cargo || "vendedor"})`
-    }));
+  const items = (r.itens||[]).map(x=>({
+    value:x.id,
+    label:`${x.nome} (${x.cargo || "vendedor"})`
+  }));
 
-    // venda
-    setSelect(
-      document.getElementById("vd_vendedor_loja"),
-      items,
-      "Selecionar vendedor da loja"
-    );
+  setSelect(
+    document.getElementById("vd_vendedor_loja"),
+    items,
+    "Selecionar vendedor da loja"
+  );
 
-    // compra
-    setSelect(
-      document.getElementById("comp_vendedor_loja"),
-      items,
-      "Selecionar funcionário da compra"
-    );
-  });
-}
+  setSelect(
+    document.getElementById("comp_vendedor_loja"),
+    items,
+    "Selecionar funcionário da compra"
+  );
+
+});
 function entrarSistema(){
   document.getElementById("capa").style.display = "none";
 }
