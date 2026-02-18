@@ -430,7 +430,6 @@ Imprimir Ficha em Branco
   </div>
 </div>
 <div id="abaProprietario" class="aba" style="display:none;">
-
   <div class="card">
     <h2>Painel do Proprietário</h2>
     <small>Visão exclusiva de resultados financeiros.</small>
@@ -458,48 +457,15 @@ Imprimir Ficha em Branco
     </div>
 
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
-<hr style="margin:25px 0;">
-<h3>Relatório de Estoque Atual</h3>
-<div id="relatorioEstoqueProprietario"></div>
-
-<hr style="margin:25px 0;">
-<h3>Relatório de Despesas</h3>
-<div id="relatorioDespesasProprietario"></div>
-
-<hr style="margin:25px 0;">
-
-<hr style="margin:25px 0;">
-<div class="grid" style="margin-bottom:15px;">
-  <div>
-    <label>Data Inicial</label>
-    <input type="date" id="filtro_data_inicio">
   </div>
-
-  <div>
-    <label>Data Final</label>
-    <input type="date" id="filtro_data_fim">
-  </div>
-
-  <div style="display:flex;align-items:flex-end;">
-    <button onclick="carregarRelatorioVendasFiltrado()">Filtrar</button>
-  </div>
-</div>
-
-<h3>Relatório de Vendas por Vendedor</h3>
-<div id="relatorioVendasProprietario"></div>
-
-<button onclick="imprimirRelatorio()">Imprimir Relatório</button>
 </div>
 
 <div id="abaRelatorio" class="aba" style="display:none;">
-
   <div class="card">
     <h2>Relatório de Estoque</h2>
     <div id="relatorioEstoque"></div>
-
-   <button onclick="imprimirRelatorio()">Imprimir</button>
+    <button onclick="imprimirRelatorio()">Imprimir</button>
   </div>
-
 </div>
 <script>
 /* ========= CONFIG ========= */
