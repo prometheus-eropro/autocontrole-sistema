@@ -1273,6 +1273,17 @@ function aplicarPermissoes(perfil){
 
 }
 
+function esconderBotaoMenu(texto){
+
+  const botoes = document.querySelectorAll(".menu-btn");
+
+  botoes.forEach(btn=>{
+    if(btn.innerText.includes(texto)){
+      btn.style.display = "none";
+    }
+  });
+
+}
 function mostrar(id){
   const el = document.getElementById(id);
   if(el) el.style.display = "block";
