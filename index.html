@@ -1148,37 +1148,37 @@ function fazerLogin(){
   const usuario = v("login_usuario");
   const senha = v("login_senha");
 
-  if(!usuario || !senha) return alert("Informe usuário e senha.");
+  if(!usuario || !senha) 
+    return alert("Informe usuário e senha.");
 
   jsonp({
     action:"loginUsuario",
     usuario,
     senha
-  }, (r)=>{
+  }, function(r){
 
-if(r.ok){
+    if(!r.ok){
+      return alert("Login inválido.");
+    }
 
-  CLIENTE_ID = r.cliente_id;
-  PERFIL = r.perfil;
-aplicarPermissoes(PERFIL);
+    CLIENTE_ID = r.cliente_id;
+    PERFIL = r.perfil;
 
+    // salva no navegador
+    localStorage.setItem("cliente_id", CLIENTE_ID);
+    localStorage.setItem("perfil", PERFIL);
+    localStorage.setItem("nome_loja", r.nome_loja || "");
 
-// ===== RESTORE AUTOMÁTICO COMPLETO =====
+    aplicarPermissoes(PERFIL);
 
-  const clienteSalvo = localStorage.getItem("cliente_id");
-  const nomeSalvo = localStorage.getItem("nome_loja");
-
-  if(clienteSalvo){
-    CLIENTE_ID = clienteSalvo;
     document.getElementById("telaLogin").style.display = "none";
+    document.getElementById("nomeLojaTopo").innerText = r.nome_loja || "";
+
     carregarListas();
-  }
 
-  if(nomeSalvo){
-    document.getElementById("nomeLojaTopo").innerText = nomeSalvo;
-  }
+  });
 
-});
+}
 function salvarOffline(payload){
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   fila.push(payload);
