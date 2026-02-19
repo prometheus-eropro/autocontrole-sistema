@@ -686,6 +686,7 @@ if(!navigator.onLine){
   });
 }
 function lancarDespesa(){
+
   const payload = {
     action:"lancarDespesa",
     id_veiculo:v("d_id_veiculo"),
@@ -701,20 +702,22 @@ function lancarDespesa(){
   if(!payload.data_despesa) return alert("Informe a data da despesa.");
   if(!payload.tipo_despesa) return alert("Informe o tipo da despesa.");
   if(!payload.valor_despesa) return alert("Informe o valor da despesa.");
-if(!navigator.onLine){
-  salvarOffline(payload);
-  alert("Sem internet. Salvo localmente.");
-  return;
-}
 
-jsonp(payload, (r)=>{
+  if(!navigator.onLine){
+    salvarOffline(payload);
+    alert("Sem internet. Salvo localmente.");
+    return;
+  }
 
-  jsonp(payload, (r)=>{
+  jsonp(payload, function(r){
     if(r.ok){
       alert("Despesa lançada!");
       limparFormularioDespesa();
-    } else alert("Erro: " + (r.msg||""));
+    } else {
+      alert("Erro: " + (r.msg||""));
+    }
   });
+
 }
 
 function cadastrarVendedorLoja(){
