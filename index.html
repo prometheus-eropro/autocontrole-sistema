@@ -258,26 +258,34 @@ tr:nth-child(even){
 
 <body>
 <header class="app-header">
-  <div>AutoControle</div>
-<div id="usuarioHeaderMobile">👤</div>
-<div id="bannerOffline" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-right:0;
-background:#dc2626;
-color:#fff;
-text-align:center;
-padding:8px;
-font-weight:600;
-z-index:3000;
-">
-⚠️ Você está em modo OFFLINE. Dados serão sincronizados quando a internet voltar.
-</div>
+
+  <div id="btnVoltar" 
+       onclick="voltarHome()" 
+       style="display:none; cursor:pointer; font-size:20px;">
+    ⬅
+  </div>
+
+  <div id="tituloApp">AutoControle</div>
+
+  <div id="usuarioHeaderMobile">👤</div>
+
+  <div id="bannerOffline" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  background:#dc2626;
+  color:#fff;
+  text-align:center;
+  padding:8px;
+  font-weight:600;
+  z-index:3000;
+  ">
+  ⚠️ Você está em modo OFFLINE. Dados serão sincronizados quando a internet voltar.
+  </div>
 
 </header>
-
 <div id="statusInternet"></div>
 
 <div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
@@ -1211,18 +1219,36 @@ let html = "<div class='table-wrapper'><table>";
   });
 }
 function abrirAba(id){
+
   document.querySelectorAll(".aba").forEach(el=>{
     el.style.display = "none";
   });
+
   document.getElementById(id).style.display = "block";
+
+  // MOBILE
+  if(window.innerWidth < 900){
+    document.getElementById("btnVoltar").style.display = "block";
+
+    const nomes = {
+      abaVeiculo: "Entrada Veículo",
+      abaDespesas: "Despesas",
+      abaVenda: "Venda",
+      abaRelatorio: "Estoque",
+      abaProprietario: "Financeiro",
+      abaMinhasVendas: "Minhas Vendas"
+    };
+
+    document.getElementById("tituloApp").innerText = nomes[id] || "AutoControle";
+  }
 
   if(id === "abaRelatorio"){
     carregarRelatorios();
   }
-if(id === "abaMinhasVendas"){
-  carregarMinhasVendas();
-}
 
+  if(id === "abaMinhasVendas"){
+    carregarMinhasVendas();
+  }
 }
 
 function imprimirRelatorio(){
@@ -1662,6 +1688,15 @@ function carregarVendasProprietarioFiltradas(){
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
+function voltarHome(){
+  document.querySelectorAll(".aba").forEach(el=>{
+    el.style.display = "none";
+  });
+
+  document.getElementById("btnVoltar").style.display = "none";
+  document.getElementById("tituloApp").innerText = "AutoControle";
+}
+
 </script>
 <nav class="bottom-nav">
 
