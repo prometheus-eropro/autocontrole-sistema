@@ -122,6 +122,7 @@ button{
 
 button:hover{
   transform:scale(1.02);
+  opacity:0.95;
 }
 
 /* ===== TABS ===== */
@@ -175,17 +176,65 @@ th{
   button{display:none;}
   body{background:#fff;}
 }
+@media(max-width:768px){
+  .grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .menu-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  h1{
+    font-size:20px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+}
+table{
+  border-collapse:collapse;
+  width:100%;
+  min-width:700px;
+  font-size:13px;
+}
+
+th{
+  background:#0f172a;
+  color:#fff;
+}
+
+tr:nth-child(even){
+  background:#f8fafc;
+}
 
 </style>
 
 </head>
 
 <body>
+<div id="statusInternet" style="
+position:fixed;
+bottom:10px;
+right:10px;
+background:#16a34a;
+color:#fff;
+padding:6px 12px;
+border-radius:20px;
+font-size:12px;
+z-index:9999;
+">
+Online
+</div>
+
 <div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
   <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
     <h2>Login AutoControle</h2>
-    <input id="login_usuario" placeholder="Usuário">
-    <input id="login_senha" type="password" placeholder="Senha">
+    <input id="login_usuario" placeholder="Usuário" autocomplete="username">
+
+    <input id="login_senha" type="password" placeholder="Senha" autocomplete="current-password">
+
     <button onclick="fazerLogin()">Entrar</button>
   </div>
 </div>
@@ -241,7 +290,8 @@ th{
   <div class="menu-btn" onclick="abrirAba('abaDespesas')">💰 Despesas</div>
   <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
   <div class="menu-btn" onclick="acessarProprietario()">📊 Proprietário</div>
-  <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
+  <div class="menu-btn" onclick="acessarRelatorio()">📑 Relatórios</div>
+
 </div>
 
 <!-- =======================
@@ -249,7 +299,6 @@ th{
 ======================= -->
 <div id="abaVeiculo" class="aba" style="display:block">
   <div class="card">
-
 
     <h2>Entrada do Veículo</h2>
     <small>Cadastro do veículo + dono no documento + vendedor (pode ser diferente).</small>
@@ -268,104 +317,61 @@ th{
       <input id="v_renavam" placeholder="Renavam">
       <input id="v_valor_compra" placeholder="Valor da Compra (R$)">
       <input id="v_valor_venda" placeholder="Valor para Venda (R$)">
-<div class="campo">
-  <label>Tipo de Veículo</label>
-  <select id="tipo_veiculo">
-    <option value="">Selecione</option>
-    <option value="MOTO">Moto</option>
-    <option value="CARRO">Carro</option>
-    <option value="CAMIONETE">Camionete</option> 
-    <option value="CAMINHAO">Caminhão</option>
-    <option value="QUADRICICLO">Quadriciclo</option>
-  </select>
-</div>
-
+      <select id="tipo_veiculo">
+        <option value="">Selecione</option>
+        <option value="MOTO">Moto</option>
+        <option value="CARRO">Carro</option>
+        <option value="CAMIONETE">Camionete</option>
+        <option value="CAMINHAO">Caminhão</option>
+        <option value="QUADRICICLO">Quadriciclo</option>
+      </select>
     </div>
 
     <hr>
-    <div class="badge">Dono no Documento (Proprietário Atual)</div>
-<div class="grid">
-  <input id="p_nome" placeholder="Nome Proprietário">
-  <input id="p_cpf" placeholder="CPF/CNPJ Proprietário">
-  <input id="p_rg" placeholder="RG Proprietário">
-
-  <div>
-    <label>Data de Nascimento do Proprietário</label>
-    <input id="p_nascimento" type="date">
-  </div>
-
-  <input id="p_telefone" placeholder="Telefone">
-  <input id="p_email" placeholder="Email">
-  <input id="p_endereco" placeholder="Endereço" style="grid-column: 1 / -1;">
-
-<input id="p_cidade" placeholder="Cidade">
-<input id="p_estado" placeholder="UF">
-
-<div>
-  <label>Data de Entrada no Estoque</label>
-  
-</div>
-
-
-  <div>
-    <label>Data de Entrada do Veículo no Estoque</label>
-    <input id="p_inicio" type="date">
-  </div>
-</div>
-    <hr>
-    <div class="badge">Vendedor Anterior (Quem vendeu para a loja)</div>
+    <div class="badge">Dono no Documento</div>
     <div class="grid">
-      <input id="va_nome" placeholder="Nome Vendedor Anterior">
-      <input id="va_doc" placeholder="CPF/CNPJ Vendedor">
+      <input id="p_nome" placeholder="Nome Proprietário">
+      <input id="p_cpf" placeholder="CPF/CNPJ Proprietário">
+      <input id="p_rg" placeholder="RG Proprietário">
+      <input id="p_nascimento" type="date">
+      <input id="p_telefone" placeholder="Telefone">
+      <input id="p_email" placeholder="Email">
+      <input id="p_endereco" placeholder="Endereço" style="grid-column:1/-1;">
+      <input id="p_cidade" placeholder="Cidade">
+      <input id="p_estado" placeholder="UF">
+      <input id="p_inicio" type="date">
+    </div>
+
+    <hr>
+    <div class="badge">Vendedor Anterior</div>
+    <div class="grid">
+      <input id="va_nome" placeholder="Nome">
+      <input id="va_doc" placeholder="CPF/CNPJ">
       <input id="va_telefone" placeholder="Telefone">
       <input id="va_email" placeholder="Email">
-      <input id="va_endereco" placeholder="Endereço">
+      <input id="va_endereco" placeholder="Endereço" style="grid-column:1/-1;">
       <input id="va_cidade" placeholder="Cidade">
-      <input id="va_estado" placeholder="Estado">
-      <div>
-  <label>Data da Compra do Veículo pela Loja</label>
-  <input id="va_data" type="date">
-</div>
-
+      <input id="va_estado" placeholder="UF">
     </div>
-<hr>
-<div class="badge">Funcionário da Loja (Compra)</div>
-<div class="grid">
 
-<select id="comp_vendedor_loja">
-  <option value="">Selecione o funcionário</option>
-</select>
+    <hr>
+    <div class="badge">Funcionário da Loja (Compra)</div>
+    <div class="grid">
+      <select id="comp_vendedor_loja">
+        <option value="">Selecione o funcionário</option>
+      </select>
 
-<select id="comp_tipo_comissao">
-  <option value="PERCENTUAL">Comissão %</option>
-  <option value="FIXO">Comissão Fixa (R$)</option>
-</select>
+      <select id="comp_tipo_comissao">
+        <option value="PERCENTUAL">Comissão %</option>
+        <option value="FIXO">Comissão Fixa (R$)</option>
+      </select>
 
-<input id="comp_percentual" placeholder="% Comissão (se percentual)">
-<input id="comp_valor_comissao" placeholder="Valor Comissão (se fixa)">
-
-</div>
-
-<hr>
-<div class="badge">Funcionário da Loja (Compra)</div>
-<div class="grid">
-
-  <select id="comp_vendedor_loja">
-    <option value="">Selecione o funcionário</option>
-  </select>
-
-  <select id="comp_tipo_comissao">
-    <option value="PERCENTUAL">Comissão %</option>
-    <option value="FIXO">Comissão Fixa (R$)</option>
-  </select>
-
-  <input id="comp_percentual" placeholder="% Comissão (se percentual)">
-  <input id="comp_valor_comissao" placeholder="Valor Comissão (se fixa)">
-
-</div>
-
+      <input id="comp_percentual" placeholder="% Comissão (se percentual)">
+      <input id="comp_valor_comissao" placeholder="Valor Comissão (se fixa)">
+    </div>
 
     <button onclick="salvarEntrada()">Salvar Entrada do Veículo</button>
+
   </div>
 </div>
 
@@ -529,6 +535,22 @@ th{
     </div>
 
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
+
+    <hr>
+
+    <h3>Relatório de Estoque</h3>
+    <div id="relatorioEstoqueProprietario"></div>
+
+    <hr>
+
+    <h3>Relatório de Despesas</h3>
+    <div id="relatorioDespesasProprietario"></div>
+
+    <hr>
+
+    <h3>Relatório de Vendas por Vendedor</h3>
+    <div id="relatorioVendasProprietario"></div>
+
   </div>
 </div>
 
@@ -543,6 +565,10 @@ th{
   </div>
 </div>
 <script>
+if(!localStorage.getItem("cliente_id")){
+  document.getElementById("telaLogin").style.display = "flex";
+}
+
 /* ========= CONFIG ========= */
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyDSdfY9ILeSHuqg08mo1ruDA1DzgkN7CKDIswZFwXeoa4d9064m_KrxVI_o1j1_AMn/exec";
 
@@ -688,11 +714,11 @@ tipo_veiculo: v("tipo_veiculo"),
     va_endereco:v("va_endereco"),
     va_cidade:v("va_cidade"),
     va_estado:v("va_estado"),
-    va_data: v("va_data")
-  };
+      };
 if(!navigator.onLine){
   salvarOffline(payload);
-  alert("Sem internet. Salvo localmente.");
+  console.log("Salvo offline.");
+
   return;
 }
 
@@ -884,7 +910,8 @@ function carregarPainelProprietario(){
   jsonp({action:"relatorioEstoque"}, (r)=>{
     if(!r.ok) return;
 
-    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+    let html = "<div class='table-wrapper'><table>";
+
     html += `
     <tr>
       <th>Placa</th>
@@ -913,7 +940,8 @@ function carregarPainelProprietario(){
       </tr>`;
     });
 
-    html += "</table>";
+    html += "</table></div>";
+
     document.getElementById("relatorioEstoqueProprietario").innerHTML = html;
   });
 
@@ -921,7 +949,8 @@ function carregarPainelProprietario(){
   jsonp({action:"relatorioDespesasGeral"}, (r)=>{
     if(!r.ok) return;
 
-    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+let html = "<div class='table-wrapper'><table>";
+
     html += `
     <tr>
       <th>Veículo</th>
@@ -940,7 +969,8 @@ function carregarPainelProprietario(){
       </tr>`;
     });
 
-    html += "</table>";
+    html += "</table></div>";
+
     document.getElementById("relatorioDespesasProprietario").innerHTML = html;
   });
 
@@ -948,7 +978,8 @@ function carregarPainelProprietario(){
   jsonp({action:"relatorioVendasPorVendedor"}, (r)=>{
     if(!r.ok) return;
 
-    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
+let html = "<div class='table-wrapper'><table>";
+
     html += `
 <tr>
   <th>Vendedor</th>
@@ -968,7 +999,8 @@ function carregarPainelProprietario(){
       </tr>`;
     });
 
-    html += "</table>";
+    html += "</table></div>";
+
     document.getElementById("relatorioVendasProprietario").innerHTML = html;
   });
 }
@@ -1109,6 +1141,7 @@ function abrirFichaBranca(){
 }
 let CLIENTE_ID = "";
 let PERFIL = "";
+console.clear();
 
 function fazerLogin(){
 
@@ -1160,51 +1193,30 @@ window.addEventListener("DOMContentLoaded", function(){
   }
 
 });
-function salvarOffline(dados){
-
-  let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
-  fila.push(dados);
-  localStorage.setItem("fila_offline", JSON.stringify(fila));
-
-}
-
-function sincronizarOffline(){
-
-  let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
-
-  if(fila.length === 0) return;
-
-  fila.forEach(dados=>{
-    jsonp(dados, function(r){
-      console.log("Sincronizado:", r);
-    });
-  });
-
-  localStorage.removeItem("fila_offline");
-}
 function salvarOffline(payload){
-
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   fila.push(payload);
   localStorage.setItem("fila_offline", JSON.stringify(fila));
-
-  atualizarIndicadorOffline();
 }
 
 function sincronizarOffline(){
-
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
-
   if(fila.length === 0) return;
+
+  console.log("Sincronizando", fila.length, "registros...");
+
+  let contador = 0;
 
   fila.forEach(dados=>{
     jsonp(dados, function(r){
-      console.log("Sincronizado:", r);
+      contador++;
+
+      if(contador === fila.length){
+        localStorage.removeItem("fila_offline");
+        console.log("Sincronização concluída.");
+      }
     });
   });
-
-  localStorage.removeItem("fila_offline");
-  atualizarIndicadorOffline();
 }
 
 function atualizarIndicadorOffline(){
@@ -1212,13 +1224,11 @@ function atualizarIndicadorOffline(){
   console.log("Pendentes offline:", fila.length);
 }
 
-window.addEventListener("online", sincronizarOffline);
-
 
 </script>
 <script>
 window.addEventListener("offline", function(){
-  alert("Sem internet. Sistema operando em modo local.");
+  console.log("Modo offline ativado.");
 });
 
 window.addEventListener("online", function(){
@@ -1226,6 +1236,56 @@ window.addEventListener("online", function(){
   sincronizarOffline();
 });
 
+function formatarMoedaInput(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+
+  el.addEventListener("input", function(){
+    let v = el.value.replace(/\D/g,'');
+    v = (Number(v)/100).toFixed(2) + '';
+    v = v.replace(".", ",");
+    v = v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    el.value = v;
+  });
+}
+
+formatarMoedaInput("v_valor_compra");
+formatarMoedaInput("v_valor_venda");
+formatarMoedaInput("comp_valor_comissao");
+formatarMoedaInput("vd_valor_venda");
+formatarMoedaInput("vd_entrada");
+formatarMoedaInput("vd_valor_parcela");
+formatarMoedaInput("vd_valor_financiado");
+function atualizarStatusInternet(){
+  const el = document.getElementById("statusInternet");
+  if(!el) return;
+
+  if(navigator.onLine){
+    el.style.background = "#16a34a";
+    el.innerText = "Online";
+  } else {
+    el.style.background = "#dc2626";
+    el.innerText = "Offline";
+  }
+}
+
+window.addEventListener("online", atualizarStatusInternet);
+window.addEventListener("offline", atualizarStatusInternet);
+window.addEventListener("DOMContentLoaded", atualizarStatusInternet);
+function acessarRelatorio(){
+
+  const senha = prompt("Informe a senha para visualizar o estoque:");
+  if(!senha) return;
+
+  jsonp({action:"validarSenhaEstoque", senha}, (r)=>{
+    if(r.ok){
+      abrirAba('abaRelatorio');
+    } else {
+      alert("Senha incorreta.");
+    }
+  });
+
+}
 
 </script>
 
