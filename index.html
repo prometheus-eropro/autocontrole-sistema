@@ -195,32 +195,40 @@ tr:nth-child(even){
 
   /* NAV INFERIOR */
   .bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    height:65px;
-    background:#ffffff;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    border-top:1px solid #e2e8f0;
-    box-shadow:0 -4px 10px rgba(0,0,0,.08);
-    z-index:1000;
-  }
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:70px;
+  background:#ffffff;
+  display:flex;
+  align-items:center;
+  overflow-x:auto;
+  overflow-y:hidden;
+  white-space:nowrap;
+  border-top:1px solid #e2e8f0;
+  box-shadow:0 -4px 10px rgba(0,0,0,.08);
+  z-index:1000;
+}
 
-  .bottom-nav div{
-    text-align:center;
-    font-size:12px;
-    color:#1e293b;
-    cursor:pointer;
-  }
+.bottom-nav::-webkit-scrollbar{
+  display:none;
+}
 
-  .bottom-nav span{
-    display:block;
-    font-size:11px;
-  }
+.bottom-nav div{
+  flex:0 0 auto;
+  width:85px;
+  text-align:center;
+  font-size:11px;
+  color:#1e293b;
+  cursor:pointer;
+  padding-top:6px;
+}
 
+.bottom-nav div span{
+  display:block;
+  font-size:10px;
+}
 }
 #statusInternet{
   position:fixed;
@@ -1656,12 +1664,15 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <nav class="bottom-nav">
+
   <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
   <div onclick="abrirAba('abaDespesas')">💰<span>Despesas</span></div>
   <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
+  <div onclick="abrirAba('abaRelatorio')">📑<span>Estoque</span></div>
   <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
-</nav>
+  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Minhas</span></div>
 
+</nav>
 
 </body>
 </html>
