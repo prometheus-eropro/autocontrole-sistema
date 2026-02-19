@@ -671,6 +671,11 @@ tipo_veiculo: v("tipo_veiculo"),
     va_estado:v("va_estado"),
     va_data: v("va_data")
   };
+if(!navigator.onLine){
+  salvarOffline(payload);
+  alert("Sem internet. Salvo localmente.");
+  return;
+}
 
   jsonp(payload, (r)=>{
     if(r.ok){
@@ -696,6 +701,13 @@ function lancarDespesa(){
   if(!payload.data_despesa) return alert("Informe a data da despesa.");
   if(!payload.tipo_despesa) return alert("Informe o tipo da despesa.");
   if(!payload.valor_despesa) return alert("Informe o valor da despesa.");
+if(!navigator.onLine){
+  salvarOffline(payload);
+  alert("Sem internet. Salvo localmente.");
+  return;
+}
+
+jsonp(payload, (r)=>{
 
   jsonp(payload, (r)=>{
     if(r.ok){
@@ -719,6 +731,11 @@ function cadastrarVendedorLoja(){
 
   if(!payload.nome_vendedor_loja) return alert("Informe o nome do vendedor.");
   if(!payload.cpf_vendedor_loja) return alert("Informe o CPF do vendedor.");
+if(!navigator.onLine){
+  salvarOffline(payload);
+  alert("Sem internet. Salvo localmente.");
+  return;
+}
 
   jsonp(payload, (r)=>{
     if(r.ok){
@@ -1002,46 +1019,69 @@ function imprimirRelatorio(){
 function carregarRelatorios(){
 
   jsonp({action:"relatorioEstoque"}, (r)=>{
+
     if(!r.ok) return;
 
-    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
-html += `
-<tr>
-  <th>Placa</th>
-  <th>Marca</th>
-  <th>Modelo</th>
-  <th>Ano Fab</th>
-  <th>Ano Mod</th>
-  <th>Cor</th>
-  <th>Tipo</th>
-  <th>Valor Venda</th>
-  <th>Data Entrada</th>
-</tr>
-`;
+    const isMobile = window.innerWidth < 768;
 
+    let html = "";
 
-    r.itens.forEach(v=>{
-  html += `
-<tr>
-  <td>${v.placa}</td>
-  <td>${v.marca}</td>
-  <td>${v.modelo}</td>
-  <td>${v.ano_fabricacao}</td>
-  <td>${v.ano_modelo}</td>
-  <td>${v.cor}</td>
-  <td>${v.tipo_veiculo}</td>
-  <td>R$ ${v.valor_venda}</td>
-  <td>${v.data_entrada}</td>
-</tr>
-`;
-});
+    if(isMobile){
 
-    html += "</table>";
+      r.itens.forEach(v=>{
+        html += `
+          <div class="card" style="margin-bottom:15px;">
+            <b>${v.placa}</b><br>
+            ${v.marca} ${v.modelo}<br>
+            Ano: ${v.ano_fabricacao}/${v.ano_modelo}<br>
+            Cor: ${v.cor}<br>
+            Tipo: ${v.tipo_veiculo}<br>
+            Valor Venda: R$ ${v.valor_venda}<br>
+            Entrada: ${v.data_entrada}
+          </div>
+        `;
+      });
+
+    } else {
+
+      html = "<table>";
+      html += `
+      <tr>
+        <th>Placa</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Ano Fab</th>
+        <th>Ano Mod</th>
+        <th>Cor</th>
+        <th>Tipo</th>
+        <th>Valor Venda</th>
+        <th>Data Entrada</th>
+      </tr>
+      `;
+
+      r.itens.forEach(v=>{
+        html += `
+        <tr>
+          <td>${v.placa}</td>
+          <td>${v.marca}</td>
+          <td>${v.modelo}</td>
+          <td>${v.ano_fabricacao}</td>
+          <td>${v.ano_modelo}</td>
+          <td>${v.cor}</td>
+          <td>${v.tipo_veiculo}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>${v.data_entrada}</td>
+        </tr>
+        `;
+      });
+
+      html += "</table>";
+    }
+
     document.getElementById("relatorioEstoque").innerHTML = html;
+
   });
-
 }
-
 function abrirFichaBranca(){
   window.open("ficha_branca.html", "_blank");
 }
@@ -1098,8 +1138,71 @@ window.addEventListener("DOMContentLoaded", function(){
   }
 
 });
+function salvarOffline(dados){
+
+  let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
+  fila.push(dados);
+  localStorage.setItem("fila_offline", JSON.stringify(fila));
+
+}
+
+function sincronizarOffline(){
+
+  let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
+
+  if(fila.length === 0) return;
+
+  fila.forEach(dados=>{
+    jsonp(dados, function(r){
+      console.log("Sincronizado:", r);
+    });
+  });
+
+  localStorage.removeItem("fila_offline");
+}
+function salvarOffline(payload){
+
+  let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
+  fila.push(payload);
+  localStorage.setItem("fila_offline", JSON.stringify(fila));
+
+  atualizarIndicadorOffline();
+}
+
+function sincronizarOffline(){
+
+  let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
+
+  if(fila.length === 0) return;
+
+  fila.forEach(dados=>{
+    jsonp(dados, function(r){
+      console.log("Sincronizado:", r);
+    });
+  });
+
+  localStorage.removeItem("fila_offline");
+  atualizarIndicadorOffline();
+}
+
+function atualizarIndicadorOffline(){
+  const fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
+  console.log("Pendentes offline:", fila.length);
+}
+
+window.addEventListener("online", sincronizarOffline);
 
 
+</script>
+<script>
+window.addEventListener("offline", function(){
+  alert("Sem internet. Sistema operando em modo local.");
+});
+
+window.addEventListener("online", function(){
+  alert("Internet voltou. Sincronizando dados...");
+  sincronizarOffline();
+});
 </script>
 
 </body>
