@@ -7,6 +7,7 @@
 <style>
 
 /* CONFIGURAÇÃO A4 */
+
 @page {
   size: A4;
   margin: 12mm;
@@ -98,7 +99,21 @@ h2 {
 
 <body>
 
-<h2>FICHA DE CONTROLE VEICULAR</h2>
+<h2 id="tituloFicha" style="text-align:center;margin:6px 0 4px 0;"></h2>
+<div style="text-align:center;font-size:13px;margin-bottom:10px;">
+  FICHA DE CONTROLE VEICULAR
+</div>
+
+<script>
+window.onload = function(){
+
+  const loja = localStorage.getItem("nome_loja") || "AutoControle";
+
+  document.getElementById("tituloFicha").innerText = loja.toUpperCase();
+
+};
+</script>
+
 
 <div class="titulo">DADOS DO VEÍCULO</div>
 
@@ -142,6 +157,20 @@ h2 {
     <label>Combustível</label>
     <div class="linha"></div>
   </div>
+<div class="campo">
+  <label>Chassi</label>
+  <div class="linha"></div>
+</div>
+
+<div class="campo">
+  <label>Renavam</label>
+  <div class="linha"></div>
+</div>
+
+<div class="campo">
+  <label>Data Entrada Estoque</label>
+  <div class="linha"></div>
+</div>
 
   <div class="campo">
     <label>Valor Compra</label>
@@ -207,7 +236,6 @@ h2 {
 
 <br>
 <strong>Total Despesas:</strong> ___________________________________________
-</div>
 
 <div class="page-break"></div>
 <div class="titulo">COMISSÃO DA COMPRA (FUNCIONÁRIO LOJA)</div>
@@ -350,6 +378,8 @@ h2 {
 </div>
 
 <br><br>
+<div class="titulo">OBSERVAÇÕES</div>
+<div class="linha" style="height:60px;"></div>
 
 <div class="campo full">
   <label>Assinatura Responsável</label>

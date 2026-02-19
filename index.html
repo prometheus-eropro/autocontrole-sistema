@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Ícone padrão -->
+<link rel="icon" type="image/png" href="icon-192.png">
+
+<!-- 🔥 ESSENCIAL PARA IPHONE -->
+<link rel="apple-touch-icon" href="icon-512.png">
+
+<meta name="theme-color" content="#16a34a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 <meta charset="UTF-8" />
 <title>AutoControle — Sistema de Gestão Veicular</title>
 
@@ -13,92 +26,53 @@
 }
 
 body{
-  font-family:Segoe UI, Arial, sans-serif;
-  background:linear-gradient(180deg,#e2e8f0,#f8fafc);
+  font-family:'Segoe UI', Arial, sans-serif;
+  background:linear-gradient(180deg,#f1f5f9,#ffffff);
   margin:0;
   padding:0;
-  color:#1e293b;
+  color:#0f172a;
 }
 
 /* ===== CONTAINER ===== */
 .container{
-  max-width:1100px;
+  max-width:1200px;
   margin:auto;
-  padding:20px;
+  padding:25px;
 }
-
-/* ===== RESPONSIVO MOBILE ===== */
-@media(max-width:768px){
-
-  .container{
-    max-width:100%;
-    padding:14px;
-  }
-
-  .menu-grid{
-    grid-template-columns:1fr;
-  }
-
-  .menu-btn{
-    padding:18px;
-    font-size:16px;
-  }
-
-  .card{
-    padding:20px;
-  }
-
-}
-
 
 /* ===== CARD ===== */
-.card {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  transition: 0.3s;
+.card{
+  background:#ffffff;
+  padding:28px;
+  border-radius:18px;
+  margin-bottom:25px;
+  box-shadow:0 8px 25px rgba(0,0,0,.06);
+  transition:.25s;
 }
 
-.card:hover {
-  transform: translateY(-4px);
+.card:hover{
+  transform:translateY(-3px);
 }
 
-
-/* ===== HEADER ===== */
-h1{
-  margin:0;
-  font-size:24px;
-}
-
-h2{
-  margin-bottom:12px;
-}
-
-small{
-  color:#64748b;
-}
-
-/* ===== MENU GRID (NOVA HOME) ===== */
+/* ===== MENU ===== */
 .menu-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:14px;
-  margin-bottom:25px;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:18px;
+  margin-bottom:30px;
 }
 
 .menu-btn{
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  background:linear-gradient(135deg,#0f172a,#1e293b);
   color:#fff;
-  padding:22px 15px;
-  border-radius:20px;
+  padding:22px;
+  border-radius:18px;
   text-align:center;
   font-weight:600;
-  font-size:16px;
+  font-size:15px;
   cursor:pointer;
   transition:.3s;
-  box-shadow:0 10px 25px rgba(0,0,0,.12);
+  box-shadow:0 10px 20px rgba(0,0,0,.12);
 }
 
 .menu-btn:hover{
@@ -111,24 +85,17 @@ input,select,textarea{
   width:100%;
   padding:14px;
   margin-top:8px;
-  margin-bottom:12px;
-  border-radius:14px;
+  margin-bottom:14px;
+  border-radius:12px;
   border:1px solid #e2e8f0;
-  font-size:15px;
+  font-size:14px;
   background:#f8fafc;
 }
 
 input:focus,select:focus,textarea:focus{
   outline:none;
-  border-color:#2563eb;
+  border-color:#16a34a;
   background:#ffffff;
-}
-
-/* ===== GRID FORM ===== */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:12px;
 }
 
 /* ===== BOTÕES ===== */
@@ -137,7 +104,7 @@ button{
   color:#fff;
   border:none;
   padding:14px;
-  border-radius:14px;
+  border-radius:12px;
   font-weight:600;
   cursor:pointer;
   transition:.2s;
@@ -145,91 +112,114 @@ button{
 
 button:hover{
   transform:scale(1.02);
-  opacity:0.95;
 }
 
-/* ===== TABS ===== */
-.tabs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:25px;
-}
-
-.tabs button{
-  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+/* ===== FINANCEIRO DESTAQUE ===== */
+.financeiro-box{
+  background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+  padding:18px;
   border-radius:14px;
+  margin-bottom:15px;
+  font-weight:600;
 }
 
-/* ===== BADGE ===== */
-.badge{
-  display:inline-block;
-  background:#e2e8f0;
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:13px;
-  margin-bottom:12px;
-}
-
-/* ===== TABELA RESPONSIVA ===== */
+/* ===== TABELA ===== */
 .table-wrapper{
   overflow-x:auto;
-  margin-top:10px;
 }
 
 table{
   border-collapse:collapse;
   width:100%;
-  min-width:700px;
-}
-
-th,td{
-  border:1px solid #e2e8f0;
-  padding:8px;
-  font-size:14px;
-  text-align:left;
-}
-
-th{
-  background:#f1f5f9;
-}
-
-/* ===== PRINT ===== */
-@media print{
-  button{display:none;}
-  body{background:#fff;}
-}
-@media(max-width:768px){
-  .grid{
-    grid-template-columns:1fr !important;
-  }
-
-  .menu-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  h1{
-    font-size:20px;
-  }
-
-  h2{
-    font-size:18px;
-  }
-}
-table{
-  border-collapse:collapse;
-  width:100%;
-  min-width:700px;
   font-size:13px;
 }
 
 th{
   background:#0f172a;
   color:#fff;
+  padding:10px;
+}
+
+td{
+  padding:8px;
+  border-bottom:1px solid #e2e8f0;
 }
 
 tr:nth-child(even){
   background:#f8fafc;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  .container{
+    padding:15px;
+  }
+
+  .menu-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+/* =========================================
+   MODO APP (Somente Mobile / Tablet)
+========================================= */
+
+@media (max-width: 900px){
+
+  body{
+    padding-top:70px;
+    padding-bottom:75px;
+  }
+
+  /* HEADER FIXO */
+  .app-header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:60px;
+    background:#16a34a;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    font-weight:600;
+    z-index:1000;
+  }
+
+  /* ESCONDE MENU GRID ANTIGO NO MOBILE */
+  .menu-grid{
+    display:none;
+  }
+
+  /* NAV INFERIOR */
+  .bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:65px;
+    background:#ffffff;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    border-top:1px solid #e2e8f0;
+    box-shadow:0 -4px 10px rgba(0,0,0,.08);
+    z-index:1000;
+  }
+
+  .bottom-nav div{
+    text-align:center;
+    font-size:12px;
+    color:#1e293b;
+    cursor:pointer;
+  }
+
+  .bottom-nav span{
+    display:block;
+    font-size:11px;
+  }
+
 }
 
 </style>
@@ -237,6 +227,12 @@ tr:nth-child(even){
 </head>
 
 <body>
+<header class="app-header">
+  <div>AutoControle</div>
+<div id="usuarioHeaderMobile">👤</div>
+
+</header>
+
 <div id="statusInternet" style="
 position:fixed;
 bottom:10px;
@@ -457,6 +453,10 @@ padding:20px;
     </div>
 
     <button onclick="salvarEntrada()">Salvar Entrada do Veículo</button>
+<button onclick="window.open('ficha_entrada.html','_blank')"
+style="background:#0f172a;">
+🖨 Imprimir Ficha em Branco
+</button>
 
   </div>
 </div>
@@ -590,6 +590,9 @@ padding:20px;
     <textarea id="vd_obs" placeholder="Observações"></textarea>
 
     <button onclick="registrarVenda()">Registrar Venda</button>
+<button onclick="imprimirRelatorioFinal()" style="background:#1e3a8a;">
+🖨 Relatório Final do Veículo
+</button>
 
   </div>
 </div>
@@ -633,6 +636,26 @@ padding:20px;
     <div id="relatorioDespesasProprietario"></div>
 
     <hr>
+<div class="grid" style="margin-bottom:12px;">
+  <select id="pr_filtro_vendedor_venda">
+    <option value="">Todos os vendedores</option>
+  </select>
+
+  <div>
+    <label>Data início</label>
+    <input id="pr_data_inicio_venda" type="date">
+  </div>
+
+  <div>
+    <label>Data fim</label>
+    <input id="pr_data_fim_venda" type="date">
+  </div>
+
+  <input id="pr_filtro_placa_venda" placeholder="Filtrar por Placa">
+  <input id="pr_filtro_cpf_venda" placeholder="Filtrar por CPF">
+
+  <button onclick="carregarVendasProprietarioFiltradas()">Filtrar Vendas</button>
+</div>
 
     <h3>Relatório de Vendas por Vendedor</h3>
     <div id="relatorioVendasProprietario"></div>
@@ -643,7 +666,36 @@ padding:20px;
 <div id="abaRelatorio" class="aba" style="display:none;">
   <div class="card">
     <h2>Relatório de Estoque</h2>
-    <div class="table-wrapper">
+<hr>
+<h3>Relatório de Vendas</h3>
+
+<div class="grid" style="margin-bottom:15px;">
+  <select id="filtro_vendedor_venda">
+    <option value="">Todos os vendedores</option>
+  </select>
+
+  <div>
+    <label>Data início</label>
+    <input id="filtro_data_inicio_venda" type="date">
+  </div>
+
+  <div>
+    <label>Data fim</label>
+    <input id="filtro_data_fim_venda" type="date">
+  </div>
+
+  <input id="filtro_placa_venda" placeholder="Filtrar por Placa">
+  <input id="filtro_cpf_venda" placeholder="Filtrar por CPF">
+
+  <button onclick="carregarVendasFiltradas()">Filtrar Vendas</button>
+</div>
+
+<div id="relatorioVendasFiltrado"></div>
+
+<div class="grid" style="margin-bottom:15px;">
+  <input id="filtro_modelo" placeholder="Filtrar por Modelo">
+  <button onclick="carregarRelatorios()">Filtrar</button>
+</div>    <div class="table-wrapper">
       <div id="relatorioEstoque"></div>
     </div>
     <button onclick="imprimirRelatorio()">Imprimir</button>
@@ -756,12 +808,24 @@ function carregarListas(){
     items,
     "Selecionar vendedor da loja"
   );
+// ===== SELECT DE FILTRO (RELATÓRIO DE VENDAS) =====
+setSelect(
+  document.getElementById("filtro_vendedor_venda"),
+  items,
+  "Todos os vendedores"
+);
 
   setSelect(
     document.getElementById("comp_vendedor_loja"),
     items,
     "Selecionar funcionário da compra"
   );
+
+setSelect(
+  document.getElementById("pr_filtro_vendedor_venda"),
+  items,
+  "Todos os vendedores"
+);
 
 });
 } // <-- FECHA carregarListas()
@@ -1030,6 +1094,9 @@ function carregarPainelProprietario(){
       <th>Valor Venda</th>
       <th>Data Entrada</th>
     </tr>`;
+r.itens.sort((a,b)=>{
+  return String(a.modelo).localeCompare(String(b.modelo));
+});
 
     r.itens.forEach(v=>{
       html += `
@@ -1110,46 +1177,6 @@ let html = "<div class='table-wrapper'><table>";
     document.getElementById("relatorioVendasProprietario").innerHTML = html;
   });
 }
-function carregarRelatorioVendasFiltrado(){
-
-  const dataInicio = document.getElementById("filtro_data_inicio").value;
-  const dataFim = document.getElementById("filtro_data_fim").value;
-
-  jsonp({
-    action:"relatorioVendasPorVendedor",
-    data_inicio:dataInicio,
-    data_fim:dataFim
-  }, (r)=>{
-
-    if(!r.ok) return alert("Erro ao filtrar vendas.");
-
-    let html = "<table border='1' width='100%' cellspacing='0' cellpadding='6'>";
-    html += `
-    <tr>
-      <th>Vendedor</th>
-      <th>Data</th>
-      <th>Valor Venda</th>
-      <th>Lucro</th>
-    </tr>`;
-
-    r.itens.forEach(v=>{
-      html += `
-      <tr>
-        <td>${v.vendedor_nome}</td>
-        <td>${v.data_venda}</td>
-        <td>R$ ${v.valor_venda}</td>
-        <td>R$ ${v.lucro}</td>
-      </tr>`;
-    });
-
-    html += "</table>";
-
-    document.getElementById("relatorioVendasProprietario").innerHTML = html;
-
-  });
-}
-
-
 function abrirAba(id){
   document.querySelectorAll(".aba").forEach(el=>{
     el.style.display = "none";
@@ -1172,7 +1199,19 @@ function carregarRelatorios(){
 
   jsonp({action:"relatorioEstoque"}, (r)=>{
 
-    if(!r.ok) return;
+   if(!r.ok) return;
+
+const filtroModelo = document.getElementById("filtro_modelo")?.value?.toLowerCase() || "";
+
+r.itens = r.itens.filter(v=>{
+  if(!filtroModelo) return true;
+  return String(v.modelo).toLowerCase().includes(filtroModelo);
+});
+
+// ordenar
+r.itens.sort((a,b)=>{
+  return String(a.modelo).localeCompare(String(b.modelo));
+});
 
     const isMobile = window.innerWidth < 768;
 
@@ -1271,7 +1310,8 @@ function fazerLogin(){
     aplicarPermissoes(PERFIL);
 
     document.getElementById("telaLogin").style.display = "none";
-document.getElementById("usuarioLogado").innerText =
+document.getElementById("usuarioHeaderMobile").innerText =
+
   "Usuário: " + (r.nome_usuario || usuario) + 
   " • Perfil: " + (r.perfil || "");
 
@@ -1446,8 +1486,155 @@ function carregarMinhasVendas(){
   });
 
 }
+function imprimirRelatorioFinal(){
+
+  const id = document.getElementById("vd_id_veiculo").value;
+  if(!id){
+    alert("Selecione o veículo.");
+    return;
+  }
+
+  jsonp({
+    action:"relatorioCompletoVeiculo",
+    id_veiculo:id
+  }, function(r){
+
+    if(!r.ok){
+      alert("Erro ao gerar relatório.");
+      return;
+    }
+
+    const loja = localStorage.getItem("nome_loja") || "";
+let html = `
+  <style>
+    body{ font-family:Arial; padding:30px; }
+    .selo{
+      position:fixed;
+      top:40%;
+      left:20%;
+      font-size:80px;
+      color:red;
+      opacity:0.15;
+      transform:rotate(-30deg);
+      font-weight:bold;
+      z-index:9999;
+      pointer-events:none;
+    }
+  </style>
+`;
+
+if(r.valor_venda && Number(r.valor_venda) > 0){
+  html += `<div class="selo">VENDIDO</div>`;
+}
+
+html += `
+  <h2 style="text-align:center;">${loja}</h2>
+  <h3 style="text-align:center;">RELATÓRIO FINAL DO VEÍCULO</h3>
+  <hr>
+  <p><b>Placa:</b> ${r.placa}</p>
+  <p><b>Marca:</b> ${r.marca}</p>
+  <p><b>Modelo:</b> ${r.modelo}</p>
+  <p><b>Valor Compra:</b> R$ ${r.valor_compra}</p>
+  <p><b>Total Despesas:</b> R$ ${r.total_despesas}</p>
+  <p><b>Valor Venda:</b> R$ ${r.valor_venda}</p>
+  <p><b>Lucro Líquido:</b> R$ ${r.lucro_liquido}</p>
+  <p><b>Comprador:</b> ${r.comprador_nome}</p>
+  <p><b>Data Venda:</b> ${r.data_venda}</p>
+`;
+
+    const w = window.open("");
+    w.document.write(html);
+    w.print();
+  });
+}
+function carregarVendasFiltradas(){
+
+  jsonp({
+    action:"relatorioVendasPorVendedor",
+
+    vendedor_filtro_id: document.getElementById("filtro_vendedor_venda").value,
+    data_inicio: document.getElementById("filtro_data_inicio_venda").value,
+    data_fim: document.getElementById("filtro_data_fim_venda").value,
+
+    filtro_placa: document.getElementById("filtro_placa_venda").value,
+    filtro_cpf: document.getElementById("filtro_cpf_venda").value
+
+  }, function(r){
+
+    if(!r.ok) return alert("Erro ao buscar vendas.");
+
+    let html = "<div class='table-wrapper'><table>";
+    html += "<tr><th>Vendedor</th><th>Placa</th><th>CPF</th><th>Data</th><th>Valor</th><th>Lucro</th></tr>";
+
+    (r.itens||[]).forEach(v=>{
+      html += `
+        <tr>
+          <td>${v.vendedor_nome}</td>
+          <td>${v.placa}</td>
+          <td>${v.cpf_comprador}</td>
+          <td>${v.data_venda}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>R$ ${v.lucro}</td>
+        </tr>
+      `;
+    });
+
+    html += "</table></div>";
+
+    document.getElementById("relatorioVendasFiltrado").innerHTML = html;
+  });
+}
+function carregarVendasProprietarioFiltradas(){
+
+  jsonp({
+    action:"relatorioVendasPorVendedor",
+
+    vendedor_filtro_id: document.getElementById("pr_filtro_vendedor_venda").value,
+    data_inicio: document.getElementById("pr_data_inicio_venda").value,
+    data_fim: document.getElementById("pr_data_fim_venda").value,
+
+    filtro_placa: document.getElementById("pr_filtro_placa_venda").value,
+    filtro_cpf: document.getElementById("pr_filtro_cpf_venda").value
+
+  }, function(r){
+
+    if(!r.ok) return alert("Erro ao buscar vendas.");
+
+    let html = "<div class='table-wrapper'><table>";
+    html += "<tr><th>Vendedor</th><th>Placa</th><th>CPF</th><th>Data</th><th>Valor</th><th>Lucro</th></tr>";
+
+    (r.itens||[]).forEach(v=>{
+      html += `
+        <tr>
+          <td>${v.vendedor_nome}</td>
+          <td>${v.placa}</td>
+          <td>${v.cpf_comprador}</td>
+          <td>${v.data_venda}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>R$ ${v.lucro}</td>
+        </tr>
+      `;
+    });
+
+    html += "</table></div>";
+    document.getElementById("relatorioVendasProprietario").innerHTML = html;
+
+  });
+}
 
 </script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
+<nav class="bottom-nav">
+  <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
+  <div onclick="abrirAba('abaDespesas')">💰<span>Despesas</span></div>
+  <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
+  <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
+</nav>
+
 
 </body>
 </html>
