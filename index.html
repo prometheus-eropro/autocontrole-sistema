@@ -29,20 +29,42 @@ body{
 
 /* ===== RESPONSIVO MOBILE ===== */
 @media(max-width:768px){
+
   .container{
-    max-width:500px;
-    padding:16px;
+    max-width:100%;
+    padding:14px;
   }
+
+  .menu-grid{
+    grid-template-columns:1fr;
+  }
+
+  .menu-btn{
+    padding:18px;
+    font-size:16px;
+  }
+
+  .card{
+    padding:20px;
+  }
+
 }
 
+
 /* ===== CARD ===== */
-.card{
-  background:#ffffff;
-  padding:22px;
-  border-radius:20px;
-  margin-bottom:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
+.card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  transition: 0.3s;
 }
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
 
 /* ===== HEADER ===== */
 h1{
@@ -67,20 +89,21 @@ small{
 }
 
 .menu-btn{
-  background:linear-gradient(135deg,#2563eb,#1e40af);
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:#fff;
-  padding:20px 12px;
-  border-radius:18px;
+  padding:22px 15px;
+  border-radius:20px;
   text-align:center;
   font-weight:600;
-  font-size:15px;
+  font-size:16px;
   cursor:pointer;
-  transition:.2s;
-  box-shadow:0 6px 18px rgba(0,0,0,.15);
+  transition:.3s;
+  box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
 
 .menu-btn:hover{
-  transform:translateY(-3px);
+  transform:translateY(-6px);
+  box-shadow:0 15px 30px rgba(0,0,0,.18);
 }
 
 /* ===== INPUTS ===== */
@@ -254,40 +277,71 @@ Tecnologia com ConsciêncIA gera resultado
 </div>
 
 <!-- CAPA (TELA INICIAL) -->
-<div id="capa" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;">
-  <div style="max-width:780px;width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;">
-    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-        <img src="logo.png" 
-     style="width:70px;border-radius:12px;">
+<div id="capa" style="
+position:fixed;
+inset:0;
+background:#0b1220;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+padding:20px;
+">
 
-      </div>
-      <div>
-        <div style="font-size:28px;font-weight:800;line-height:1.1;">AutoControle</div>
-        <div style="opacity:.85;margin-top:4px;">Sistema de Gestão Veicular</div>
-<div style="margin-top:8px;font-size:14px;opacity:.85;">
-Tecnologia com ConsciêncIA gera resultado
-</div>
+  <div style="
+    width:100%;
+    max-width:420px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:22px;
+    padding:30px;
+    text-align:center;
+  ">
 
-      </div>
+    <img src="logo.png" style="width:90px;margin-bottom:15px;border-radius:15px;">
+
+    <h1 style="margin:0;font-size:26px;">AutoControle</h1>
+
+    <div style="opacity:.85;margin-top:4px;">
+      Sistema de Gestão Veicular
     </div>
 
-    <div style="margin-top:18px;opacity:.92;line-height:1.6;">
-      <b>Criado por:</b> PROMETHEUS EROPRO Soluções Inteligentes LTDA<br>
-      <b>Responsável:</b> Edgar Rocha Oliveira<br>
-      <b>Contato:</b> 28 99969-2303 • assistentes.prometheus@gmail.com
+    <div style="margin-top:10px;font-size:14px;opacity:.8;">
+      Tecnologia com ConsciêncIA gera resultado
     </div>
 
-    <button onclick="entrarSistema()" style="margin-top:18px;width:100%;background:#16a34a;border:none;color:#fff;padding:14px;border-radius:12px;font-weight:800;cursor:pointer;">
+    <hr style="margin:20px 0;border-color:rgba(255,255,255,.15);">
+
+    <div style="font-size:14px;line-height:1.6;">
+      <b>PROMETHEUS EROPRO</b><br>
+      Edgar Rocha Oliveira<br>
+      28 99969-2303<br>
+      assistentes.prometheus@gmail.com
+    </div>
+
+    <button onclick="entrarSistema()" style="
+      margin-top:20px;
+      width:100%;
+      background:#16a34a;
+      border:none;
+      color:#fff;
+      padding:14px;
+      border-radius:14px;
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+    ">
       Entrar no Sistema
     </button>
 
-    <div style="margin-top:10px;font-size:12px;opacity:.7;">
+    <div style="margin-top:10px;font-size:12px;opacity:.6;">
       Última atualização: <span id="capaAtualizacao"></span>
     </div>
+
   </div>
 </div>
-
-
+      
 <div class="container">
 <div class="card" style="margin-bottom:20px;text-align:center;">
 <img src="logo.png" 
@@ -323,7 +377,8 @@ Tecnologia com ConsciêncIA gera resultado
 <!-- =======================
   ABA VEÍCULO (ENTRADA)
 ======================= -->
-<div id="abaVeiculo" class="aba" style="display:block">
+<div id="abaVeiculo" class="aba" style="display:none">
+
   <div class="card">
 
     <h2>Entrada do Veículo</h2>
@@ -601,10 +656,6 @@ Tecnologia com ConsciêncIA gera resultado
   </div>
 </div>
 
-
-    <button onclick="imprimirRelatorio()">Imprimir</button>
-  </div>
-</div>
 <script>
 if(!localStorage.getItem("cliente_id")){
   document.getElementById("telaLogin").style.display = "flex";
@@ -1205,7 +1256,7 @@ function fazerLogin(){
     }
 
     CLIENTE_ID = r.cliente_id;
-    PERFIL = r.perfil;
+    PERFIL = String(r.perfil || "").toUpperCase();
 
     // salva no navegador
     localStorage.setItem("cliente_id", CLIENTE_ID);
@@ -1308,26 +1359,35 @@ window.addEventListener("offline", atualizarStatusInternet);
 window.addEventListener("DOMContentLoaded", atualizarStatusInternet);
 function aplicarPermissoes(perfil){
 
-  // ADMIN e PROPRIETARIO = acesso total
+  perfil = String(perfil || "").toUpperCase();
+
+  // RESET TOTAL
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    btn.style.display = "block";
+  });
+
   if(perfil === "ADMIN" || perfil === "PROPRIETARIO"){
     return;
   }
 
-  // VENDEDOR
   if(perfil === "VENDEDOR"){
-    esconderAba("abaDespesas");
     esconderAba("abaProprietario");
   }
 
-  // ESTOQUE
   if(perfil === "ESTOQUE"){
+
     esconderAba("abaVeiculo");
     esconderAba("abaDespesas");
     esconderAba("abaVenda");
     esconderAba("abaProprietario");
     esconderAba("abaMinhasVendas");
-  }
 
+    document.querySelectorAll(".aba").forEach(el=>{
+      el.style.display = "none";
+    });
+
+    abrirAba("abaRelatorio");
+  }
 }
 function esconderBotaoMenu(texto){
 
