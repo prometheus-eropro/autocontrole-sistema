@@ -230,7 +230,21 @@ Online
 
 <div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
   <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
-    <h2>Login AutoControle</h2>
+<img src="logo-prometheus.png" 
+     style="width:120px;margin-bottom:15px;display:block;margin:auto;">
+
+    <h2 style="text-align:center;margin-bottom:5px;">
+AutoControle
+</h2>
+
+<div style="text-align:center;font-size:14px;opacity:.8;margin-bottom:15px;">
+Sistema Profissional de Gestão Veicular
+</div>
+
+<p style="text-align:center;font-size:13px;opacity:.7;">
+Tecnologia com ConsciêncIA gera resultado
+</p>
+
     <input id="login_usuario" placeholder="Usuário" autocomplete="username">
 
     <input id="login_senha" type="password" placeholder="Senha" autocomplete="current-password">
@@ -243,12 +257,17 @@ Online
 <div id="capa" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;">
   <div style="max-width:780px;width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;">
     <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-      <div style="width:56px;height:56px;border-radius:14px;background:#16a34a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;">
-        AC
+        <img src="logo-prometheus.png" 
+     style="width:70px;border-radius:12px;">
+
       </div>
       <div>
         <div style="font-size:28px;font-weight:800;line-height:1.1;">AutoControle</div>
         <div style="opacity:.85;margin-top:4px;">Sistema de Gestão Veicular</div>
+<div style="margin-top:8px;font-size:14px;opacity:.85;">
+Tecnologia com ConsciêncIA gera resultado
+</div>
+
       </div>
     </div>
 
@@ -271,6 +290,8 @@ Online
 
 <div class="container">
 <div class="card" style="margin-bottom:20px;text-align:center;">
+<img src="logo-prometheus.png" 
+     style="width:60px;margin-bottom:10px;">
   
   <h1 style="margin:0;font-size:26px;">
     AutoControle — Sistema de Gestão Veicular
@@ -278,6 +299,7 @@ Online
 
   <h2 id="nomeLojaTopo" style="margin:8px 0 4px 0;font-size:20px;color:#16a34a;">
   </h2>
+  <h3 id="usuarioLogado" style="margin:6px 0;color:#2563eb;font-weight:600;"></h3>
 
   <small style="font-size:14px;color:#64748b;">
     Tecnologia com ConsciêncIA gera resultado
@@ -291,6 +313,9 @@ Online
   <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
   <div class="menu-btn" onclick="abrirAba('abaProprietario')">📊 Proprietário</div>
   <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
+  <div class="menu-btn" onclick="abrirAba('abaMinhasVendas')">
+  📌 Minhas Vendas
+</div>
 
 
 </div>
@@ -564,8 +589,18 @@ Online
   <div class="card">
     <h2>Relatório de Estoque</h2>
     <div class="table-wrapper">
-  <div id="relatorioEstoque"></div>
+      <div id="relatorioEstoque"></div>
+    </div>
+    <button onclick="imprimirRelatorio()">Imprimir</button>
+  </div>
 </div>
+<div id="abaMinhasVendas" class="aba" style="display:none;">
+  <div class="card">
+    <h2>Minhas Vendas</h2>
+    <div id="relatorioMinhasVendas"></div>
+  </div>
+</div>
+
 
     <button onclick="imprimirRelatorio()">Imprimir</button>
   </div>
@@ -597,6 +632,10 @@ function jsonp(params, callback){
   if(PERFIL){
     params.perfil = PERFIL;
   }
+const nomeUsuario = localStorage.getItem("nome_usuario");
+if(nomeUsuario){
+  params.nome_usuario = nomeUsuario;
+}
 
   const vendedorLogado = localStorage.getItem("vendedor_loja_id");
   if(vendedorLogado){
@@ -1065,6 +1104,10 @@ function abrirAba(id){
   if(id === "abaRelatorio"){
     carregarRelatorios();
   }
+if(id === "abaMinhasVendas"){
+  carregarMinhasVendas();
+}
+
 }
 
 function imprimirRelatorio(){
@@ -1168,10 +1211,15 @@ function fazerLogin(){
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
     localStorage.setItem("nome_loja", r.nome_loja || "");
+    localStorage.setItem("nome_usuario", r.nome_usuario);
 
     aplicarPermissoes(PERFIL);
 
     document.getElementById("telaLogin").style.display = "none";
+document.getElementById("usuarioLogado").innerText =
+  "Usuário: " + (r.nome_usuario || usuario) + 
+  " • Perfil: " + (r.perfil || "");
+
     document.getElementById("nomeLojaTopo").innerText = r.nome_loja || "";
 
     carregarListas();
@@ -1260,19 +1308,27 @@ window.addEventListener("offline", atualizarStatusInternet);
 window.addEventListener("DOMContentLoaded", atualizarStatusInternet);
 function aplicarPermissoes(perfil){
 
-  if(perfil === "ESTOQUE"){
-    esconderBotaoMenu("🚗 Veículo");
-    esconderBotaoMenu("💰 Despesas");
-    esconderBotaoMenu("📝 Venda");
-    esconderBotaoMenu("📊 Proprietário");
+  // ADMIN e PROPRIETARIO = acesso total
+  if(perfil === "ADMIN" || perfil === "PROPRIETARIO"){
+    return;
   }
 
+  // VENDEDOR
   if(perfil === "VENDEDOR"){
-    esconderBotaoMenu("📊 Proprietário");
+    esconderAba("abaDespesas");
+    esconderAba("abaProprietario");
+  }
+
+  // ESTOQUE
+  if(perfil === "ESTOQUE"){
+    esconderAba("abaVeiculo");
+    esconderAba("abaDespesas");
+    esconderAba("abaVenda");
+    esconderAba("abaProprietario");
+    esconderAba("abaMinhasVendas");
   }
 
 }
-
 function esconderBotaoMenu(texto){
 
   const botoes = document.querySelectorAll(".menu-btn");
@@ -1287,6 +1343,44 @@ function esconderBotaoMenu(texto){
 function mostrar(id){
   const el = document.getElementById(id);
   if(el) el.style.display = "block";
+}
+function esconderAba(id){
+
+  const btns = document.querySelectorAll(".menu-btn");
+
+  btns.forEach(btn=>{
+    if(btn.getAttribute("onclick").includes(id)){
+      btn.style.display = "none";
+    }
+  });
+
+}
+function carregarMinhasVendas(){
+
+  jsonp({action:"relatorioMinhasVendas"}, function(r){
+
+    if(!r.ok) return;
+
+    let html = "<table>";
+    html += "<tr><th>Data</th><th>Veículo</th><th>Valor</th><th>Lucro</th></tr>";
+
+    r.itens.forEach(v=>{
+      html += `
+        <tr>
+          <td>${v.data_venda}</td>
+          <td>${v.placa}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>R$ ${v.lucro}</td>
+        </tr>
+      `;
+    });
+
+    html += "</table>";
+
+    document.getElementById("relatorioMinhasVendas").innerHTML = html;
+
+  });
+
 }
 
 </script>
