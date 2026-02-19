@@ -289,8 +289,9 @@ Online
   <div class="menu-btn" onclick="abrirAba('abaVeiculo')">🚗 Veículo</div>
   <div class="menu-btn" onclick="abrirAba('abaDespesas')">💰 Despesas</div>
   <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
-  <div class="menu-btn" onclick="acessarProprietario()">📊 Proprietário</div>
-  <div class="menu-btn" onclick="acessarRelatorio()">📑 Relatórios</div>
+  <div class="menu-btn" onclick="abrirAba('abaProprietario')">📊 Proprietário</div>
+  <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
+
 
 </div>
 
@@ -339,11 +340,16 @@ Online
       <input id="p_endereco" placeholder="Endereço" style="grid-column:1/-1;">
       <input id="p_cidade" placeholder="Cidade">
       <input id="p_estado" placeholder="UF">
-      <input id="p_inicio" type="date">
+      <div>
+  <label>Data de Entrada no Estoque</label>
+  <input id="p_inicio" type="date">
+</div>
+
     </div>
 
     <hr>
-    <div class="badge">Vendedor Anterior</div>
+    <div class="badge">Vendedor do Veículo (Quem vendeu para a loja)</div>
+
     <div class="grid">
       <input id="va_nome" placeholder="Nome">
       <input id="va_doc" placeholder="CPF/CNPJ">
@@ -588,21 +594,27 @@ function jsonp(params, callback){
     params.cliente_id = CLIENTE_ID;
   }
 
+  if(PERFIL){
+    params.perfil = PERFIL;
+  }
 
-  const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*1000);
+  const vendedorLogado = localStorage.getItem("vendedor_loja_id");
+  if(vendedorLogado){
+    params.vendedor_loja_id = vendedorLogado;
+  }
+
+  const cbName = "cb_" + Date.now();
+  window[cbName] = function(data){
+    callback(data);
+    delete window[cbName];
+    script.remove();
+  };
+
   params.callback = cbName;
 
   const query = new URLSearchParams(params).toString();
   const script = document.createElement("script");
-
-  window[cbName] = function(data){
-    callback(data);
-    delete window[cbName];
-    document.body.removeChild(script);
-  };
-
   script.src = GAS_URL + "?" + query;
-
   document.body.appendChild(script);
 }
 function setSelect(el, items, placeholder){
@@ -1043,18 +1055,6 @@ function carregarRelatorioVendasFiltrado(){
   });
 }
 
-function acessarProprietario(){
-  const senha = prompt("Informe a senha do proprietário:");
-  if(!senha) return;
-
-  jsonp({action:"validarSenhaProprietario", senha}, (r)=>{
-    if(r.ok){
-      abrirAba('abaProprietario');
-    } else {
-      alert("Senha incorreta.");
-    }
-  });
-}
 
 function abrirAba(id){
   document.querySelectorAll(".aba").forEach(el=>{
@@ -1160,24 +1160,10 @@ if(r.ok){
 
   CLIENTE_ID = r.cliente_id;
   PERFIL = r.perfil;
+aplicarPermissoes(PERFIL);
 
-  localStorage.setItem("cliente_id", r.cliente_id);
-  localStorage.setItem("nome_loja", r.nome_loja || "AutoControle");
 
-  document.getElementById("nomeLojaTopo").innerText =
-  r.nome_loja || "Loja";
-
-  document.getElementById("telaLogin").style.display = "none";
-
-  carregarListas();
-    } else {
-      alert(r.msg || "Erro login");
-    }
-
-  });
-}
 // ===== RESTORE AUTOMÁTICO COMPLETO =====
-window.addEventListener("DOMContentLoaded", function(){
 
   const clienteSalvo = localStorage.getItem("cliente_id");
   const nomeSalvo = localStorage.getItem("nome_loja");
@@ -1272,19 +1258,24 @@ function atualizarStatusInternet(){
 window.addEventListener("online", atualizarStatusInternet);
 window.addEventListener("offline", atualizarStatusInternet);
 window.addEventListener("DOMContentLoaded", atualizarStatusInternet);
-function acessarRelatorio(){
+function aplicarPermissoes(perfil){
 
-  const senha = prompt("Informe a senha para visualizar o estoque:");
-  if(!senha) return;
+  if(perfil === "ESTOQUE"){
+    esconderBotaoMenu("🚗 Veículo");
+    esconderBotaoMenu("💰 Despesas");
+    esconderBotaoMenu("📝 Venda");
+    esconderBotaoMenu("📊 Proprietário");
+  }
 
-  jsonp({action:"validarSenhaEstoque", senha}, (r)=>{
-    if(r.ok){
-      abrirAba('abaRelatorio');
-    } else {
-      alert("Senha incorreta.");
-    }
-  });
+  if(perfil === "VENDEDOR"){
+    esconderBotaoMenu("📊 Proprietário");
+  }
 
+}
+
+function mostrar(id){
+  const el = document.getElementById(id);
+  if(el) el.style.display = "block";
 }
 
 </script>
