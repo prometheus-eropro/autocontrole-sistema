@@ -420,7 +420,9 @@ padding:20px;
   <div class="menu-btn" onclick="abrirAba('abaProprietario')">📊 Proprietário</div>
   <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
   <div class="menu-btn" onclick="abrirAba('abaMinhasVendas')">
-  📌 Minhas Vendas
+  📌 Minhas Vendas</div>
+<div class="menu-btn" onclick="abrirAba('abaMinhasCompras')">
+📦 Minhas Compras
 </div>
 
 
@@ -728,7 +730,7 @@ style="background:#0f172a;">
   <div id="relatorioVendasProprietario"></div>
 </div>
     <h3>Relatório de Vendas por Vendedor</h3>
-    <div id="relatorioVendasProprietario"></div>
+<div id="relatorioVendasPorVendedorProprietario"></div>
 
   </div>
 </div>
@@ -798,6 +800,30 @@ style="background:#0f172a;">
 
   </div>
 </div>
+<!-- =======================
+  ABA MINHAS VENDAS
+======================= -->
+<div id="abaMinhasVendas" class="aba" style="display:none;">
+  <div class="card">
+
+    <h2>Minhas Vendas</h2>
+    <small>Vendas realizadas pelo usuário logado.</small>
+
+    <div class="table-wrapper">
+      <div id="relatorioMinhasVendas"></div>
+    </div>
+
+  </div>
+</div>
+<div id="abaMinhasCompras" class="aba" style="display:none;">
+  <div class="card">
+    <h2>Minhas Compras</h2>
+    <div class="table-wrapper">
+      <div id="relatorioMinhasCompras"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 if(!localStorage.getItem("cliente_id")){
   document.getElementById("telaLogin").style.display = "flex";
@@ -1276,38 +1302,37 @@ let html = "<div class='table-wrapper'><table>";
 
     html += "</table></div>";
 
-    document.getElementById("relatorioVendasProprietario").innerHTML = html;
+    document.getElementById("relatorioVendasPorVendedorProprietario").innerHTML = html;
   });
 }
 function abrirAba(id){
-
-  if(id === "abaProprietario" && PERFIL !== "PROPRIETARIO"){
-    alert("Acesso restrito ao proprietário.");
-    return;
-  }
-
-  if(id === "abaVeiculo" && PERFIL === "VENDEDOR"){
-    alert("Vendedor não pode cadastrar entrada.");
-    return;
-  }
-
-  if(id === "abaDespesas" && PERFIL === "VENDEDOR"){
-    alert("Vendedor não pode lançar despesas.");
-    return;
-  }
 
   document.querySelectorAll(".aba").forEach(el=>{
     el.style.display = "none";
   });
 
-  document.getElementById(id).style.display = "block";
+  const aba = document.getElementById(id);
+  if(!aba){
+    console.warn("Aba não encontrada:", id);
+    return;
+  }
+
+  aba.style.display = "block";
+
+  if(id === "abaMinhasVendas"){
+    carregarMinhasVendas();
+  }
+
+  if(id === "abaMinhasCompras"){
+    carregarMinhasCompras();
+  }
 
   if(id === "abaRelatorio"){
     carregarRelatorios();
   }
 
-  if(id === "abaMinhasVendas"){
-    carregarMinhasVendas();
+  if(id === "abaProprietario"){
+    carregarPainelProprietario();
   }
 }
 function imprimirRelatorio(){
@@ -1599,11 +1624,20 @@ function aplicarPermissoes(perfil){
   // =========================
   if(perfil === "VENDEDOR"){
 
-    mostrarMenu("abaVenda");
-    mostrarMenu("abaRelatorio");
-    mostrarMenu("abaMinhasVendas");
-    return;
+  mostrarMenu("abaVenda");
+  mostrarMenu("abaRelatorio");
+  mostrarMenu("abaMinhasVendas");
+  mostrarMenu("abaMinhasCompras");
+
+  esconderMenuPorAba("abaProprietario");
+
+  const blocoVendas = document.getElementById("blocoVendasRelatorio");
+  if(blocoVendas){
+    blocoVendas.style.display = "none";
   }
+
+  return;
+}
 
   // =========================
   // ESTOQUE (SOMENTE ESTOQUE)
@@ -1940,6 +1974,33 @@ function logout(){
   document.getElementById("telaLogin").style.display = "none";
 
 }
+function carregarMinhasCompras(){
+
+  jsonp({action:"relatorioMinhasCompras"}, function(r){
+
+    if(!r.ok) return;
+
+    let html = "<table>";
+    html += "<tr><th>Data</th><th>Placa</th><th>Valor Compra</th></tr>";
+
+    r.itens.forEach(v=>{
+      html += `
+        <tr>
+          <td>${v.data_entrada}</td>
+          <td>${v.placa}</td>
+          <td>R$ ${v.valor_compra}</td>
+        </tr>
+      `;
+    });
+
+    html += "</table>";
+
+    document.getElementById("relatorioMinhasCompras").innerHTML = html;
+
+  });
+
+}
+
 </script>
 <nav class="bottom-nav">
 
@@ -1948,7 +2009,8 @@ function logout(){
   <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
   <div onclick="abrirAba('abaRelatorio')">📑<span>Estoque</span></div>
   <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
-  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Minhas</span></div>
+  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Vendas</span></div>
+  <div onclick="abrirAba('abaMinhasCompras')">📦<span>Compras</span></div>
 
 </nav>
 
