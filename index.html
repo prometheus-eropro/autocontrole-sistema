@@ -708,7 +708,10 @@ style="background:#0f172a;">
   <div class="card">
     <h2>Relatório de Estoque</h2>
 <hr>
-<h3>Relatório de Vendas</h3>
+
+<div id="resultadoEstoque"></div>
+
+<h2 style="margin-top:30px;">Relatório de Vendas</h2>
 
 <div class="grid" style="margin-bottom:15px;">
   <select id="filtro_vendedor_venda">
@@ -1278,20 +1281,53 @@ r.itens.sort((a,b)=>{
 
     if(isMobile){
 
-      r.itens.forEach(v=>{
-        html += `
-          <div class="card" style="margin-bottom:15px;">
-            <b>${v.placa}</b><br>
-            ${v.marca} ${v.modelo}<br>
-            Ano: ${v.ano_fabricacao}/${v.ano_modelo}<br>
-            Cor: ${v.cor}<br>
-            Tipo: ${v.tipo_veiculo}<br>
-            Valor Venda: R$ ${v.valor_venda}<br>
-            Entrada: ${v.data_entrada}
-          </div>
-        `;
-      });
+  r.itens.forEach((v, index)=>{
 
+    html += `
+      <div style="
+        border-bottom:1px solid #e2e8f0;
+        padding:12px 5px;
+        font-size:14px;
+      ">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-weight:600;">
+            ${v.placa} — ${v.modelo}
+          </div>
+
+          <div style="color:#16a34a;font-weight:600;">
+            R$ ${Number(v.valor_venda).toLocaleString('pt-BR')}
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:#64748b;margin-top:3px;">
+          ${v.ano_fabricacao}/${v.ano_modelo} • ${v.cor}
+        </div>
+
+        <div style="margin-top:6px;">
+          <button onclick="toggleDetalheEstoque(${index})"
+            style="
+              background:#16a34a;
+              color:white;
+              border:none;
+              padding:5px 10px;
+              border-radius:6px;
+              font-size:12px;
+            ">
+            Ver detalhes
+          </button>
+        </div>
+
+        <div id="detalhe_${index}" style="display:none;margin-top:10px;font-size:13px;color:#334155;">
+          <b>Tipo:</b> ${v.tipo_veiculo}<br>
+          <b>Data Entrada:</b> ${v.data_entrada}
+        </div>
+
+      </div>
+    `;
+  });
+
+}
     } else {
 
       html = "<table>";
@@ -1332,6 +1368,20 @@ r.itens.sort((a,b)=>{
 
   });
 }
+
+function toggleDetalheEstoque(index){
+
+  const el = document.getElementById("detalhe_" + index);
+
+  if(el.style.display === "none"){
+    el.style.display = "block";
+  } else {
+    el.style.display = "none";
+  }
+
+}
+
+
 function abrirFichaBranca(){
   window.open("ficha_branca.html", "_blank");
 }
