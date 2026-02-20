@@ -298,6 +298,7 @@ tr:nth-child(even){
   ">
   ⚠️ Você está em modo OFFLINE. Dados serão sincronizados quando a internet voltar.
   </div>
+<div onclick="logout()" style="cursor:pointer;">🚪 Sair</div>
 
 </header>
 <div id="statusInternet"></div>
@@ -919,8 +920,17 @@ setSelect(
 });
 } // <-- FECHA carregarListas()
 function entrarSistema(){
+
   document.getElementById("capa").style.display = "none";
+
+  const clienteSalvo = localStorage.getItem("cliente_id");
+
+  if(!clienteSalvo){
+    document.getElementById("telaLogin").style.display = "flex";
+  }
+
 }
+
 
 (function(){
   const d = new Date();
@@ -1874,20 +1884,39 @@ window.addEventListener("DOMContentLoaded", function(){
   const clienteSalvo = localStorage.getItem("cliente_id");
   const perfilSalvo = localStorage.getItem("perfil");
 
+  // Sempre começa mostrando capa
+  document.getElementById("capa").style.display = "flex";
+
   if(clienteSalvo && perfilSalvo){
 
     CLIENTE_ID = clienteSalvo;
     PERFIL = perfilSalvo;
 
+    // Esconde login
     document.getElementById("telaLogin").style.display = "none";
 
     aplicarPermissoes(PERFIL);
     carregarListas();
 
+  } else {
+
+    // Se não tiver sessão, quando clicar em entrar, abre login
+    document.getElementById("telaLogin").style.display = "none";
+
   }
 
 });
+function logout(){
 
+  localStorage.clear();
+
+  CLIENTE_ID = "";
+  PERFIL = "";
+
+  document.getElementById("capa").style.display = "flex";
+  document.getElementById("telaLogin").style.display = "none";
+
+}
 </script>
 <nav class="bottom-nav">
 
