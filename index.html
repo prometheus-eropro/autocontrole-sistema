@@ -251,6 +251,20 @@ tr:nth-child(even){
 .offline{
   animation: piscar 1s infinite;
 }
+.bottom-nav{
+  display:none;
+}
+/* ESCONDE POR PADRÃO */
+.bottom-nav{
+  display:none;
+}
+
+/* MOSTRA APENAS MOBILE */
+@media (max-width: 900px){
+  .bottom-nav{
+    display:flex;
+  }
+}
 
 </style>
 
@@ -1259,21 +1273,21 @@ function imprimirRelatorio(){
 }
 function carregarRelatorios(){
 
-  jsonp({action:"relatorioEstoque"}, (r)=>{
+  jsonp({action:"relatorioEstoque"}, function(r){
 
-   if(!r.ok) return;
+    if(!r.ok) return;
 
-const filtroModelo = document.getElementById("filtro_modelo")?.value?.toLowerCase() || "";
+    const filtroModelo = document.getElementById("filtro_modelo")?.value?.toLowerCase() || "";
 
-r.itens = r.itens.filter(v=>{
-  if(!filtroModelo) return true;
-  return String(v.modelo).toLowerCase().includes(filtroModelo);
-});
+    let itens = (r.itens || []).filter(v=>{
+      if(!filtroModelo) return true;
+      return String(v.modelo).toLowerCase().includes(filtroModelo);
+    });
 
-// ordenar
-r.itens.sort((a,b)=>{
-  return String(a.modelo).localeCompare(String(b.modelo));
-});
+    // Ordenar por modelo
+    itens.sort((a,b)=>{
+      return String(a.modelo).localeCompare(String(b.modelo));
+    });
 
     const isMobile = window.innerWidth < 768;
 
@@ -1281,52 +1295,79 @@ r.itens.sort((a,b)=>{
 
     if(isMobile){
 
-  r.itens.forEach((v, index)=>{
+      itens.forEach((v,index)=>{
 
-    html += `
-      <div style="
-        border-bottom:1px solid #e2e8f0;
-        padding:12px 5px;
-        font-size:14px;
-      ">
+        html += `
+          <div style="border-bottom:1px solid #e2e8f0;padding:12px 5px;font-size:14px;">
 
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-weight:600;">
-            ${v.placa} — ${v.modelo}
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-weight:600;">
+                ${v.placa} — ${v.modelo}
+              </div>
+
+              <div style="color:#16a34a;font-weight:600;">
+                R$ ${Number(v.valor_venda || 0).toLocaleString('pt-BR')}
+              </div>
+            </div>
+
+            <div style="font-size:12px;color:#64748b;margin-top:3px;">
+              ${v.ano_fabricacao || ""}/${v.ano_modelo || ""} • ${v.cor || ""}
+            </div>
+
+            <div style="margin-top:6px;">
+              <button onclick="toggleDetalheEstoque(${index})"
+                style="background:#16a34a;color:white;border:none;padding:5px 10px;border-radius:6px;font-size:12px;">
+                Ver detalhes
+              </button>
+            </div>
+
+            <div id="detalhe_${index}" style="display:none;margin-top:10px;font-size:13px;color:#334155;">
+              <b>Tipo:</b> ${v.tipo_veiculo || ""}<br>
+              <b>Data Entrada:</b> ${v.data_entrada || ""}
+            </div>
+
           </div>
+        `;
+      });
 
-          <div style="color:#16a34a;font-weight:600;">
-            R$ ${Number(v.valor_venda).toLocaleString('pt-BR')}
-          </div>
-        </div>
+        <div class="table-wrapper">
+        <table>
+          <tr>
+            <th>Placa</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Ano Fab</th>
+            <th>Ano Mod</th>
+            <th>Cor</th>
+            <th>Tipo</th>
+            <th>Valor Venda</th>
+            <th>Data Entrada</th>
+          </tr>
+      `;
 
-        <div style="font-size:12px;color:#64748b;margin-top:3px;">
-          ${v.ano_fabricacao}/${v.ano_modelo} • ${v.cor}
-        </div>
+      itens.forEach(v=>{
+        html += `
+          <tr>
+            <td>${v.placa}</td>
+            <td>${v.marca}</td>
+            <td>${v.modelo}</td>
+            <td>${v.ano_fabricacao || ""}</td>
+            <td>${v.ano_modelo || ""}</td>
+            <td>${v.cor || ""}</td>
+            <td>${v.tipo_veiculo || ""}</td>
+            <td>R$ ${Number(v.valor_venda || 0).toLocaleString('pt-BR')}</td>
+            <td>${v.data_entrada || ""}</td>
+          </tr>
+        `;
+      });
 
-        <div style="margin-top:6px;">
-          <button onclick="toggleDetalheEstoque(${index})"
-            style="
-              background:#16a34a;
-              color:white;
-              border:none;
-              padding:5px 10px;
-              border-radius:6px;
-              font-size:12px;
-            ">
-            Ver detalhes
-          </button>
-        </div>
+      html += "</table></div>";
+    }
 
-        <div id="detalhe_${index}" style="display:none;margin-top:10px;font-size:13px;color:#334155;">
-          <b>Tipo:</b> ${v.tipo_veiculo}<br>
-          <b>Data Entrada:</b> ${v.data_entrada}
-        </div>
+    document.getElementById("relatorioEstoque").innerHTML = html;
 
-      </div>
-    `;
   });
-
+}
     } else {
 
       html = "<table>";
@@ -1599,61 +1640,115 @@ function carregarMinhasVendas(){
 function imprimirRelatorioFinal(){
 
   const id = document.getElementById("vd_id_veiculo").value;
-  if(!id){
-    alert("Selecione o veículo.");
-    return;
-  }
+  if(!id) return alert("Selecione o veículo.");
 
-  jsonp({
-    action:"relatorioCompletoVeiculo",
-    id_veiculo:id
-  }, function(r){
+  jsonp({ action:"relatorioCompletoVeiculo", id_veiculo:id }, function(r){
 
-    if(!r.ok){
-      alert("Erro ao gerar relatório.");
-      return;
-    }
+    if(!r.ok) return alert("Erro ao gerar relatório.");
 
     const loja = localStorage.getItem("nome_loja") || "";
-let html = `
-  <style>
-    body{ font-family:Arial; padding:30px; }
-    .selo{
-      position:fixed;
-      top:40%;
-      left:20%;
-      font-size:80px;
-      color:red;
-      opacity:0.15;
-      transform:rotate(-30deg);
-      font-weight:bold;
-      z-index:9999;
-      pointer-events:none;
+    const sistema = "AutoControle — Sistema de Gestão Veicular";
+
+    let despesasHtml = "";
+
+    if(r.despesas.length > 0){
+
+      despesasHtml += `
+      <h3>DESPESAS DO VEÍCULO</h3>
+      <table border="1" cellspacing="0" cellpadding="6" width="100%">
+        <tr>
+          <th>Data</th>
+          <th>Tipo</th>
+          <th>Descrição</th>
+          <th>Valor</th>
+        </tr>`;
+
+      r.despesas.forEach(d=>{
+        despesasHtml += `
+        <tr>
+          <td>${d.data}</td>
+          <td>${d.tipo}</td>
+          <td>${d.descricao}</td>
+          <td>R$ ${d.valor}</td>
+        </tr>`;
+      });
+
+      despesasHtml += `</table>`;
     }
-  </style>
-`;
 
-if(r.valor_venda && Number(r.valor_venda) > 0){
-  html += `<div class="selo">VENDIDO</div>`;
-}
+    let html = `
+    <html>
+    <head>
+      <title>Relatório Final</title>
+      <style>
+        body{ font-family:Arial; padding:30px; }
+        h2,h3{ text-align:center; }
+        hr{ margin:15px 0; }
+        table{ margin-top:10px; }
+      </style>
+    </head>
+    <body>
 
-html += `
-  <h2 style="text-align:center;">${loja}</h2>
-  <h3 style="text-align:center;">RELATÓRIO FINAL DO VEÍCULO</h3>
-  <hr>
-  <p><b>Placa:</b> ${r.placa}</p>
-  <p><b>Marca:</b> ${r.marca}</p>
-  <p><b>Modelo:</b> ${r.modelo}</p>
-  <p><b>Valor Compra:</b> R$ ${r.valor_compra}</p>
-  <p><b>Total Despesas:</b> R$ ${r.total_despesas}</p>
-  <p><b>Valor Venda:</b> R$ ${r.valor_venda}</p>
-  <p><b>Lucro Líquido:</b> R$ ${r.lucro_liquido}</p>
-  <p><b>Comprador:</b> ${r.comprador_nome}</p>
-  <p><b>Data Venda:</b> ${r.data_venda}</p>
-`;
+    <h2>${loja}</h2>
+    <h3>${sistema}</h3>
+    <h3>RELATÓRIO FINAL DO VEÍCULO</h3>
+    <hr>
+
+    <b>Placa:</b> ${r.placa}<br>
+    <b>Marca:</b> ${r.marca}<br>
+    <b>Modelo:</b> ${r.modelo}<br>
+    <b>Ano:</b> ${r.ano_fabricacao}/${r.ano_modelo}<br>
+    <b>Cor:</b> ${r.cor}<br>
+
+    <hr>
+
+    <b>Valor Compra:</b> R$ ${r.valor_compra}<br>
+    <b>Total Despesas:</b> R$ ${r.total_despesas}<br>
+    <b>Valor Venda:</b> R$ ${r.valor_venda}<br>
+    <b>Lucro Líquido:</b> R$ ${r.lucro_liquido}<br>
+
+    ${despesasHtml}
+
+    <hr>
+
+    <h3>DADOS DA VENDA</h3>
+
+    <b>Data:</b> ${r.data_venda}<br>
+    <b>Forma Pagamento:</b> ${r.forma_pagamento}<br>
+    <b>Condição:</b> ${r.condicao_pagamento}<br>
+    <b>Entrada:</b> R$ ${r.entrada}<br>
+    <b>Parcelas:</b> ${r.numero_parcelas}<br>
+    <b>Banco:</b> ${r.banco}<br>
+
+    <hr>
+
+    <h3>COMISSÃO</h3>
+
+    <b>Vendedor:</b> ${r.vendedor_nome}<br>
+    <b>Tipo:</b> ${r.tipo_comissao}<br>
+    <b>%:</b> ${r.percentual_comissao}<br>
+    <b>Valor:</b> R$ ${r.valor_comissao}<br>
+
+    <hr>
+
+    <h3>COMPRADOR</h3>
+
+    <b>Nome:</b> ${r.comprador_nome}<br>
+    <b>CPF/CNPJ:</b> ${r.comprador_doc}<br>
+    <b>Telefone:</b> ${r.comprador_telefone}<br>
+
+    <br><br>
+    _______________________________<br>
+    Assinatura Responsável
+
+    </body>
+    </html>
+    `;
 
     const w = window.open("");
     w.document.write(html);
+    w.document.close();
+    w.focus();
     w.print();
   });
 }
