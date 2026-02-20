@@ -1261,14 +1261,14 @@ let html = "<div class='table-wrapper'><table>";
     </tr>`;
 
     r.itens.forEach(d=>{
-      html += `
-      <tr>
-        <td>${d.placa}</td>
-        <td>${d.data_despesa}</td>
-        <td>${d.tipo_despesa}</td>
-        <td>R$ ${d.valor_despesa}</td>
-      </tr>`;
-    });
+  html += `
+    <tr>
+      <td>${d.placa || d.veiculo || ""}</td>
+      <td>${d.data_despesa || d.data || ""}</td>
+      <td>${d.tipo_despesa || d.tipo || ""}</td>
+      <td>R$ ${d.valor_despesa || d.valor || 0}</td>
+    </tr>`;
+});
 
     html += "</table></div>";
 
