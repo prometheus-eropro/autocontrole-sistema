@@ -680,18 +680,26 @@ style="background:#0f172a;">
 
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
 
-    <hr>
+<hr>
 
-    <h3>Relatório de Estoque</h3>
-    <div id="relatorioEstoqueProprietario"></div>
+<h3 style="margin-top:10px;">Relatório de Estoque</h3>
+<div class="table-wrapper">
+  <div id="relatorioEstoqueProprietario"></div>
+</div>
 
-    <hr>
+<hr>
 
-    <h3>Relatório de Despesas</h3>
-    <div id="relatorioDespesasProprietario"></div>
+<h3 style="margin-top:10px;">Relatório de Despesas</h3>
+<div class="table-wrapper">
+  <div id="relatorioDespesasProprietario"></div>
+</div>
 
-    <hr>
-<div class="grid" style="margin-bottom:12px;">
+<hr>
+
+<h3 style="margin-top:10px;">Relatório de Vendas</h3>
+
+<div class="grid" style="margin-bottom:15px;">
+
   <select id="pr_filtro_vendedor_venda">
     <option value="">Todos os vendedores</option>
   </select>
@@ -709,9 +717,15 @@ style="background:#0f172a;">
   <input id="pr_filtro_placa_venda" placeholder="Filtrar por Placa">
   <input id="pr_filtro_cpf_venda" placeholder="Filtrar por CPF">
 
-  <button onclick="carregarVendasProprietarioFiltradas()">Filtrar Vendas</button>
+  <button onclick="carregarVendasProprietarioFiltradas()">
+    Filtrar Vendas
+  </button>
+
 </div>
 
+<div class="table-wrapper">
+  <div id="relatorioVendasProprietario"></div>
+</div>
     <h3>Relatório de Vendas por Vendedor</h3>
     <div id="relatorioVendasProprietario"></div>
 
