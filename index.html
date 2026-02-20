@@ -1901,6 +1901,34 @@ window.addEventListener("DOMContentLoaded", function(){
   }
 
 });
+function mostrarMenu(idAba){
+
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    if(btn.getAttribute("onclick")?.includes(idAba)){
+      btn.style.display = "block";
+    }
+  });
+
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    if(btn.getAttribute("onclick")?.includes(idAba)){
+      btn.style.display = "block";
+    }
+  });
+
+}
+
+function mostrarTodosMenus(){
+
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    btn.style.display = "block";
+  });
+
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    btn.style.display = "block";
+  });
+
+}
+
 function logout(){
 
   localStorage.clear();
