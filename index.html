@@ -734,52 +734,63 @@ style="background:#0f172a;">
 
 <div id="abaRelatorio" class="aba" style="display:none;">
   <div class="card">
+
+    <!-- ============================= -->
+    <!-- RELATÓRIO DE ESTOQUE -->
+    <!-- ============================= -->
     <h2>Relatório de Estoque</h2>
-<hr>
+    <hr>
 
-<div id="resultadoEstoque"></div>
+    <div class="grid" style="margin-bottom:15px;">
+      <input id="filtro_modelo" placeholder="Filtrar por Modelo">
+      <button onclick="carregarRelatorios()">Filtrar Estoque</button>
+    </div>
 
-<h2 style="margin-top:30px;">Relatório de Vendas</h2>
-
-<div class="grid" style="margin-bottom:15px;">
-  <select id="filtro_vendedor_venda">
-    <option value="">Todos os vendedores</option>
-  </select>
-
-  <div>
-    <label>Data início</label>
-    <input id="filtro_data_inicio_venda" type="date">
-  </div>
-
-  <div>
-    <label>Data fim</label>
-    <input id="filtro_data_fim_venda" type="date">
-  </div>
-
-  <input id="filtro_placa_venda" placeholder="Filtrar por Placa">
-  <input id="filtro_cpf_venda" placeholder="Filtrar por CPF">
-
-  <button onclick="carregarVendasFiltradas()">Filtrar Vendas</button>
-</div>
-
-<div id="relatorioVendasFiltrado"></div>
-
-<div class="grid" style="margin-bottom:15px;">
-  <input id="filtro_modelo" placeholder="Filtrar por Modelo">
-  <button onclick="carregarRelatorios()">Filtrar</button>
-</div>    <div class="table-wrapper">
+    <div class="table-wrapper">
       <div id="relatorioEstoque"></div>
     </div>
-    <button onclick="imprimirRelatorio()">Imprimir</button>
-  </div>
-</div>
-<div id="abaMinhasVendas" class="aba" style="display:none;">
-  <div class="card">
-    <h2>Minhas Vendas</h2>
-    <div id="relatorioMinhasVendas"></div>
-  </div>
-</div>
 
+    <button onclick="imprimirRelatorio()" style="margin-top:15px;">
+      🖨 Imprimir Estoque
+    </button>
+
+    <!-- ============================= -->
+    <!-- RELATÓRIO DE VENDAS -->
+    <!-- ============================= -->
+    <h2 style="margin-top:40px;">Relatório de Vendas</h2>
+    <hr>
+
+    <div class="grid" style="margin-bottom:15px;">
+
+      <select id="filtro_vendedor_venda">
+        <option value="">Todos os vendedores</option>
+      </select>
+
+      <div>
+        <label>Data início</label>
+        <input id="filtro_data_inicio_venda" type="date">
+      </div>
+
+      <div>
+        <label>Data fim</label>
+        <input id="filtro_data_fim_venda" type="date">
+      </div>
+
+      <input id="filtro_placa_venda" placeholder="Filtrar por Placa">
+      <input id="filtro_cpf_venda" placeholder="Filtrar por CPF">
+
+      <button onclick="carregarVendasFiltradas()">
+        Filtrar Vendas
+      </button>
+
+    </div>
+
+    <div class="table-wrapper">
+      <div id="relatorioVendasFiltrado"></div>
+    </div>
+
+  </div>
+</div>
 <script>
 if(!localStorage.getItem("cliente_id")){
   document.getElementById("telaLogin").style.display = "flex";
@@ -1140,7 +1151,10 @@ function carregarPainelProprietario(){
 
   // ===== RESUMO FINANCEIRO =====
   jsonp({action:"resumoFinanceiro"}, (r)=>{
-    if(!r.ok) return alert("Erro ao carregar resumo.");
+    if(!r.ok){
+  console.warn("Resumo não disponível para este perfil.");
+  return;
+}
 
     document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
     document.getElementById("pr_total_despesas").value = r.total_despesas || 0;
