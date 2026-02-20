@@ -757,7 +757,12 @@ style="background:#0f172a;">
     <!-- ============================= -->
     <!-- RELATÓRIO DE VENDAS -->
     <!-- ============================= -->
-    <h2 style="margin-top:40px;">Relatório de Vendas</h2>
+    <div id="blocoVendasRelatorio">
+  <h2 style="margin-top:40px;">Relatório de Vendas</h2>
+  <hr>
+
+  <!-- TODO o bloco de vendas fica aqui dentro -->
+
     <hr>
 
     <div class="grid" style="margin-bottom:15px;">
@@ -788,6 +793,7 @@ style="background:#0f172a;">
     <div class="table-wrapper">
       <div id="relatorioVendasFiltrado"></div>
     </div>
+</div>
 
   </div>
 </div>
@@ -1545,30 +1551,67 @@ function aplicarPermissoes(perfil){
 
   perfil = String(perfil || "").toUpperCase();
 
-  // RESET TOTAL
+  const blocoVendas = document.getElementById("blocoVendasRelatorio");
+
+  // ===== RESET GERAL =====
   document.querySelectorAll(".menu-btn").forEach(btn=>{
     btn.style.display = "block";
   });
 
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    btn.style.display = "block";
+  });
+
+  if(blocoVendas){
+    blocoVendas.style.display = "block";
+  }
+
+  // =========================
+  // ADMIN / PROPRIETARIO
+  // =========================
   if(perfil === "ADMIN" || perfil === "PROPRIETARIO"){
     return;
   }
 
+  // =========================
+  // VENDEDOR
+  // =========================
   if(perfil === "VENDEDOR"){
+
+    esconderAba("abaVeiculo");
+    esconderAba("abaDespesas");
     esconderAba("abaProprietario");
+
+    esconderBottom("abaVeiculo");
+    esconderBottom("abaDespesas");
+    esconderBottom("abaProprietario");
+
+    return;
   }
 
+  // =========================
+  // ESTOQUE
+  // =========================
   if(perfil === "ESTOQUE"){
 
+    // Desktop
     esconderAba("abaVeiculo");
     esconderAba("abaDespesas");
     esconderAba("abaVenda");
     esconderAba("abaProprietario");
     esconderAba("abaMinhasVendas");
 
-    document.querySelectorAll(".aba").forEach(el=>{
-      el.style.display = "none";
-    });
+    // Mobile
+    esconderBottom("abaVeiculo");
+    esconderBottom("abaDespesas");
+    esconderBottom("abaVenda");
+    esconderBottom("abaProprietario");
+    esconderBottom("abaMinhasVendas");
+
+    // Esconde bloco vendas dentro do relatório
+    if(blocoVendas){
+      blocoVendas.style.display = "none";
+    }
 
     abrirAba("abaRelatorio");
   }
