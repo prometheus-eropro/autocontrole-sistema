@@ -1271,27 +1271,26 @@ let html = "<div class='table-wrapper'><table>";
 }
 function abrirAba(id){
 
+  if(id === "abaProprietario" && PERFIL !== "PROPRIETARIO"){
+    alert("Acesso restrito ao proprietário.");
+    return;
+  }
+
+  if(id === "abaVeiculo" && PERFIL === "VENDEDOR"){
+    alert("Vendedor não pode cadastrar entrada.");
+    return;
+  }
+
+  if(id === "abaDespesas" && PERFIL === "VENDEDOR"){
+    alert("Vendedor não pode lançar despesas.");
+    return;
+  }
+
   document.querySelectorAll(".aba").forEach(el=>{
     el.style.display = "none";
   });
 
   document.getElementById(id).style.display = "block";
-
-  // MOBILE
-  if(window.innerWidth < 900){
-    document.getElementById("btnVoltar").style.display = "block";
-
-    const nomes = {
-      abaVeiculo: "Entrada Veículo",
-      abaDespesas: "Despesas",
-      abaVenda: "Venda",
-      abaRelatorio: "Estoque",
-      abaProprietario: "Financeiro",
-      abaMinhasVendas: "Minhas Vendas"
-    };
-
-    document.getElementById("tituloApp").innerText = nomes[id] || "AutoControle";
-  }
 
   if(id === "abaRelatorio"){
     carregarRelatorios();
@@ -1301,7 +1300,6 @@ function abrirAba(id){
     carregarMinhasVendas();
   }
 }
-
 function imprimirRelatorio(){
   window.print();
 }
@@ -1553,7 +1551,7 @@ function aplicarPermissoes(perfil){
 
   const blocoVendas = document.getElementById("blocoVendasRelatorio");
 
-  // ===== RESET GERAL =====
+  // RESET GERAL
   document.querySelectorAll(".menu-btn").forEach(btn=>{
     btn.style.display = "block";
   });
@@ -1562,14 +1560,26 @@ function aplicarPermissoes(perfil){
     btn.style.display = "block";
   });
 
+  document.querySelectorAll(".aba").forEach(aba=>{
+    aba.style.display = "none";
+  });
+
   if(blocoVendas){
     blocoVendas.style.display = "block";
   }
 
   // =========================
-  // ADMIN / PROPRIETARIO
+  // PROPRIETARIO (vê tudo)
   // =========================
-  if(perfil === "ADMIN" || perfil === "PROPRIETARIO"){
+  if(perfil === "PROPRIETARIO"){
+    return;
+  }
+
+  // =========================
+  // ADMIN (não vê financeiro)
+  // =========================
+  if(perfil === "ADMIN"){
+    esconderMenuPorAba("abaProprietario");
     return;
   }
 
@@ -1578,13 +1588,15 @@ function aplicarPermissoes(perfil){
   // =========================
   if(perfil === "VENDEDOR"){
 
-    esconderAba("abaVeiculo");
-    esconderAba("abaDespesas");
-    esconderAba("abaProprietario");
+    // Pode ver estoque
+    // Pode registrar venda
+    // Não pode ver financeiro
+    // Não pode lançar despesa
+    // Não pode cadastrar entrada
 
-    esconderBottom("abaVeiculo");
-    esconderBottom("abaDespesas");
-    esconderBottom("abaProprietario");
+    esconderMenuPorAba("abaVeiculo");
+    esconderMenuPorAba("abaDespesas");
+    esconderMenuPorAba("abaProprietario");
 
     return;
   }
@@ -1594,21 +1606,10 @@ function aplicarPermissoes(perfil){
   // =========================
   if(perfil === "ESTOQUE"){
 
-    // Desktop
-    esconderAba("abaVeiculo");
-    esconderAba("abaDespesas");
-    esconderAba("abaVenda");
-    esconderAba("abaProprietario");
-    esconderAba("abaMinhasVendas");
+    esconderMenuPorAba("abaVenda");
+    esconderMenuPorAba("abaProprietario");
+    esconderMenuPorAba("abaMinhasVendas");
 
-    // Mobile
-    esconderBottom("abaVeiculo");
-    esconderBottom("abaDespesas");
-    esconderBottom("abaVenda");
-    esconderBottom("abaProprietario");
-    esconderBottom("abaMinhasVendas");
-
-    // Esconde bloco vendas dentro do relatório
     if(blocoVendas){
       blocoVendas.style.display = "none";
     }
@@ -1616,31 +1617,27 @@ function aplicarPermissoes(perfil){
     abrirAba("abaRelatorio");
   }
 }
-function esconderBotaoMenu(texto){
+function esconderMenuPorAba(idAba){
 
-  const botoes = document.querySelectorAll(".menu-btn");
+  // Desktop
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    if(btn.getAttribute("onclick")?.includes(idAba)){
+      btn.style.display = "none";
+    }
+  });
 
-  botoes.forEach(btn=>{
-    if(btn.innerText.includes(texto)){
+  // Mobile
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    if(btn.getAttribute("onclick")?.includes(idAba)){
       btn.style.display = "none";
     }
   });
 
 }
+
 function mostrar(id){
   const el = document.getElementById(id);
   if(el) el.style.display = "block";
-}
-function esconderAba(id){
-
-  const btns = document.querySelectorAll(".menu-btn");
-
-  btns.forEach(btn=>{
-    if(btn.getAttribute("onclick").includes(id)){
-      btn.style.display = "none";
-    }
-  });
-
 }
 function carregarMinhasVendas(){
 
@@ -1872,6 +1869,24 @@ function voltarHome(){
   document.getElementById("btnVoltar").style.display = "none";
   document.getElementById("tituloApp").innerText = "AutoControle";
 }
+window.addEventListener("DOMContentLoaded", function(){
+
+  const clienteSalvo = localStorage.getItem("cliente_id");
+  const perfilSalvo = localStorage.getItem("perfil");
+
+  if(clienteSalvo && perfilSalvo){
+
+    CLIENTE_ID = clienteSalvo;
+    PERFIL = perfilSalvo;
+
+    document.getElementById("telaLogin").style.display = "none";
+
+    aplicarPermissoes(PERFIL);
+    carregarListas();
+
+  }
+
+});
 
 </script>
 <nav class="bottom-nav">
