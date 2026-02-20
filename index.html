@@ -1559,37 +1559,45 @@ function aplicarPermissoes(perfil){
 
   perfil = String(perfil || "").toUpperCase();
 
-  const blocoVendas = document.getElementById("blocoVendasRelatorio");
-
-  // RESET GERAL
+  // Esconde tudo primeiro
   document.querySelectorAll(".menu-btn").forEach(btn=>{
-    btn.style.display = "block";
+    btn.style.display = "none";
   });
 
   document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    btn.style.display = "block";
+    btn.style.display = "none";
   });
 
   document.querySelectorAll(".aba").forEach(aba=>{
     aba.style.display = "none";
   });
 
-  if(blocoVendas){
-    blocoVendas.style.display = "block";
-  }
-
   // =========================
-  // PROPRIETARIO (vê tudo)
+  // PROPRIETARIO
   // =========================
   if(perfil === "PROPRIETARIO"){
+
+    mostrarMenu("abaVeiculo");
+    mostrarMenu("abaDespesas");
+    mostrarMenu("abaVenda");
+    mostrarMenu("abaRelatorio");
+    mostrarMenu("abaProprietario");
+    mostrarMenu("abaMinhasVendas");
+
     return;
   }
 
   // =========================
-  // ADMIN (não vê financeiro)
+  // ADMIN
   // =========================
   if(perfil === "ADMIN"){
-    esconderMenuPorAba("abaProprietario");
+
+    mostrarMenu("abaVeiculo");
+    mostrarMenu("abaDespesas");
+    mostrarMenu("abaVenda");
+    mostrarMenu("abaRelatorio");
+    mostrarMenu("abaMinhasVendas");
+
     return;
   }
 
@@ -1598,34 +1606,49 @@ function aplicarPermissoes(perfil){
   // =========================
   if(perfil === "VENDEDOR"){
 
-    // Pode ver estoque
-    // Pode registrar venda
-    // Não pode ver financeiro
-    // Não pode lançar despesa
-    // Não pode cadastrar entrada
-
-    esconderMenuPorAba("abaVeiculo");
-    esconderMenuPorAba("abaDespesas");
-    esconderMenuPorAba("abaProprietario");
+    mostrarMenu("abaVenda");
+    mostrarMenu("abaRelatorio");
+    mostrarMenu("abaMinhasVendas");
 
     return;
   }
 
   // =========================
-  // ESTOQUE
-  // =========================
-  if(perfil === "ESTOQUE"){
+// 🔒 ESTOQUE (SOMENTE ESTOQUE)
+// =========================
+if(perfil === "ESTOQUE"){
 
-    esconderMenuPorAba("abaVenda");
-    esconderMenuPorAba("abaProprietario");
-    esconderMenuPorAba("abaMinhasVendas");
+  // Mostra apenas menu Relatório
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    btn.style.display = "none";
+  });
 
-    if(blocoVendas){
-      blocoVendas.style.display = "none";
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    btn.style.display = "none";
+  });
+
+  // Mostra apenas botão Relatório
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    if(btn.getAttribute("onclick")?.includes("abaRelatorio")){
+      btn.style.display = "block";
     }
+  });
 
-    abrirAba("abaRelatorio");
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    if(btn.getAttribute("onclick")?.includes("abaRelatorio")){
+      btn.style.display = "block";
+    }
+  });
+
+  abrirAba("abaRelatorio");
+
+  // 🔒 Esconde bloco de vendas dentro do relatório
+  const blocoVendas = document.getElementById("blocoVendasRelatorio");
+  if(blocoVendas){
+    blocoVendas.style.display = "none";
   }
+
+  return;
 }
 function esconderMenuPorAba(idAba){
 
