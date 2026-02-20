@@ -1577,13 +1577,7 @@ function aplicarPermissoes(perfil){
   // =========================
   if(perfil === "PROPRIETARIO"){
 
-    mostrarMenu("abaVeiculo");
-    mostrarMenu("abaDespesas");
-    mostrarMenu("abaVenda");
-    mostrarMenu("abaRelatorio");
-    mostrarMenu("abaProprietario");
-    mostrarMenu("abaMinhasVendas");
-
+    mostrarTodosMenus();
     return;
   }
 
@@ -1597,7 +1591,6 @@ function aplicarPermissoes(perfil){
     mostrarMenu("abaVenda");
     mostrarMenu("abaRelatorio");
     mostrarMenu("abaMinhasVendas");
-
     return;
   }
 
@@ -1609,46 +1602,25 @@ function aplicarPermissoes(perfil){
     mostrarMenu("abaVenda");
     mostrarMenu("abaRelatorio");
     mostrarMenu("abaMinhasVendas");
-
     return;
   }
 
   // =========================
-// 🔒 ESTOQUE (SOMENTE ESTOQUE)
-// =========================
-if(perfil === "ESTOQUE"){
+  // ESTOQUE (SOMENTE ESTOQUE)
+  // =========================
+  if(perfil === "ESTOQUE"){
 
-  // Mostra apenas menu Relatório
-  document.querySelectorAll(".menu-btn").forEach(btn=>{
-    btn.style.display = "none";
-  });
+    mostrarMenu("abaRelatorio");
+    abrirAba("abaRelatorio");
 
-  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    btn.style.display = "none";
-  });
-
-  // Mostra apenas botão Relatório
-  document.querySelectorAll(".menu-btn").forEach(btn=>{
-    if(btn.getAttribute("onclick")?.includes("abaRelatorio")){
-      btn.style.display = "block";
+    // Esconde vendas dentro do relatório
+    const blocoVendas = document.getElementById("blocoVendasRelatorio");
+    if(blocoVendas){
+      blocoVendas.style.display = "none";
     }
-  });
 
-  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    if(btn.getAttribute("onclick")?.includes("abaRelatorio")){
-      btn.style.display = "block";
-    }
-  });
-
-  abrirAba("abaRelatorio");
-
-  // 🔒 Esconde bloco de vendas dentro do relatório
-  const blocoVendas = document.getElementById("blocoVendasRelatorio");
-  if(blocoVendas){
-    blocoVendas.style.display = "none";
+    return;
   }
-
-  return;
 }
 function esconderMenuPorAba(idAba){
 
