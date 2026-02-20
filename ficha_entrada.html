@@ -107,13 +107,17 @@ h2 {
 <script>
 window.onload = function(){
 
-  const loja = localStorage.getItem("nome_loja") || "AutoControle";
+  const clienteId = localStorage.getItem("cliente_id");
+  const loja = localStorage.getItem("nome_loja");
 
-  document.getElementById("tituloFicha").innerText = loja.toUpperCase();
+  if(clienteId && loja){
+    document.getElementById("tituloFicha").innerText = loja.toUpperCase();
+  } else {
+    document.getElementById("tituloFicha").innerText = "FICHA VEICULAR";
+  }
 
 };
 </script>
-
 
 <div class="titulo">DADOS DO VEÍCULO</div>
 

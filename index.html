@@ -1284,7 +1284,6 @@ function carregarRelatorios(){
       return String(v.modelo).toLowerCase().includes(filtroModelo);
     });
 
-    // Ordenar por modelo
     itens.sort((a,b)=>{
       return String(a.modelo).localeCompare(String(b.modelo));
     });
@@ -1330,47 +1329,10 @@ function carregarRelatorios(){
         `;
       });
 
-        <div class="table-wrapper">
-        <table>
-          <tr>
-            <th>Placa</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Ano Fab</th>
-            <th>Ano Mod</th>
-            <th>Cor</th>
-            <th>Tipo</th>
-            <th>Valor Venda</th>
-            <th>Data Entrada</th>
-          </tr>
-      `;
-
-      itens.forEach(v=>{
-        html += `
-          <tr>
-            <td>${v.placa}</td>
-            <td>${v.marca}</td>
-            <td>${v.modelo}</td>
-            <td>${v.ano_fabricacao || ""}</td>
-            <td>${v.ano_modelo || ""}</td>
-            <td>${v.cor || ""}</td>
-            <td>${v.tipo_veiculo || ""}</td>
-            <td>R$ ${Number(v.valor_venda || 0).toLocaleString('pt-BR')}</td>
-            <td>${v.data_entrada || ""}</td>
-          </tr>
-        `;
-      });
-
-      html += "</table></div>";
-    }
-
-    document.getElementById("relatorioEstoque").innerHTML = html;
-
-  });
-}
     } else {
 
-      html = "<table>";
+      html = "<div class='table-wrapper'><table>";
+
       html += `
       <tr>
         <th>Placa</th>
@@ -1385,30 +1347,29 @@ function carregarRelatorios(){
       </tr>
       `;
 
-      r.itens.forEach(v=>{
+      itens.forEach(v=>{
         html += `
         <tr>
           <td>${v.placa}</td>
           <td>${v.marca}</td>
           <td>${v.modelo}</td>
-          <td>${v.ano_fabricacao}</td>
-          <td>${v.ano_modelo}</td>
-          <td>${v.cor}</td>
-          <td>${v.tipo_veiculo}</td>
-          <td>R$ ${v.valor_venda}</td>
-          <td>${v.data_entrada}</td>
+          <td>${v.ano_fabricacao || ""}</td>
+          <td>${v.ano_modelo || ""}</td>
+          <td>${v.cor || ""}</td>
+          <td>${v.tipo_veiculo || ""}</td>
+          <td>R$ ${Number(v.valor_venda || 0).toLocaleString('pt-BR')}</td>
+          <td>${v.data_entrada || ""}</td>
         </tr>
         `;
       });
 
-      html += "</table>";
+      html += "</table></div>";
     }
 
     document.getElementById("relatorioEstoque").innerHTML = html;
 
   });
 }
-
 function toggleDetalheEstoque(index){
 
   const el = document.getElementById("detalhe_" + index);
