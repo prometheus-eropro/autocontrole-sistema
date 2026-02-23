@@ -265,8 +265,25 @@ tr:nth-child(even){
     display:flex;
   }
 }
+@media print {
 
-</style>
+  body * {
+    visibility: hidden !important;
+  }
+
+  #relatorioEstoque,
+  #relatorioEstoque * {
+    visibility: visible !important;
+  }
+
+  #relatorioEstoque {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+}</style>
 
 </head>
 
@@ -501,14 +518,12 @@ padding:20px;
         <option value="">Selecione o funcionário</option>
       </select>
 
-      <select id="comp_tipo_comissao">
-        <option value="PERCENTUAL">Comissão %</option>
-        <option value="FIXO">Comissão Fixa (R$)</option>
-      </select>
+      <select id="comp_tipo_comissao" onchange="alternarComissaoCompra()">
+  <option value="PERCENTUAL">Comissão %</option>
+  <option value="FIXO">Comissão Fixa (R$)</option>
+</select>
 
-      <input id="comp_percentual" placeholder="% Comissão (se percentual)">
-      <input id="comp_valor_comissao" placeholder="Valor Comissão (se fixa)">
-    </div>
+<input id="comp_valor_unico" placeholder="Informe valor ou %">    </div>
 
     <button onclick="salvarEntrada()">Salvar Entrada do Veículo</button>
 <button onclick="window.open('ficha_entrada.html','_blank')"
@@ -566,22 +581,21 @@ style="background:#0f172a;">
     <!-- Seleção Veículo e Vendedor -->
     <div class="badge">Selecionar veículo e vendedor</div>
     <div class="grid">
-      <select id="vd_id_veiculo"></select>
+<select id="vd_id_veiculo"></select>
 
-      <select id="vd_vendedor_loja"></select>
+<select id="vd_vendedor_loja"></select>
 
-      <select id="vd_tipo_comissao">
-        <option value="PERCENTUAL">Comissão por %</option>
-        <option value="FIXO">Comissão fixa (R$)</option>
-      </select>
+<select id="vd_tipo_comissao" onchange="alternarComissaoVenda()">
+  <option value="PERCENTUAL">Comissão %</option>
+  <option value="FIXO">Comissão Fixa (R$)</option>
+</select>
 
-      <input id="vd_percentual" placeholder="% Comissão (se percentual)">
-      <input id="vd_valor_comissao" placeholder="Valor Comissão (se fixa)">
-    </div>
+<input id="vd_valor_unico" placeholder="Informe valor ou %">    </div>
 
     <hr>
 
     <!-- Cadastro Vendedor Loja -->
+<div id="blocoCadastroVendedor">
     <div class="badge">Cadastrar vendedor da loja</div>
     <div class="grid">
       <input id="vl_nome" placeholder="Nome do vendedor">
@@ -595,6 +609,7 @@ style="background:#0f172a;">
         <option value="FIXO">Padrão: R$</option>
       </select>
     </div>
+</div>
 
     <button onclick="cadastrarVendedorLoja()">Salvar Vendedor</button>
 
@@ -741,9 +756,12 @@ style="background:#0f172a;">
     <!-- ============================= -->
     <!-- RELATÓRIO DE ESTOQUE -->
     <!-- ============================= -->
-    <h2>Relatório de Estoque</h2>
-    <hr>
+   <h2>Relatório de Estoque</h2>
+<hr>
 
+<button onclick="imprimirEstoque()" style="background:#0f172a;margin-bottom:15px;">
+🖨 Imprimir Estoque
+</button>
     <div class="grid" style="margin-bottom:15px;">
       <input id="filtro_modelo" placeholder="Filtrar por Modelo">
       <button onclick="carregarRelatorios()">Filtrar Estoque</button>
@@ -752,11 +770,6 @@ style="background:#0f172a;">
     <div class="table-wrapper">
       <div id="relatorioEstoque"></div>
     </div>
-
-    <button onclick="imprimirRelatorio()" style="margin-top:15px;">
-      🖨 Imprimir Estoque
-    </button>
-
     <!-- ============================= -->
     <!-- RELATÓRIO DE VENDAS -->
     <!-- ============================= -->
@@ -987,8 +1000,8 @@ function salvarEntrada(){
 tipo_comissao_compra: v("comp_tipo_comissao"),
 valor_comissao_compra:
   v("comp_tipo_comissao") === "PERCENTUAL"
-  ? (num(v("v_valor_compra")) * num(v("comp_percentual"))) / 100
-  : num(v("comp_valor_comissao")),
+  ? (num(v("v_valor_compra")) * num(v("comp_valor_unico"))) / 100
+  : num(v("comp_valor_unico")),
 tipo_veiculo: v("tipo_veiculo"),
 
     p_nome:v("p_nome"),
@@ -1109,19 +1122,32 @@ function registrarVenda(){
 }
 
 function enviarVenda(){
-  const tipo_comissao = v("vd_tipo_comissao");
-  const percent = num(v("vd_percentual"));
-  const valorCom = num(v("vd_valor_comissao"));
 
-  if(tipo_comissao === "PERCENTUAL" && !percent) return alert("Informe o % de comissão.");
-  if(tipo_comissao === "FIXO" && !valorCom) return alert("Informe o valor fixo da comissão.");
-  if(!v("vd_data")) return alert("Informe a data da venda.");
-  if(!num(v("vd_valor_venda"))) return alert("Informe o valor da venda.");
+  const tipo_comissao = v("vd_tipo_comissao");
+  const valorUnico = num(v("vd_valor_unico"));
+
+  if(!valorUnico)
+    return alert("Informe o valor da comissão.");
+
+  if(!v("vd_data"))
+    return alert("Informe a data da venda.");
+
+  if(!num(v("vd_valor_venda")))
+    return alert("Informe o valor da venda.");
+
+  let percentual = 0;
+  let valorFixo = 0;
+
+  if(tipo_comissao === "PERCENTUAL"){
+    percentual = valorUnico;
+  } else {
+    valorFixo = valorUnico;
+  }
 
   const payload = {
     action:"registrarVenda",
-    id_veiculo:v("vd_id_veiculo"),
 
+    id_veiculo:v("vd_id_veiculo"),
     data_venda:v("vd_data"),
     valor_venda:num(v("vd_valor_venda")),
     forma_pagamento:v("vd_forma_pag"),
@@ -1130,7 +1156,6 @@ function enviarVenda(){
     entrada:num(v("vd_entrada")),
     numero_parcelas:v("vd_parcelas"),
     valor_parcela:num(v("vd_valor_parcela")),
-
     banco_financiamento:v("vd_banco"),
     valor_financiado:num(v("vd_valor_financiado")),
 
@@ -1145,25 +1170,23 @@ function enviarVenda(){
     vendedor_loja_id:v("vd_vendedor_loja"),
 
     tipo_comissao,
-    percentual_comissao:percent,
-    valor_comissao_fixo:valorCom,
+    percentual_comissao: percentual,
+    valor_comissao_fixo: valorFixo,
 
     observacoes:v("vd_obs")
   };
 
   jsonp(payload, (rr)=>{
     if(rr.ok){
-      alert("Venda registrada! ID: " + (rr.id_venda || "(não retornou)") +
-            "\nLucro líquido: R$ " + (rr.lucro_liquido||0));
+      alert("Venda registrada com sucesso!");
       limparFormularioVenda();
       carregarListas();
     } else {
       alert("Erro: " + (rr.msg||""));
     }
   });
-}
 
-/* ===== LIMPEZAS ===== */
+}/* ===== LIMPEZAS ===== */
 function limparFormularioEntrada(){
   document.querySelectorAll("#abaVeiculo input").forEach(el=>el.value="");
   document.getElementById("tipo_veiculo").selectedIndex = 0;
@@ -1335,9 +1358,7 @@ function abrirAba(id){
     carregarPainelProprietario();
   }
 }
-function imprimirRelatorio(){
-  window.print();
-}
+
 function carregarRelatorios(){
 
   jsonp({action:"relatorioEstoque"}, function(r){
@@ -1557,8 +1578,8 @@ function formatarMoedaInput(id){
 
 formatarMoedaInput("v_valor_compra");
 formatarMoedaInput("v_valor_venda");
-formatarMoedaInput("comp_valor_comissao");
-formatarMoedaInput("vd_valor_venda");
+formatarMoedaInput("comp_valor_unico");
+formatarMoedaInput("vd_valor_unico");
 formatarMoedaInput("vd_entrada");
 formatarMoedaInput("vd_valor_parcela");
 formatarMoedaInput("vd_valor_financiado");
@@ -1601,7 +1622,7 @@ function aplicarPermissoes(perfil){
   // PROPRIETARIO
   // =========================
   if(perfil === "PROPRIETARIO"){
-
+document.getElementById("blocoCadastroVendedor").style.display = "block";
     mostrarTodosMenus();
     return;
   }
@@ -1610,7 +1631,7 @@ function aplicarPermissoes(perfil){
   // ADMIN
   // =========================
   if(perfil === "ADMIN"){
-
+document.getElementById("blocoCadastroVendedor").style.display = "block";
     mostrarMenu("abaVeiculo");
     mostrarMenu("abaDespesas");
     mostrarMenu("abaVenda");
@@ -1628,7 +1649,7 @@ function aplicarPermissoes(perfil){
   mostrarMenu("abaRelatorio");
   mostrarMenu("abaMinhasVendas");
   mostrarMenu("abaMinhasCompras");
-
+  document.getElementById("blocoCadastroVendedor").style.display = "none";
   esconderMenuPorAba("abaProprietario");
 
   const blocoVendas = document.getElementById("blocoVendasRelatorio");
@@ -2000,7 +2021,36 @@ function carregarMinhasCompras(){
   });
 
 }
+function alternarComissaoCompra(){
+  const tipo = document.getElementById("comp_tipo_comissao").value;
+  const campo = document.getElementById("comp_valor_unico");
 
+  if(tipo === "PERCENTUAL"){
+    campo.placeholder = "Informe % de comissão";
+  } else {
+    campo.placeholder = "Informe valor fixo (R$)";
+  }
+}
+function alternarComissaoVenda(){
+  const tipo = document.getElementById("vd_tipo_comissao").value;
+  const campo = document.getElementById("vd_valor_unico");
+
+  if(tipo === "PERCENTUAL"){
+    campo.placeholder = "Informe % de comissão";
+  } else {
+    campo.placeholder = "Informe valor fixo (R$)";
+  }
+}
+function imprimirEstoque(){
+
+  // garante que relatório esteja carregado
+  carregarRelatorios();
+
+  setTimeout(()=>{
+    window.print();
+  },300);
+
+}
 </script>
 <nav class="bottom-nav">
 
