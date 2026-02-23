@@ -265,23 +265,6 @@ tr:nth-child(even){
     display:flex;
   }
 }
-@media print {
-
-  body * {
-    visibility: hidden !important;
-  }
-
-  #relatorioEstoque,
-  #relatorioEstoque * {
-    visibility: visible !important;
-  }
-
-  #relatorioEstoque {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-  }
 
 }</style>
 
@@ -2043,15 +2026,72 @@ function alternarComissaoVenda(){
 }
 function imprimirEstoque(){
 
-  // garante que relatório esteja carregado
   carregarRelatorios();
 
   setTimeout(()=>{
-    window.print();
+
+    const loja = localStorage.getItem("nome_loja") || "";
+    const data = new Date().toLocaleString("pt-BR");
+
+    const tabela = document.getElementById("relatorioEstoque").innerHTML;
+
+    const html = `
+      <html>
+      <head>
+        <title>Relatório de Estoque</title>
+        <style>
+          body{
+            font-family:Arial;
+            padding:30px;
+          }
+          h2{
+            text-align:center;
+            margin-bottom:5px;
+          }
+          h3{
+            text-align:center;
+            margin-top:0;
+            margin-bottom:20px;
+          }
+          table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:13px;
+          }
+          th{
+            background:#0f172a;
+            color:#fff;
+            padding:8px;
+          }
+          td{
+            padding:6px;
+            border-bottom:1px solid #ddd;
+          }
+        </style>
+      </head>
+      <body>
+
+        <h2>${loja}</h2>
+        <h3>RELATÓRIO DE ESTOQUE</h3>
+        <div style="text-align:right;font-size:12px;margin-bottom:15px;">
+          Emitido em: ${data}
+        </div>
+
+        ${tabela}
+
+      </body>
+      </html>
+    `;
+
+    const w = window.open("");
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    w.print();
+
   },300);
 
-}
-</script>
+}</script>
 <nav class="bottom-nav">
 
   <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
