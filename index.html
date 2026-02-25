@@ -1661,9 +1661,12 @@ localStorage.setItem("plano", PLANO);
     localStorage.setItem("nome_loja", r.nome_loja || "");
     localStorage.setItem("nome_usuario", r.nome_usuario);
 
-    aplicarPermissoes(PERFIL);
+aplicarPermissoes(PERFIL);
 
-    document.getElementById("telaLogin").style.display = "none";
+document.getElementById("capa").style.display = "none";
+document.getElementById("telaLogin").style.display = "none";
+
+document.getElementById("nomeLojaTopo").innerText = r.nome_loja || "";
 const elMobile = document.getElementById("usuarioHeaderMobile");
 
 if(elMobile){
@@ -2150,9 +2153,8 @@ function logout(){
   CLIENTE_ID = "";
   PERFIL = "";
 
-  document.getElementById("capa").style.display = "flex";
-  document.getElementById("telaLogin").style.display = "none";
-document.getElementById("capa").style.display = "none";
+  document.getElementById("capa").style.display = "none";
+document.getElementById("telaLogin").style.display = "flex";
 
 }
 function carregarMinhasCompras(){
