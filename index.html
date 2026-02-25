@@ -359,26 +359,53 @@ tr:nth-child(even){
   box-shadow:0 0 10px rgba(0,0,0,0.4);
   transition:all .3s ease;
 }
+.logo-principal{
+  width:180px;
+  max-width:100%;
+  display:block;
+  margin:0 auto 20px auto;
+}
+.header-sistema{
+  text-align:center;
+  padding:40px 20px;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  border-radius:20px;
+  margin-bottom:30px;
+}
+
+.header-sistema h1{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.header-sistema h3{
+  color:#22c55e;
+  margin-bottom:12px;
+}
+
+.usuario-logado{
+  font-size:16px;
+  opacity:0.9;
+}
 </style>
 
 </head>
 
 <body>
-<header class="app-header">
+<div class="header-sistema">
 
-  <div style="
-    font-weight:800;
-    font-size:20px;
-    letter-spacing:.5px;
-  ">
-    AutoControle
-  </div>
+  <img src="logo.png" class="logo-principal">
 
-  <div style="font-size:12px;text-align:right;line-height:1.4;">
-    <div id="headerLoja"></div>
-    <div id="headerUsuario"></div>
-  </div>
+  <h1>AutoControle — Sistema de Gestão Veicular</h1>
+  <h3>DEMONSTRAÇÃO PROMETHEUS</h3>
 
+  <p class="usuario-logado">
+    Usuário: <strong id="nomeUsuario"></strong> • 
+    Perfil: <strong id="perfilUsuario"></strong>
+  </p>
+
+</div>
   <div onclick="logout()" 
        style="
           cursor:pointer;
@@ -394,7 +421,7 @@ tr:nth-child(even){
 </header>
 <div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
   <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
-<img src="logo.png" 
+<img src="logo.png" class="logo-principal"> 
      style="width:120px;margin-bottom:15px;display:block;margin:auto;">
 
     <h2 style="text-align:center;margin-bottom:5px;">
