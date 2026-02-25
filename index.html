@@ -499,10 +499,23 @@ tr:nth-child(even){
   <h1>AutoControle</h1>
   <p class="subtitulo">Sistema Profissional de Gestão Veicular</p>
 
-  <button class="btn-entrar" onclick="entrarSistema()">
-    Entrar no Sistema
-  </button>
+  <div style="margin-top:30px;width:280px;">
 
+    <input id="login_usuario" placeholder="Usuário">
+    <input id="login_senha" type="password" placeholder="Senha">
+
+    <button class="btn-entrar" onclick="fazerLogin()">
+      Entrar no Sistema
+    </button>
+
+  </div>
+
+  <div style="margin-top:25px;font-size:12px;opacity:.7;">
+    PROMETHEUS EROPRO<br>
+    Edgar Rocha Oliveirà
+  </div>
+
+</div>
 </div>
 <div id="sistema" style="display:none;">
 <div class="header-unico">
@@ -1684,9 +1697,8 @@ function fazerLogin(){
 
     aplicarPermissoes(PERFIL);
 
-    const telaLogin = document.getElementById("telaLogin");
-    if(telaLogin) telaLogin.style.display = "none";
-
+    document.getElementById("capa").style.display = "none";
+document.getElementById("sistema").style.display = "block";
     const usuarioLogado = document.getElementById("usuarioLogado");
     if(usuarioLogado){
       usuarioLogado.innerText =
@@ -2318,10 +2330,6 @@ function atualizarStatusConexao(){
     indicador.style.background = "#ef4444"; // vermelho
   }
 
-}
-function entrarSistema(){
-  document.getElementById("capa").style.display = "none";
-  document.getElementById("sistema").style.display = "block";
 }
 
 </script>
