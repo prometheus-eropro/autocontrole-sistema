@@ -396,47 +396,56 @@ tr:nth-child(even){
   margin-bottom:25px;
 }
 
-.header-topo{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
+.header-unico{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  text-align:center;
+  padding:40px 20px;
+  border-radius:20px;
+  margin-bottom:30px;
 }
 
-.header-info h1{
-  font-size:28px;
+.logo-header{
+  width:160px;
+  margin-bottom:20px;
+}
+
+.header-unico h1{
+  font-size:30px;
   margin:0;
 }
 
 .subtitulo{
+  display:block;
+  margin-top:5px;
   font-size:14px;
   color:#22c55e;
 }
 
-.header-usuario{
-  text-align:right;
-  font-size:14px;
+.dados-empresa{
+  margin-top:20px;
+  font-size:15px;
   line-height:1.6;
 }
 
 .btn-sair{
-  margin-top:20px;
-  width:100%;
+  margin-top:25px;
   padding:14px;
+  width:100%;
+  max-width:400px;
   background:#dc2626;
   border:none;
   border-radius:12px;
   color:#fff;
-  font-weight:bold;
   font-size:16px;
+  font-weight:bold;
   cursor:pointer;
   transition:0.3s;
 }
 
 .btn-sair:hover{
   background:#b91c1c;
-}
-@media(max-width:768px){
+}@media(max-width:768px){
 
   .header-topo{
     flex-direction:column;
@@ -455,81 +464,22 @@ tr:nth-child(even){
 </head>
 
 <body>
-<div class="header-sistema-unico">
+<div class="header-unico">
 
-  <div class="header-topo">
-    <div class="header-info">
-      <h1>AutoControle</h1>
-      <span class="subtitulo">Sistema de Gestão Veicular</span>
-    </div>
+  <img src="logo.png" class="logo-header">
 
-    <div class="header-usuario">
-      <div><strong id="nomeLoja"></strong></div>
-      <div>Usuário: <strong id="nomeUsuario"></strong></div>
-      <div>Perfil: <strong id="perfilUsuario"></strong></div>
-    </div>
+  <h1>AutoControle</h1>
+  <span class="subtitulo">Sistema Profissional de Gestão Veicular</span>
+
+  <div class="dados-empresa">
+    <div><strong id="nomeLoja"></strong></div>
+    <div>Usuário: <strong id="nomeUsuario"></strong></div>
+    <div>Perfil: <strong id="perfilUsuario"></strong></div>
   </div>
 
   <button class="btn-sair" onclick="logout()">Sair do Sistema</button>
 
-</div>
-
-</header>
-<div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
-  <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
-<img src="logo.png" class="logo-principal"> 
-     style="width:120px;margin-bottom:15px;display:block;margin:auto;">
-
-    <h2 style="text-align:center;margin-bottom:5px;">
-AutoControle
-</h2>
-
-<div style="text-align:center;font-size:14px;opacity:.8;margin-bottom:15px;">
-Sistema Profissional de Gestão Veicular
-</div>
-
-<p style="text-align:center;font-size:13px;opacity:.7;">
-Tecnologia com ConsciêncIA gera resultado
-</p>
-
-    <input id="login_usuario" placeholder="Usuário" autocomplete="username">
-
-    <input id="login_senha" type="password" placeholder="Senha" autocomplete="current-password">
-
-    <button onclick="fazerLogin()">Entrar</button>
-  </div>
-</div>
-
-<!-- CAPA (TELA INICIAL) -->
-    <div style="margin-top:10px;font-size:14px;opacity:.8;">
-      Tecnologia com ConsciêncIA gera resultado
-    </div>
-
-    <hr style="margin:20px 0;border-color:rgba(255,255,255,.15);">
-
-    <div style="font-size:14px;line-height:1.6;">
-      <b>PROMETHEUS EROPRO</b><br>
-      Edgar Rocha Oliveira<br>
-      28 99969-2303<br>
-      assistentes.prometheus@gmail.com
-    </div>
-
-    <button onclick="entrarSistema()" style="
-      margin-top:20px;
-      width:100%;
-      background:#16a34a;
-      border:none;
-      color:#fff;
-      padding:14px;
-      border-radius:14px;
-      font-weight:700;
-      font-size:16px;
-      cursor:pointer;
-    ">
-      Entrar no Sistema
-    </button>
-
-    <div style="margin-top:10px;font-size:12px;opacity:.6;">
+</div>    <div style="margin-top:10px;font-size:12px;opacity:.6;">
       Última atualização: <span id="capaAtualizacao"></span>
     </div>
 
