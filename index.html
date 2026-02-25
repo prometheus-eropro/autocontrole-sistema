@@ -1085,15 +1085,9 @@ setSelect(
 function entrarSistema(){
 
   document.getElementById("capa").style.display = "none";
+  document.getElementById("telaLogin").style.display = "flex";
 
-  const clienteSalvo = localStorage.getItem("cliente_id");
-  const perfilSalvo  = localStorage.getItem("perfil");
-
-  if(!clienteSalvo){
-    document.getElementById("telaLogin").style.display = "flex";
-    return;
-  }
-
+}
   CLIENTE_ID = clienteSalvo;
   PERFIL = String(perfilSalvo || "").toUpperCase();
 
