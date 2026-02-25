@@ -2096,9 +2096,8 @@ window.addEventListener("DOMContentLoaded", function(){
 
   if(clienteSalvo && perfilSalvo){
 
-    CLIENTE_ID = clienteSalvo;
-    PERFIL = perfilSalvo;
-
+  CLIENTE_ID = clienteSalvo;
+  PERFIL = String(perfilSalvo).toUpperCase();
     // Esconde login
     document.getElementById("telaLogin").style.display = "none";
 
