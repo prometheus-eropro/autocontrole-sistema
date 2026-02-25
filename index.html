@@ -498,7 +498,9 @@ tr:nth-child(even){
 
   <h1>AutoControle</h1>
   <p class="subtitulo">Sistema Profissional de Gestão Veicular</p>
-
+<p style="margin-top:8px;font-size:13px;color:#94a3b8;">
+Tecnologia com ConsciêncIA gera resultado.
+</p>
   <div style="margin-top:30px;width:280px;">
 
     <input id="login_usuario" placeholder="Usuário">
@@ -1687,8 +1689,10 @@ function fazerLogin(){
       return alert("Login inválido.");
     }
 
-    CLIENTE_ID = r.cliente_id;
-    PERFIL = String(r.perfil || "").toUpperCase();
+CLIENTE_ID = r.cliente_id;
+PERFIL = String(r.perfil || "").toUpperCase();
+PLANO = String(r.plano || "BASICO").toUpperCase();
+localStorage.setItem("plano", PLANO);
 
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
@@ -2128,14 +2132,17 @@ window.addEventListener("DOMContentLoaded", function(){
     PERFIL = perfilSalvo;
     PLANO = planoSalvo || "BASICO";
 
-    
+    document.getElementById("capa").style.display = "none";
+    document.getElementById("sistema").style.display = "block";
 
     aplicarPermissoes(PERFIL);
     carregarListas();
 
   } else {
 
-    document.getElementById("telaLogin").style.display = "flex";
+    document.getElementById("capa").style.display = "flex";
+    document.getElementById("sistema").style.display = "none";
+
   }
 
 });
@@ -2175,7 +2182,7 @@ function logout(){
   CLIENTE_ID = "";
   PERFIL = "";
 
-  const tela = document.getElementById("telaLogin");
+  const tela = document.getElementById("capa");
   if(tela){
     tela.style.display = "flex";
   }
