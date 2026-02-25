@@ -2285,13 +2285,14 @@ document.addEventListener("DOMContentLoaded", function(){
   const nomeUsuario  = localStorage.getItem("nome_usuario");
 
   if(clienteSalvo){
+
     CLIENTE_ID = clienteSalvo;
     PERFIL = perfilSalvo || "";
 
     const tela = document.getElementById("telaLogin");
-if(tela){
-  tela.style.display = "flex"; // ou "none"
-}
+    if(tela){
+      tela.style.display = "none";
+    }
 
     if(nomeLoja){
       document.getElementById("nomeLojaTopo").innerText = nomeLoja;
@@ -2306,10 +2307,14 @@ if(tela){
     carregarListas();
 
   } else {
+
     const tela = document.getElementById("telaLogin");
-if(tela){
-  tela.style.display = "flex"; // ou "none"
-}
+    if(tela){
+      tela.style.display = "flex";
+    }
+
+  }
+
 });
 
 </script>
