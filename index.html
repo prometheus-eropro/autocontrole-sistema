@@ -2088,31 +2088,26 @@ function voltarHome(){
 window.addEventListener("DOMContentLoaded", function(){
 
   const clienteSalvo = localStorage.getItem("cliente_id");
-  const perfilSalvo = localStorage.getItem("perfil");
-  const planoSalvo = localStorage.getItem("plano");
+  const perfilSalvo  = localStorage.getItem("perfil");
+  const planoSalvo   = localStorage.getItem("plano");
+
   if(planoSalvo){
     PLANO = planoSalvo;
-}
-  // Sempre começa mostrando capa
+  }
+
+  // Sempre mostra capa primeiro
   document.getElementById("capa").style.display = "flex";
 
   if(clienteSalvo && perfilSalvo){
 
-  CLIENTE_ID = clienteSalvo;
-  PERFIL = String(perfilSalvo).toUpperCase();
+    CLIENTE_ID = clienteSalvo;
+    PERFIL = String(perfilSalvo).toUpperCase();
 
-  if(!PERFIL){
-    localStorage.clear();
-    return;
-  }
+    if(!PERFIL){
+      localStorage.clear();
+      return;
+    }
 
-  aplicarPermissoes(PERFIL);
-  carregarListas();
-}
-
-  CLIENTE_ID = clienteSalvo;
-  PERFIL = String(perfilSalvo).toUpperCase();
-    // Esconde login
     document.getElementById("telaLogin").style.display = "none";
 
     aplicarPermissoes(PERFIL);
@@ -2120,12 +2115,13 @@ window.addEventListener("DOMContentLoaded", function(){
 
   } else {
 
-    // Se não tiver sessão, quando clicar em entrar, abre login
+    // Sem sessão → espera clicar em entrar
     document.getElementById("telaLogin").style.display = "none";
 
   }
 
 });
+
 function mostrarMenu(idAba){
 
   document.querySelectorAll(".menu-btn").forEach(btn=>{
