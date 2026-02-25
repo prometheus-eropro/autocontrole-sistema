@@ -1625,7 +1625,10 @@ localStorage.setItem("plano", PLANO);
 aplicarPermissoes(PERFIL);
 
 document.getElementById("capa").style.display = "none";
-document.getElementById("telaLogin").style.display = "none";
+const tela = document.getElementById("telaLogin");
+if(tela){
+  tela.style.display = "none";
+}
 
 document.getElementById("nomeLojaTopo").innerText = r.nome_loja || "";
 const elMobile = document.getElementById("usuarioHeaderMobile");
@@ -2064,21 +2067,24 @@ window.addEventListener("DOMContentLoaded", function(){
     CLIENTE_ID = clienteSalvo;
     PERFIL = String(perfilSalvo).toUpperCase();
 
-    document.getElementById("capa").style.display = "none";
-    document.getElementById("telaLogin").style.display = "none";
-    
+    const tela = document.getElementById("telaLogin");
+    if(tela){
+      tela.style.display = "none";
+    }
+
     aplicarPermissoes(PERFIL);
     carregarListas();
 
   } else {
 
-    document.getElementById("capa").style.display = "none";
-    document.getElementById("telaLogin").style.display = "flex";
+    const tela = document.getElementById("telaLogin");
+    if(tela){
+      tela.style.display = "flex";
+    }
 
   }
 
 });
-
 function mostrarMenu(idAba){
 
   document.querySelectorAll(".menu-btn").forEach(btn=>{
@@ -2114,8 +2120,10 @@ function logout(){
   CLIENTE_ID = "";
   PERFIL = "";
 
-  document.getElementById("capa").style.display = "none";
-document.getElementById("telaLogin").style.display = "flex";
+  const tela = document.getElementById("telaLogin");
+  if(tela){
+    tela.style.display = "flex";
+  }
 
 }
 function carregarMinhasCompras(){
@@ -2280,7 +2288,10 @@ document.addEventListener("DOMContentLoaded", function(){
     CLIENTE_ID = clienteSalvo;
     PERFIL = perfilSalvo || "";
 
-    document.getElementById("telaLogin").style.display = "none";
+    const tela = document.getElementById("telaLogin");
+if(tela){
+  tela.style.display = "flex"; // ou "none"
+}
 
     if(nomeLoja){
       document.getElementById("nomeLojaTopo").innerText = nomeLoja;
@@ -2295,9 +2306,10 @@ document.addEventListener("DOMContentLoaded", function(){
     carregarListas();
 
   } else {
-    document.getElementById("telaLogin").style.display = "flex";
-  }
-
+    const tela = document.getElementById("telaLogin");
+if(tela){
+  tela.style.display = "flex"; // ou "none"
+}
 });
 
 </script>
