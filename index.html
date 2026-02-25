@@ -926,9 +926,6 @@ font-weight:600;">
 </div>
 
 <script>
-if(!localStorage.getItem("cliente_id")){
-  document.getElementById("telaLogin").style.display = "flex";
-}
 
 /* ========= CONFIG ========= */
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyDSdfY9ILeSHuqg08mo1ruDA1DzgkN7CKDIswZFwXeoa4d9064m_KrxVI_o1j1_AMn/exec";
@@ -2271,6 +2268,37 @@ function atualizarStatusConexao(){
   }
 
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  const clienteSalvo = localStorage.getItem("cliente_id");
+  const perfilSalvo  = localStorage.getItem("perfil");
+  const nomeLoja     = localStorage.getItem("nome_loja");
+  const nomeUsuario  = localStorage.getItem("nome_usuario");
+
+  if(clienteSalvo){
+    CLIENTE_ID = clienteSalvo;
+    PERFIL = perfilSalvo || "";
+
+    document.getElementById("telaLogin").style.display = "none";
+
+    if(nomeLoja){
+      document.getElementById("nomeLojaTopo").innerText = nomeLoja;
+    }
+
+    if(nomeUsuario){
+      document.getElementById("usuarioLogado").innerText =
+        "Usuário: " + nomeUsuario + " • Perfil: " + PERFIL;
+    }
+
+    aplicarPermissoes(PERFIL);
+    carregarListas();
+
+  } else {
+    document.getElementById("telaLogin").style.display = "flex";
+  }
+
+});
 
 </script>
 <nav class="bottom-nav">
