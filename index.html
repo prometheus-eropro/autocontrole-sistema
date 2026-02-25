@@ -1818,10 +1818,8 @@ document.getElementById("blocoCadastroVendedor").style.display = "block";
 
   mostrarMenu("abaRelatorio");
 
-  setTimeout(()=>{
-    abrirAba("abaRelatorio");
-    carregarRelatorios();
-  },100);
+  abrirAba("abaRelatorio"); // 🔥 abre direto
+  carregarRelatorios();     // 🔥 carrega estoque
 
   const blocoVendas = document.getElementById("blocoVendasRelatorio");
   if(blocoVendas){
@@ -1830,6 +1828,7 @@ document.getElementById("blocoCadastroVendedor").style.display = "block";
 
   return;
 }
+
 }
 
 function esconderMenuPorAba(idAba){
