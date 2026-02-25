@@ -1671,8 +1671,9 @@ localStorage.setItem("plano", PLANO);
 
     document.getElementById("telaLogin").style.display = "none";
 const elMobile = document.getElementById("usuarioHeaderMobile");
+
 if(elMobile){
-  elMobile.innerText =
+  elMobile.innerText = 
     "Usuário: " + (r.nome_usuario || usuario) +
     " • Perfil: " + (r.perfil || "");
 }
