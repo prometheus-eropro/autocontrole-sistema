@@ -366,7 +366,11 @@ tr:nth-child(even){
 <body>
 <header class="app-header">
 
-  <div style="font-weight:700;">
+  <div style="
+    font-weight:800;
+    font-size:20px;
+    letter-spacing:.5px;
+  ">
     AutoControle
   </div>
 
@@ -376,16 +380,18 @@ tr:nth-child(even){
   </div>
 
   <div onclick="logout()" 
-       style="cursor:pointer;
-              background:#ef4444;
-              padding:6px 10px;
-              border-radius:8px;
-              font-size:12px;">
+       style="
+          cursor:pointer;
+          background:#dc2626;
+          padding:8px 14px;
+          border-radius:10px;
+          font-size:14px;
+          font-weight:600;
+       ">
     Sair
   </div>
 
 </header>
-
 <div id="telaLogin" style="position:fixed;inset:0;background:#0b1220;color:#fff;display:flex;align-items:center;justify-content:center;z-index:99999;padding:24px;">
   <div style="max-width:400px;width:100%;background:rgba(255,255,255,.06);padding:25px;border-radius:15px;">
 <img src="logo.png" 
@@ -1640,7 +1646,7 @@ function fazerLogin(){
 
     CLIENTE_ID = r.cliente_id;
 PERFIL = String(r.perfil || "").toUpperCase();
-document.getElementById("usuarioLogado").innerText = r.usuario;
+document.getElementById("usuarioLogado").innerText = r.nome_usuario || "";
 
 const elPerfil = document.getElementById("perfilLogado");
 if(elPerfil){
@@ -1810,19 +1816,20 @@ document.getElementById("blocoCadastroVendedor").style.display = "block";
   // =========================
   if(perfil === "ESTOQUE"){
 
-    mostrarMenu("abaRelatorio");
+  mostrarMenu("abaRelatorio");
+
+  setTimeout(()=>{
     abrirAba("abaRelatorio");
+    carregarRelatorios();
+  },100);
 
-    // Esconde vendas dentro do relatório
-    const blocoVendas = document.getElementById("blocoVendasRelatorio");
-    if(blocoVendas){
-      blocoVendas.style.display = "none";
-    }
-
-    return;
+  const blocoVendas = document.getElementById("blocoVendasRelatorio");
+  if(blocoVendas){
+    blocoVendas.style.display = "none";
   }
-}
-function esconderMenuPorAba(idAba){
+
+  return;
+}function esconderMenuPorAba(idAba){
 
   // Desktop
   document.querySelectorAll(".menu-btn").forEach(btn=>{
