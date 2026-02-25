@@ -2104,7 +2104,6 @@ window.addEventListener("DOMContentLoaded", function(){
     PLANO = planoSalvo;
   }
 
-  // Se existir sessão salva → entra automático
   if(clienteSalvo && perfilSalvo){
 
     CLIENTE_ID = clienteSalvo;
@@ -2118,13 +2117,13 @@ window.addEventListener("DOMContentLoaded", function(){
 
   } else {
 
-    // 🔥 NÃO TEM SESSÃO → MOSTRA LOGIN
     document.getElementById("capa").style.display = "none";
     document.getElementById("telaLogin").style.display = "flex";
 
   }
 
 });
+
 function mostrarMenu(idAba){
 
   document.querySelectorAll(".menu-btn").forEach(btn=>{
