@@ -485,55 +485,174 @@ tr:nth-child(even){
   cursor:pointer;
 }
 
+/* ===== TELA LOGIN ===== */
+#telaLogin{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  z-index:9999;
+}
+
+.login-card{
+  width:min(520px, 100%);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  padding:34px 28px;
+  text-align:center;
+  box-shadow:0 20px 55px rgba(0,0,0,.35);
+  backdrop-filter: blur(10px);
+}
+
+.login-logo{
+  width:160px;
+  max-width:60%;
+  display:block;
+  margin:0 auto 14px auto;
+}
+
+.login-title{
+  margin:0;
+  font-size:34px;
+  font-weight:900;
+  color:#fff;
+}
+
+.login-sub{
+  margin:6px 0 0 0;
+  color:#22c55e;
+  font-weight:700;
+  font-size:14px;
+}
+
+.login-slogan{
+  margin:14px 0 18px 0;
+  color:rgba(255,255,255,.75);
+  font-size:13px;
+}
+
+.login-card input{
+  background:rgba(255,255,255,.95) !important;
+  border:0 !important;
+  border-radius:14px !important;
+  padding:14px 16px !important;
+  margin:10px 0 !important;
+  font-size:15px !important;
+}
+
+.login-btn{
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:800;
+  border:0;
+  cursor:pointer;
+  background:linear-gradient(135deg,#16a34a,#15803d);
+  color:#fff;
+  margin-top:10px;
+}
+
+.login-footer{
+  margin-top:14px;
+  color:rgba(255,255,255,.70);
+  font-size:12px;
+  line-height:1.4;
+}
+
+/* ===== CABEÇALHO DO SISTEMA (O “SEGUNDO”) ===== */
+.system-head{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  padding:28px 22px;
+  border-radius:22px;
+  margin-bottom:22px;
+  text-align:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
+}
+
+.system-head .head-logo{
+  width:110px;           /* AUMENTA LOGO AQUI */
+  max-width:40%;
+  display:block;
+  margin:0 auto 10px auto;
+}
+
+.system-head h1{
+  margin:0;
+  font-size:26px;
+  font-weight:900;
+}
+
+.system-head .sub{
+  display:block;
+  margin-top:6px;
+  color:#22c55e;
+  font-weight:800;
+  font-size:13px;
+}
+
+.system-head .info{
+  margin-top:14px;
+  font-size:14px;
+  line-height:1.6;
+  opacity:.95;
+}
+
+.system-head .info strong{
+  color:#fff;
+}
+
+.system-head .btn-sair-topo{
+  margin:16px auto 0 auto;
+  display:block;
+  width:100%;
+  max-width:420px;
+  padding:14px 16px;
+  border-radius:14px;
+  border:0;
+  background:#dc2626;
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.system-head .btn-sair-topo:hover{
+  background:#b91c1c;
+}
 
 </style>
 
 </head>
 
 <body>
-<!-- CAPA INICIAL -->
-<div id="capa" class="capa-sistema">
+<!-- ===== TELA DE LOGIN (ÚNICA) ===== -->
+<div id="telaLogin">
+  <div class="login-card">
+    <img src="logo.png" class="login-logo" alt="Logo">
 
-  <img src="logo.png" class="logo-capa">
-
-  <h1>AutoControle</h1>
-  <p class="subtitulo">Sistema Profissional de Gestão Veicular</p>
-<p style="margin-top:8px;font-size:13px;color:#94a3b8;">
-Tecnologia com ConsciêncIA gera resultado.
-</p>
-  <div style="margin-top:30px;width:280px;">
+    <h1 class="login-title">AutoControle</h1>
+    <div class="login-sub">Sistema Profissional de Gestão Veicular</div>
+    <div class="login-slogan">Tecnologia com ConsciêncIA gera resultado.</div>
 
     <input id="login_usuario" placeholder="Usuário">
-    <input id="login_senha" type="password" placeholder="Senha">
+    <input id="login_senha" placeholder="Senha" type="password">
 
-    <button class="btn-entrar" onclick="fazerLogin()">
-      Entrar no Sistema
-    </button>
+    <button class="login-btn" onclick="fazerLogin()">Entrar no Sistema</button>
 
+    <div class="login-footer">
+      PROMETHEUS EROPRO<br>
+      Edgar Rocha Oliveira
+    </div>
   </div>
-
-  <div style="margin-top:25px;font-size:12px;opacity:.7;">
-    PROMETHEUS EROPRO<br>
-    Edgar Rocha Oliveirà
-  </div>
-
 </div>
-</div>
-<div id="sistema" style="display:none;">
-<div class="header-unico">
 
-  <img src="logo.png" class="logo-header">
-
-  <h1>AutoControle</h1>
-  <span class="subtitulo">Sistema Profissional de Gestão Veicular</span>
-
-  <div class="dados-empresa">
-    <div><strong id="nomeLoja"></strong></div>
-    <div>Usuário: <strong id="nomeUsuario"></strong></div>
-    <div>Perfil: <strong id="perfilUsuario"></strong></div>
-  </div>
-
-  <button class="btn-sair" onclick="logout()">Sair do Sistema</button>
+<!-- ===== SISTEMA (fica escondido até logar) ===== -->
+<div id="sistema" style="display:none;">  <button class="btn-sair" onclick="logout()">Sair do Sistema</button>
 
 </div>    <div style="margin-top:10px;font-size:12px;opacity:.6;">
       Última atualização: <span id="capaAtualizacao"></span>
@@ -541,25 +660,22 @@ Tecnologia com ConsciêncIA gera resultado.
 
   </div>
 </div>
-      
-<div class="container">
-<div class="card" style="margin-bottom:20px;text-align:center;">
-<img src="logo.png" 
-     style="width:60px;margin-bottom:10px;">
-  
-  <h1 style="margin:0;font-size:26px;">
-    AutoControle — Sistema de Gestão Veicular
-  </h1>
+ <div class="container">
 
-  <h2 id="nomeLojaTopo" style="margin:8px 0 4px 0;font-size:20px;color:#16a34a;">
-  </h2>
-  <h3 id="usuarioLogado" style="margin:6px 0;color:#2563eb;font-weight:600;"></h3>
+  <div class="system-head">
+    <img src="logo.png" class="head-logo" alt="Logo">
 
-  <small style="font-size:14px;color:#64748b;">
-    Tecnologia com ConsciêncIA gera resultado
-  </small>
+    <h1>AutoControle</h1>
+    <span class="sub">Sistema Profissional de Gestão Veicular</span>
 
-</div>
+    <div class="info">
+      <div><strong id="nomeLojaTopo"></strong></div>
+      <div>Usuário: <strong id="nomeUsuarioTopo"></strong></div>
+      <div>Perfil: <strong id="perfilUsuarioTopo"></strong></div>
+    </div>
+
+    <button class="btn-sair-topo" onclick="logout()">Sair do Sistema</button>
+  </div>     
 
 <div class="menu-grid">
   <div class="menu-btn" onclick="abrirAba('abaVeiculo')">🚗 Veículo</div>
@@ -1717,6 +1833,19 @@ document.getElementById("sistema").style.display = "block";
 
     carregarListas();
   });
+    // Mostra sistema e preenche cabeçalho
+    const tela = document.getElementById("telaLogin");
+    const sistema = document.getElementById("sistema");
+    if(tela) tela.style.display = "none";
+    if(sistema) sistema.style.display = "block";
+
+    const elLoja = document.getElementById("nomeLojaTopo");
+    const elUser = document.getElementById("nomeUsuarioTopo");
+    const elPerf = document.getElementById("perfilUsuarioTopo");
+
+    if(elLoja) elLoja.textContent = r.nome_loja || "";
+    if(elUser) elUser.textContent = (r.nome_usuario || usuario);
+    if(elPerf) elPerf.textContent = (r.perfil || "");
 }
 
 function salvarOffline(payload){
@@ -2126,23 +2255,37 @@ window.addEventListener("DOMContentLoaded", function(){
   const perfilSalvo  = localStorage.getItem("perfil");
   const planoSalvo   = localStorage.getItem("plano");
 
+  const nomeLoja = localStorage.getItem("nome_loja") || "";
+  const nomeUsuario = localStorage.getItem("nome_usuario") || "";
+
+  const tela = document.getElementById("telaLogin");
+  const sistema = document.getElementById("sistema");
+
+  // Só entra direto se tiver login salvo
   if(clienteSalvo && perfilSalvo){
 
     CLIENTE_ID = clienteSalvo;
-    PERFIL = perfilSalvo;
+    PERFIL = String(perfilSalvo || "").toUpperCase();
     PLANO = planoSalvo || "BASICO";
 
-    document.getElementById("capa").style.display = "none";
-    document.getElementById("sistema").style.display = "block";
+    if(tela) tela.style.display = "none";
+    if(sistema) sistema.style.display = "block";
+
+    // Preenche cabeçalho (o segundo)
+    const elLoja = document.getElementById("nomeLojaTopo");
+    const elUser = document.getElementById("nomeUsuarioTopo");
+    const elPerf = document.getElementById("perfilUsuarioTopo");
+
+    if(elLoja) elLoja.textContent = nomeLoja;
+    if(elUser) elUser.textContent = nomeUsuario;
+    if(elPerf) elPerf.textContent = PERFIL;
 
     aplicarPermissoes(PERFIL);
     carregarListas();
 
   } else {
-
-    document.getElementById("capa").style.display = "flex";
-    document.getElementById("sistema").style.display = "none";
-
+    if(tela) tela.style.display = "flex";
+    if(sistema) sistema.style.display = "none";
   }
 
 });
@@ -2176,18 +2319,21 @@ function mostrarTodosMenus(){
 }
 
 function logout(){
-
   localStorage.clear();
 
   CLIENTE_ID = "";
   PERFIL = "";
+  PLANO = "";
 
-  const tela = document.getElementById("capa");
-  if(tela){
-    tela.style.display = "flex";
-  }
+  const tela = document.getElementById("telaLogin");
+  const sistema = document.getElementById("sistema");
 
+  if(sistema) sistema.style.display = "none";
+  if(tela) tela.style.display = "flex";
+
+  window.scrollTo(0,0);
 }
+
 function carregarMinhasCompras(){
 
   jsonp({action:"relatorioMinhasCompras"}, function(r){
