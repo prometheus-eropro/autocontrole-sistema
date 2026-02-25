@@ -2110,19 +2110,13 @@ window.addEventListener("DOMContentLoaded", function(){
     PLANO = planoSalvo;
   }
 
-  // Sempre mostra capa primeiro
-  document.getElementById("capa").style.display = "flex";
-
+  // Se existir sessão salva → entra automático
   if(clienteSalvo && perfilSalvo){
 
     CLIENTE_ID = clienteSalvo;
     PERFIL = String(perfilSalvo).toUpperCase();
 
-    if(!PERFIL){
-      localStorage.clear();
-      return;
-    }
-
+    document.getElementById("capa").style.display = "none";
     document.getElementById("telaLogin").style.display = "none";
 
     aplicarPermissoes(PERFIL);
@@ -2130,13 +2124,13 @@ window.addEventListener("DOMContentLoaded", function(){
 
   } else {
 
-    // Sem sessão → espera clicar em entrar
-    document.getElementById("telaLogin").style.display = "none";
+    // 🔥 NÃO TEM SESSÃO → MOSTRA LOGIN
+    document.getElementById("capa").style.display = "none";
+    document.getElementById("telaLogin").style.display = "flex";
 
   }
 
 });
-
 function mostrarMenu(idAba){
 
   document.querySelectorAll(".menu-btn").forEach(btn=>{
