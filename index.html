@@ -266,7 +266,7 @@ tr:nth-child(even){
   }
 }
 
-}</style>
+</style>
 
 </head>
 
@@ -655,8 +655,39 @@ style="background:#0f172a;">
 <div id="abaProprietario" class="aba" style="display:none;">
   <div class="card">
     <h2>Painel do Proprietário</h2>
+<div id="upgradePlano" style="display:none;
+background:#fee2e2;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+font-weight:600;">
+🔒 Recursos completos disponíveis apenas no Plano Completo.
+</div>
     <small>Visão exclusiva de resultados financeiros.</small>
 
+<hr>
+
+<div class="grid" style="margin-bottom:15px;">
+
+  <div>
+    <label>Data início</label>
+    <input id="pr_data_inicio_financeiro" type="date">
+  </div>
+
+  <div>
+    <label>Data fim</label>
+    <input id="pr_data_fim_financeiro" type="date">
+  </div>
+
+  <button onclick="carregarPainelProprietarioFiltrado()">
+    Filtrar Financeiro
+  </button>
+
+  <button onclick="carregarPainelProprietario()">
+    Ver Geral
+  </button>
+
+</div>
     <div class="grid">
       <div>
         <label>Total Investido em Estoque</label>
@@ -664,10 +695,14 @@ style="background:#0f172a;">
       </div>
 
       <div>
-        <label>Total Despesas</label>
-        <input id="pr_total_despesas" readonly>
-      </div>
+  <label>Despesas Veículos Vendidos</label>
+  <input id="pr_total_despesas" readonly>
+</div>
 
+<div>
+  <label>Despesas Veículos em Estoque</label>
+  <input id="pr_total_despesas_estoque" readonly>
+</div>
       <div>
         <label>Total Vendas</label>
         <input id="pr_total_vendas" readonly>
@@ -678,7 +713,10 @@ style="background:#0f172a;">
         <input id="pr_lucro_total" readonly>
       </div>
     </div>
-
+<div>
+  <label>Veículos Vendidos no Período</label>
+  <input id="pr_qtd_vendidos" readonly>
+</div>
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
 
 <hr>
@@ -1197,120 +1235,141 @@ function limparFormularioVenda(){
 }
 function carregarPainelProprietario(){
 
-  // ===== RESUMO FINANCEIRO =====
-  jsonp({action:"resumoFinanceiro"}, (r)=>{
-    if(!r.ok){
-  console.warn("Resumo não disponível para este perfil.");
-  return;
-}
+  if(PERFIL !== "PROPRIETARIO"){
+    return;
+  }
 
-    document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
-    document.getElementById("pr_total_despesas").value = r.total_despesas || 0;
-    document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
-    document.getElementById("pr_lucro_total").value = r.lucro_realizado || 0;
+  // ===== MOSTRAR OU ESCONDER AVISO DE UPGRADE =====
+  if(PLANO !== "COMPLETO"){
+    document.getElementById("upgradePlano").style.display = "block";
+  } else {
+    document.getElementById("upgradePlano").style.display = "none";
+  }
+
+  // ===== DEFINIR QUAL AÇÃO USAR =====
+  const actionFinanceiro = (PLANO === "COMPLETO") 
+    ? "dreCompleta" 
+    : "resumoFinanceiro";
+
+  jsonp({action:actionFinanceiro}, (r)=>{
+
+    if(!r.ok){
+      console.warn("Resumo não disponível.");
+      return;
+    }
+
+    if(PLANO === "COMPLETO"){
+
+      document.getElementById("pr_total_investido").value = r.custo_compra || 0;
+      document.getElementById("pr_total_despesas").value = r.despesas_veiculos || 0;
+      document.getElementById("pr_total_vendas").value = r.receita_bruta || 0;
+      document.getElementById("pr_lucro_total").value = r.lucro_liquido || 0;
+      document.getElementById("pr_qtd_vendidos").value = r.quantidade_vendidos || 0;
+      document.getElementById("pr_total_despesas_estoque").value = r.despesas_estoque || 0;
+
+    } else {
+
+      document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
+      document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
+      document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
+      document.getElementById("pr_lucro_total").value = r.lucro_realizado || 0;
+      document.getElementById("pr_qtd_vendidos").value = "";
+      document.getElementById("pr_total_despesas_estoque").value = "";
+    }
+
   });
 
-  // ===== RELATÓRIO ESTOQUE =====
+  // ==============================
+  // RELATÓRIO ESTOQUE
+  // ==============================
   jsonp({action:"relatorioEstoque"}, (r)=>{
     if(!r.ok) return;
 
     let html = "<div class='table-wrapper'><table>";
-
     html += `
-    <tr>
-      <th>Placa</th>
-      <th>Marca</th>
-      <th>Modelo</th>
-      <th>Ano Fab</th>
-      <th>Ano Mod</th>
-      <th>Cor</th>
-      <th>Tipo</th>
-      <th>Valor Venda</th>
-      <th>Data Entrada</th>
-    </tr>`;
-r.itens.sort((a,b)=>{
-  return String(a.modelo).localeCompare(String(b.modelo));
-});
-
-    r.itens.forEach(v=>{
-      html += `
       <tr>
-        <td>${v.placa}</td>
-        <td>${v.marca}</td>
-        <td>${v.modelo}</td>
-        <td>${v.ano_fabricacao || ""}</td>
-        <td>${v.ano_modelo || ""}</td>
-        <td>${v.cor || ""}</td>
-        <td>${v.tipo_veiculo || ""}</td>
-        <td>R$ ${v.valor_venda || 0}</td>
-        <td>${v.data_entrada || ""}</td>
+        <th>Placa</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Valor Venda</th>
+        <th>Data Entrada</th>
       </tr>`;
+
+    (r.itens||[]).forEach(v=>{
+      html += `
+        <tr>
+          <td>${v.placa}</td>
+          <td>${v.marca}</td>
+          <td>${v.modelo}</td>
+          <td>R$ ${v.valor_venda || 0}</td>
+          <td>${v.data_entrada || ""}</td>
+        </tr>`;
     });
 
     html += "</table></div>";
-
     document.getElementById("relatorioEstoqueProprietario").innerHTML = html;
   });
 
-  // ===== RELATÓRIO DESPESAS =====
+  // ==============================
+  // RELATÓRIO DESPESAS
+  // ==============================
   jsonp({action:"relatorioDespesasGeral"}, (r)=>{
     if(!r.ok) return;
 
-let html = "<div class='table-wrapper'><table>";
-
+    let html = "<div class='table-wrapper'><table>";
     html += `
-    <tr>
-      <th>Veículo</th>
-      <th>Data</th>
-      <th>Tipo</th>
-      <th>Valor</th>
-    </tr>`;
-
-    r.itens.forEach(d=>{
-  html += `
-    <tr>
-      <td>${d.placa || d.veiculo || ""}</td>
-      <td>${d.data_despesa || d.data || ""}</td>
-      <td>${d.tipo_despesa || d.tipo || ""}</td>
-      <td>R$ ${d.valor_despesa || d.valor || 0}</td>
-    </tr>`;
-});
-
-    html += "</table></div>";
-
-    document.getElementById("relatorioDespesasProprietario").innerHTML = html;
-  });
-
-  // ===== RELATÓRIO VENDAS POR VENDEDOR =====
-  jsonp({action:"relatorioVendasPorVendedor"}, (r)=>{
-    if(!r.ok) return;
-
-let html = "<div class='table-wrapper'><table>";
-
-    html += `
-<tr>
-  <th>Vendedor</th>
-  <th>Data</th>
-  <th>Valor Venda</th>
-  <th>Lucro</th>
-</tr>`;
-
-    r.itens.forEach(v=>{
-      html += `
       <tr>
-       <td>${v.vendedor_nome}</td>
-<td>${v.data_venda}</td>
-<td>R$ ${v.valor_venda}</td>
-<td>R$ ${v.lucro}</td>
-
+        <th>Veículo</th>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Valor</th>
       </tr>`;
+
+    (r.itens||[]).forEach(d=>{
+      html += `
+        <tr>
+          <td>${d.placa || ""}</td>
+          <td>${d.data_despesa || ""}</td>
+          <td>${d.tipo_despesa || ""}</td>
+          <td>R$ ${d.valor_despesa || 0}</td>
+        </tr>`;
     });
 
     html += "</table></div>";
+    document.getElementById("relatorioDespesasProprietario").innerHTML = html;
+  });
 
+  // ==============================
+  // RELATÓRIO VENDAS POR VENDEDOR
+  // ==============================
+  jsonp({action:"relatorioVendasPorVendedor"}, (r)=>{
+    if(!r.ok) return;
+
+    let html = "<div class='table-wrapper'><table>";
+    html += `
+      <tr>
+        <th>Vendedor</th>
+        <th>Data</th>
+        <th>Valor Venda</th>
+        <th>Lucro</th>
+      </tr>`;
+
+    (r.itens||[]).forEach(v=>{
+      html += `
+        <tr>
+          <td>${v.vendedor_nome}</td>
+          <td>${v.data_venda}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>R$ ${v.lucro}</td>
+        </tr>`;
+    });
+
+    html += "</table></div>";
     document.getElementById("relatorioVendasPorVendedorProprietario").innerHTML = html;
   });
+
 }
+
 function abrirAba(id){
 
   document.querySelectorAll(".aba").forEach(el=>{
@@ -1415,6 +1474,9 @@ function carregarRelatorios(){
         <th>Tipo</th>
         <th>Valor Venda</th>
         <th>Data Entrada</th>
+<th ${ (PERFIL === "ADMIN" || PERFIL === "PROPRIETARIO") ? "" : "style='display:none'" }>
+Dias em Estoque
+</th>
       </tr>
       `;
 
@@ -1429,7 +1491,10 @@ function carregarRelatorios(){
           <td>${v.cor || ""}</td>
           <td>${v.tipo_veiculo || ""}</td>
           <td>R$ ${Number(v.valor_venda || 0).toLocaleString('pt-BR')}</td>
-          <td>${v.data_entrada || ""}</td>
+         <td>${v.data_entrada || ""}</td>
+<td ${ (PERFIL === "ADMIN" || PERFIL === "PROPRIETARIO") ? "" : "style='display:none'" }>
+${v.dias_em_estoque || 0}
+</td>
         </tr>
         `;
       });
@@ -1441,6 +1506,13 @@ function carregarRelatorios(){
 
   });
 }
+
+if(PERFIL !== "ADMIN" && PERFIL !== "PROPRIETARIO"){
+  document.querySelectorAll(".col-dias").forEach(el=>{
+    el.style.display = "none";
+  });
+}
+
 function toggleDetalheEstoque(index){
 
   const el = document.getElementById("detalhe_" + index);
@@ -1459,6 +1531,7 @@ function abrirFichaBranca(){
 }
 let CLIENTE_ID = "";
 let PERFIL = "";
+let PLANO = "";
 console.clear();
 
 function fazerLogin(){
@@ -1480,9 +1553,13 @@ function fazerLogin(){
     }
 
     CLIENTE_ID = r.cliente_id;
-    PERFIL = String(r.perfil || "").toUpperCase();
+PERFIL = String(r.perfil || "").toUpperCase();
+PLANO = String(r.plano || "BASICO").toUpperCase();
+
+localStorage.setItem("plano", PLANO);
 
     // salva no navegador
+
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
     localStorage.setItem("nome_loja", r.nome_loja || "");
@@ -1503,6 +1580,8 @@ document.getElementById("usuarioHeaderMobile").innerText =
   });
 
 }
+
+
 function salvarOffline(payload){
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   fila.push(payload);
@@ -1613,6 +1692,7 @@ document.getElementById("blocoCadastroVendedor").style.display = "block";
   // =========================
   // ADMIN
   // =========================
+esconderMenuPorAba("abaProprietario");
   if(perfil === "ADMIN"){
 document.getElementById("blocoCadastroVendedor").style.display = "block";
     mostrarMenu("abaVeiculo");
@@ -1916,7 +1996,10 @@ window.addEventListener("DOMContentLoaded", function(){
 
   const clienteSalvo = localStorage.getItem("cliente_id");
   const perfilSalvo = localStorage.getItem("perfil");
-
+  const planoSalvo = localStorage.getItem("plano");
+  if(planoSalvo){
+    PLANO = planoSalvo;
+}
   // Sempre começa mostrando capa
   document.getElementById("capa").style.display = "flex";
 
@@ -2091,7 +2174,33 @@ function imprimirEstoque(){
 
   },300);
 
-}</script>
+}
+function carregarPainelProprietarioFiltrado(){
+
+  jsonp({
+    action:"resumoFinanceiro",
+    data_inicio: document.getElementById("pr_data_inicio_financeiro").value,
+    data_fim: document.getElementById("pr_data_fim_financeiro").value
+  }, (r)=>{
+
+    if(!r.ok){
+      alert("Erro ao carregar financeiro.");
+      return;
+    }
+
+    document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
+    document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
+    document.getElementById("pr_total_despesas_estoque").value = r.despesas_estoque || 0;
+    document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
+    document.getElementById("pr_lucro_total").value = r.lucro_realizado || 0;
+    document.getElementById("pr_qtd_vendidos").value = r.quantidade_vendidos || 0;
+
+  });
+
+}
+
+
+</script>
 <nav class="bottom-nav">
 
   <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
