@@ -977,6 +977,10 @@ function num(x){
 }
 function jsonp(params, callback){
 
+  if(!CLIENTE_ID || !PERFIL){
+    return;
+  }
+
   if(CLIENTE_ID){
     params.cliente_id = CLIENTE_ID;
   }
@@ -2095,6 +2099,18 @@ window.addEventListener("DOMContentLoaded", function(){
   document.getElementById("capa").style.display = "flex";
 
   if(clienteSalvo && perfilSalvo){
+
+  CLIENTE_ID = clienteSalvo;
+  PERFIL = String(perfilSalvo).toUpperCase();
+
+  if(!PERFIL){
+    localStorage.clear();
+    return;
+  }
+
+  aplicarPermissoes(PERFIL);
+  carregarListas();
+}
 
   CLIENTE_ID = clienteSalvo;
   PERFIL = String(perfilSalvo).toUpperCase();
