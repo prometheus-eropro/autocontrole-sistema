@@ -1641,7 +1641,11 @@ function fazerLogin(){
     CLIENTE_ID = r.cliente_id;
 PERFIL = String(r.perfil || "").toUpperCase();
 document.getElementById("usuarioLogado").innerText = r.usuario;
-document.getElementById("perfilLogado").innerText = PERFIL;
+
+const elPerfil = document.getElementById("perfilLogado");
+if(elPerfil){
+  elPerfil.innerText = PERFIL;
+}
 PLANO = String(r.plano || "BASICO").toUpperCase();
 
 localStorage.setItem("plano", PLANO);
@@ -1656,7 +1660,12 @@ localStorage.setItem("plano", PLANO);
     aplicarPermissoes(PERFIL);
 
     document.getElementById("telaLogin").style.display = "none";
-document.getElementById("usuarioHeaderMobile").innerText =
+const elMobile = document.getElementById("usuarioHeaderMobile");
+if(elMobile){
+  elMobile.innerText =
+    "Usuário: " + (r.nome_usuario || usuario) +
+    " • Perfil: " + (r.perfil || "");
+}
 
   "Usuário: " + (r.nome_usuario || usuario) + 
   " • Perfil: " + (r.perfil || "");
