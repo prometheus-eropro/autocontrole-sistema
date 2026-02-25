@@ -865,7 +865,9 @@ if(!localStorage.getItem("cliente_id")){
 
 /* ========= CONFIG ========= */
 const GAS_URL = "https://script.google.com/macros/s/AKfycbyDSdfY9ILeSHuqg08mo1ruDA1DzgkN7CKDIswZFwXeoa4d9064m_KrxVI_o1j1_AMn/exec";
-
+let CLIENTE_ID = "";
+let PERFIL = "";
+let PLANO = "";
 /* ========= HELPERS ========= */
 
 function v(id){
@@ -1507,11 +1509,6 @@ ${v.dias_em_estoque || 0}
   });
 }
 
-if(PERFIL !== "ADMIN" && PERFIL !== "PROPRIETARIO"){
-  document.querySelectorAll(".col-dias").forEach(el=>{
-    el.style.display = "none";
-  });
-}
 
 function toggleDetalheEstoque(index){
 
@@ -1529,9 +1526,7 @@ function toggleDetalheEstoque(index){
 function abrirFichaBranca(){
   window.open("ficha_branca.html", "_blank");
 }
-let CLIENTE_ID = "";
-let PERFIL = "";
-let PLANO = "";
+
 console.clear();
 
 function fazerLogin(){
