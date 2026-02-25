@@ -1753,8 +1753,14 @@ formatarMoedaInput("vd_valor_unico");
 formatarMoedaInput("vd_entrada");
 formatarMoedaInput("vd_valor_parcela");
 formatarMoedaInput("vd_valor_financiado");
+
 function aplicarPermissoes(perfil){
 
+  if(!perfil){
+    return; // 🔥 evita aviso antes do login
+  }
+
+  perfil = String(perfil || "").toUpperCase();
   perfil = String(perfil || "").toUpperCase();
 
   // Esconde tudo primeiro
