@@ -944,15 +944,13 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  if(!CLIENTE_ID || !PERFIL){
-    return;
-  }
+  // 🔥 PERMITE LOGIN SEM CLIENTE_ID
+  if(params.action !== "loginUsuario"){
+    if(!CLIENTE_ID || !PERFIL){
+      return;
+    }
 
-  if(CLIENTE_ID){
     params.cliente_id = CLIENTE_ID;
-  }
-
-  if(PERFIL){
     params.perfil = PERFIL;
   }
 
@@ -973,9 +971,7 @@ function jsonp(params, callback){
   window[cbName] = function(data){
     callback(data);
     delete window[cbName];
-    if(script.parentNode){
-      script.parentNode.removeChild(script);
-    }
+    script.remove();
   };
 
   params.callback = cbName;
@@ -983,6 +979,7 @@ function jsonp(params, callback){
   script.src = GAS_URL + "?" + new URLSearchParams(params).toString();
   document.body.appendChild(script);
 }
+
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
@@ -2058,33 +2055,24 @@ window.addEventListener("DOMContentLoaded", function(){
   const perfilSalvo  = localStorage.getItem("perfil");
   const planoSalvo   = localStorage.getItem("plano");
 
-  if(planoSalvo){
-    PLANO = planoSalvo;
-  }
-
   if(clienteSalvo && perfilSalvo){
 
     CLIENTE_ID = clienteSalvo;
-    PERFIL = String(perfilSalvo).toUpperCase();
+    PERFIL = perfilSalvo;
+    PLANO = planoSalvo || "BASICO";
 
-    const tela = document.getElementById("telaLogin");
-    if(tela){
-      tela.style.display = "none";
-    }
+    document.getElementById("telaLogin").style.display = "none";
 
     aplicarPermissoes(PERFIL);
     carregarListas();
 
   } else {
 
-    const tela = document.getElementById("telaLogin");
-    if(tela){
-      tela.style.display = "flex";
-    }
-
+    document.getElementById("telaLogin").style.display = "flex";
   }
 
 });
+
 function mostrarMenu(idAba){
 
   document.querySelectorAll(".menu-btn").forEach(btn=>{
@@ -2277,44 +2265,6 @@ function atualizarStatusConexao(){
 
 }
 
-document.addEventListener("DOMContentLoaded", function(){
-
-  const clienteSalvo = localStorage.getItem("cliente_id");
-  const perfilSalvo  = localStorage.getItem("perfil");
-  const nomeLoja     = localStorage.getItem("nome_loja");
-  const nomeUsuario  = localStorage.getItem("nome_usuario");
-
-  if(clienteSalvo){
-
-    CLIENTE_ID = clienteSalvo;
-    PERFIL = perfilSalvo || "";
-
-    const tela = document.getElementById("telaLogin");
-    if(tela){
-      tela.style.display = "none";
-    }
-
-    if(nomeLoja){
-      document.getElementById("nomeLojaTopo").innerText = nomeLoja;
-    }
-
-    if(nomeUsuario){
-      document.getElementById("usuarioLogado").innerText =
-        "Usuário: " + nomeUsuario + " • Perfil: " + PERFIL;
-    }
-
-    aplicarPermissoes(PERFIL);
-    carregarListas();
-
-  } else {
-
-  const tela = document.getElementById("telaLogin");
-  if(tela){
-    tela.style.display = "flex";
-  }
-
-}
-});
 
 </script>
 <nav class="bottom-nav">
