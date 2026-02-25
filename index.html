@@ -1601,52 +1601,33 @@ function fazerLogin(){
     }
 
     CLIENTE_ID = r.cliente_id;
-PERFIL = String(r.perfil || "").toUpperCase();
-document.getElementById("usuarioLogado").innerText = r.nome_usuario || "";
-
-const elPerfil = document.getElementById("perfilLogado");
-if(elPerfil){
-  elPerfil.innerText = PERFIL;
-}
-PLANO = String(r.plano || "BASICO").toUpperCase();
-
-localStorage.setItem("plano", PLANO);
-
-    // salva no navegador
+    PERFIL = String(r.perfil || "").toUpperCase();
 
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
     localStorage.setItem("nome_loja", r.nome_loja || "");
     localStorage.setItem("nome_usuario", r.nome_usuario);
 
-aplicarPermissoes(PERFIL);
+    aplicarPermissoes(PERFIL);
 
-document.getElementById("capa").style.display = "none";
-const tela = document.getElementById("telaLogin");
-if(tela){
-  tela.style.display = "none";
-}
+    const telaLogin = document.getElementById("telaLogin");
+    if(telaLogin) telaLogin.style.display = "none";
 
-document.getElementById("nomeLojaTopo").innerText = r.nome_loja || "";
-const elMobile = document.getElementById("usuarioHeaderMobile");
+    const usuarioLogado = document.getElementById("usuarioLogado");
+    if(usuarioLogado){
+      usuarioLogado.innerText =
+        "Usuário: " + (r.nome_usuario || usuario) + 
+        " • Perfil: " + (r.perfil || "");
+    }
 
-if(elMobile){
-  elMobile.innerText = 
-    "Usuário: " + (r.nome_usuario || usuario) +
-    " • Perfil: " + (r.perfil || "");
-}
+    const nomeLojaTopo = document.getElementById("nomeLojaTopo");
+    if(nomeLojaTopo){
+      nomeLojaTopo.innerText = r.nome_loja || "";
+    }
 
-     document.getElementById("nomeLojaTopo").innerText = r.nome_loja || "";
-    document.getElementById("headerLoja").innerText = "🏢 " + (r.nome_loja || "");
-document.getElementById("headerUsuario").innerText = 
-  "👤 " + (r.nome_usuario || usuario) + 
-  " • " + (r.perfil || "");
     carregarListas();
-
   });
-
 }
-
 
 function salvarOffline(payload){
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
