@@ -418,36 +418,6 @@ Tecnologia com ConsciêncIA gera resultado
 </div>
 
 <!-- CAPA (TELA INICIAL) -->
-<div id="capa" style="
-position:fixed;
-inset:0;
-background:#0b1220;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:9999;
-padding:20px;
-">
-
-  <div style="
-    width:100%;
-    max-width:420px;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:22px;
-    padding:30px;
-    text-align:center;
-  ">
-
-    <img src="logo.png" style="width:90px;margin-bottom:15px;border-radius:15px;">
-
-    <h1 style="margin:0;font-size:26px;">AutoControle</h1>
-
-    <div style="opacity:.85;margin-top:4px;">
-      Sistema de Gestão Veicular
-    </div>
-
     <div style="margin-top:10px;font-size:14px;opacity:.8;">
       Tecnologia com ConsciêncIA gera resultado
     </div>
@@ -1082,12 +1052,6 @@ setSelect(
 
 });
 } // <-- FECHA carregarListas()
-function entrarSistema(){
-
-  document.getElementById("capa").style.display = "none";
-  document.getElementById("telaLogin").style.display = "flex";
-
-}
   
 (function(){
   const d = new Date();
@@ -2105,7 +2069,7 @@ window.addEventListener("DOMContentLoaded", function(){
 
     document.getElementById("capa").style.display = "none";
     document.getElementById("telaLogin").style.display = "none";
-
+    
     aplicarPermissoes(PERFIL);
     carregarListas();
 
