@@ -458,12 +458,53 @@ tr:nth-child(even){
   }
 
 }
+.capa-sistema{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+}
+
+.logo-capa{
+  width:160px;
+  margin-bottom:20px;
+}
+
+.btn-entrar{
+  margin-top:25px;
+  padding:15px 40px;
+  font-size:18px;
+  border:none;
+  border-radius:12px;
+  background:#16a34a;
+  color:#fff;
+  cursor:pointer;
+}
+
 
 </style>
 
 </head>
 
 <body>
+<!-- CAPA INICIAL -->
+<div id="capa" class="capa-sistema">
+
+  <img src="logo.png" class="logo-capa">
+
+  <h1>AutoControle</h1>
+  <p class="subtitulo">Sistema Profissional de Gestão Veicular</p>
+
+  <button class="btn-entrar" onclick="entrarSistema()">
+    Entrar no Sistema
+  </button>
+
+</div>
+<div id="sistema" style="display:none;">
 <div class="header-unico">
 
   <img src="logo.png" class="logo-header">
@@ -2075,7 +2116,7 @@ window.addEventListener("DOMContentLoaded", function(){
     PERFIL = perfilSalvo;
     PLANO = planoSalvo || "BASICO";
 
-    document.getElementById("telaLogin").style.display = "none";
+    
 
     aplicarPermissoes(PERFIL);
     carregarListas();
@@ -2278,7 +2319,10 @@ function atualizarStatusConexao(){
   }
 
 }
-
+function entrarSistema(){
+  document.getElementById("capa").style.display = "none";
+  document.getElementById("sistema").style.display = "block";
+}
 
 </script>
 <nav class="bottom-nav">
@@ -2293,5 +2337,6 @@ function atualizarStatusConexao(){
 
 </nav>
 <div id="statusIndicator"></div>
+</div>
 </body>
 </html>
