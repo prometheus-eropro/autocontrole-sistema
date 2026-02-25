@@ -624,6 +624,47 @@ tr:nth-child(even){
 .system-head .btn-sair-topo:hover{
   background:#b91c1c;
 }
+.header-sistema{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#0f172a;
+  color:#fff;
+  padding:15px 25px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.logo-sistema{
+  width:50px;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.btn-sair{
+  background:#dc2626;
+  border:none;
+  padding:8px 15px;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+}
+.bolinha{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  display:inline-block;
+  background:#22c55e;
+  margin-right:6px;
+}
 
 </style>
 
@@ -651,31 +692,33 @@ tr:nth-child(even){
   </div>
 </div>
 
+<!-- ===== SISTEMA ===== -->
+<div id="sistema" style="display:none;">
+
 <!-- ===== SISTEMA (fica escondido até logar) ===== -->
-<div id="sistema" style="display:none;">  <button class="btn-sair" onclick="logout()">Sair do Sistema</button>
-
-</div>    <div style="margin-top:10px;font-size:12px;opacity:.6;">
-      Última atualização: <span id="capaAtualizacao"></span>
+<header class="header-sistema">
+  <div class="header-left">
+    <img src="logo.png" class="logo-sistema">
+    <div>
+      <h2 id="nomeLoja">Nome da Loja</h2>
+      <small>Última atualização: <span id="dataAtualizacao"></span></small>
     </div>
-
   </div>
+<div class="status-box">
+  <span id="statusSistema" class="bolinha"></span>
+  Sistema
 </div>
- <div class="container">
-
-  <div class="system-head">
-    <img src="logo.png" class="head-logo" alt="Logo">
-
-    <h1>AutoControle</h1>
-    <span class="sub">Sistema Profissional de Gestão Veicular</span>
-
-    <div class="info">
-      <div><strong id="nomeLojaTopo"></strong></div>
-      <div>Usuário: <strong id="nomeUsuarioTopo"></strong></div>
-      <div>Perfil: <strong id="perfilUsuarioTopo"></strong></div>
+  <div class="header-right">
+    <div class="usuario-info">
+      <strong id="usuarioLogado"></strong><br>
+      <small id="perfilLogado"></small>
     </div>
 
-    <button class="btn-sair-topo" onclick="logout()">Sair do Sistema</button>
-  </div>     
+    <button onclick="logout()" class="btn-sair">
+      Sair
+    </button>
+  </div>
+</header>
 
 <div class="menu-grid">
   <div class="menu-btn" onclick="abrirAba('abaVeiculo')">🚗 Veículo</div>
@@ -1801,53 +1844,45 @@ function fazerLogin(){
     senha
   }, function(r){
 
-    if(!r.ok){
+    if(!r || !r.ok){
       return alert("Login inválido.");
     }
 
-CLIENTE_ID = r.cliente_id;
-PERFIL = String(r.perfil || "").toUpperCase();
-PLANO = String(r.plano || "BASICO").toUpperCase();
-localStorage.setItem("plano", PLANO);
+    // ===== SALVA VARIÁVEIS GLOBAIS =====
+    CLIENTE_ID = r.cliente_id;
+    PERFIL = String(r.perfil || "").toUpperCase();
+    PLANO = String(r.plano || "BASICO").toUpperCase();
 
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
+    localStorage.setItem("plano", PLANO);
     localStorage.setItem("nome_loja", r.nome_loja || "");
-    localStorage.setItem("nome_usuario", r.nome_usuario);
+    localStorage.setItem("nome_usuario", r.nome_usuario || usuario);
 
+    // ===== APLICA PERMISSÕES =====
     aplicarPermissoes(PERFIL);
 
-    document.getElementById("capa").style.display = "none";
-document.getElementById("sistema").style.display = "block";
-    const usuarioLogado = document.getElementById("usuarioLogado");
-    if(usuarioLogado){
-      usuarioLogado.innerText =
-        "Usuário: " + (r.nome_usuario || usuario) + 
-        " • Perfil: " + (r.perfil || "");
-    }
-
-    const nomeLojaTopo = document.getElementById("nomeLojaTopo");
-    if(nomeLojaTopo){
-      nomeLojaTopo.innerText = r.nome_loja || "";
-    }
-
-    carregarListas();
-  });
-    // Mostra sistema e preenche cabeçalho
-    const tela = document.getElementById("telaLogin");
+    // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
+    const telaLogin = document.getElementById("telaLogin");
     const sistema = document.getElementById("sistema");
-    if(tela) tela.style.display = "none";
+
+    if(telaLogin) telaLogin.style.display = "none";
     if(sistema) sistema.style.display = "block";
 
-    const elLoja = document.getElementById("nomeLojaTopo");
-    const elUser = document.getElementById("nomeUsuarioTopo");
-    const elPerf = document.getElementById("perfilUsuarioTopo");
-
+    // ===== PREENCHE CABEÇALHO =====
+    const elLoja = document.getElementById("nomeLoja");
+    const elUser = document.getElementById("usuarioLogado");
+    const elPerf = document.getElementById("perfilLogado");
+    
     if(elLoja) elLoja.textContent = r.nome_loja || "";
-    if(elUser) elUser.textContent = (r.nome_usuario || usuario);
-    if(elPerf) elPerf.textContent = (r.perfil || "");
-}
+    if(elUser) elUser.textContent = r.nome_usuario || usuario;
+    if(elPerf) elPerf.textContent = r.perfil || "";
 
+    // ===== CARREGA DADOS DO SISTEMA =====
+carregarListas();
+carregarInfoSistema();
+  });
+}
 function salvarOffline(payload){
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   fila.push(payload);
@@ -1918,7 +1953,7 @@ function aplicarPermissoes(perfil){
     return; // 🔥 evita aviso antes do login
   }
 
-  perfil = String(perfil || "").toUpperCase();
+  
   perfil = String(perfil || "").toUpperCase();
 
   // Esconde tudo primeiro
@@ -2264,25 +2299,27 @@ window.addEventListener("DOMContentLoaded", function(){
   // Só entra direto se tiver login salvo
   if(clienteSalvo && perfilSalvo){
 
-    CLIENTE_ID = clienteSalvo;
-    PERFIL = String(perfilSalvo || "").toUpperCase();
-    PLANO = planoSalvo || "BASICO";
+  CLIENTE_ID = clienteSalvo;
+  PERFIL = String(perfilSalvo || "").toUpperCase();
+  PLANO = planoSalvo || "BASICO";
 
-    if(tela) tela.style.display = "none";
-    if(sistema) sistema.style.display = "block";
+  if(tela) tela.style.display = "none";
+  if(sistema) sistema.style.display = "block";
 
-    // Preenche cabeçalho (o segundo)
-    const elLoja = document.getElementById("nomeLojaTopo");
-    const elUser = document.getElementById("nomeUsuarioTopo");
-    const elPerf = document.getElementById("perfilUsuarioTopo");
+  const elLoja = document.getElementById("nomeLoja");
+  const elUser = document.getElementById("usuarioLogado");
+  const elPerf = document.getElementById("perfilLogado");
 
-    if(elLoja) elLoja.textContent = nomeLoja;
-    if(elUser) elUser.textContent = nomeUsuario;
-    if(elPerf) elPerf.textContent = PERFIL;
+  if(elLoja) elLoja.textContent = nomeLoja;
+  if(elUser) elUser.textContent = nomeUsuario;
+  if(elPerf) elPerf.textContent = PERFIL;
 
-    aplicarPermissoes(PERFIL);
-    carregarListas();
+  aplicarPermissoes(PERFIL);
+  carregarListas();
 
+  // 🔥 ESTA LINHA ESTAVA FALTANDO
+  carregarInfoSistema();
+}
   } else {
     if(tela) tela.style.display = "flex";
     if(sistema) sistema.style.display = "none";
@@ -2484,6 +2521,28 @@ function atualizarStatusConexao(){
   }
 
 }
+function carregarInfoSistema(){
+
+  jsonp({
+    action:"infoSistema"
+  }, function(r){
+
+    if(!r.ok) return;
+
+    const elData = document.getElementById("dataAtualizacao");
+    if(elData){
+      elData.textContent = r.ultima_atualizacao || "-";
+    }
+
+    const bolinha = document.getElementById("statusSistema");
+    if(bolinha){
+      bolinha.style.background =
+        (r.sistema_online === "ON") ? "#22c55e" : "#ef4444";
+    }
+
+  });
+}
+
 
 </script>
 <nav class="bottom-nav">
@@ -2499,5 +2558,6 @@ function atualizarStatusConexao(){
 </nav>
 <div id="statusIndicator"></div>
 </div>
+
 </body>
 </html>
