@@ -356,8 +356,7 @@ tr:nth-child(even){
   width:14px;
   height:14px;
   border-radius:50%;
-  background:#16a34a;
-  box-shadow:0 0 8px rgba(0,0,0,0.3);
+  box-shadow:0 0 10px rgba(0,0,0,0.4);
   transition:all .3s ease;
 }
 </style>
@@ -2276,6 +2275,8 @@ function atualizarStatusConexao(){
 
   const indicador = document.getElementById("statusIndicator");
 
+  if(!indicador) return; // 🔥 EVITA ERRO
+
   if(navigator.onLine){
     indicador.style.background = "#16a34a"; // verde
   }else{
@@ -2283,11 +2284,6 @@ function atualizarStatusConexao(){
   }
 
 }
-
-window.addEventListener("online", atualizarStatusConexao);
-window.addEventListener("offline", atualizarStatusConexao);
-
-atualizarStatusConexao();
 
 </script>
 <nav class="bottom-nav">
