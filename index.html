@@ -2585,18 +2585,18 @@ function carregarInfoSistema(){
     if(!r.ok) return;
 
     const elData = document.getElementById("dataAtualizacao");
-   if(elData){
-  if(r && r.ultima_atualizacao){
-    const d = new Date(r.ultima_atualizacao);
-    elData.textContent = d.toLocaleString("pt-BR");
-  } else {
-    elData.textContent = "--";
-  }
-}
-const agora = new Date().toLocaleString("pt-BR");
-elData.textContent += " • " + agora;
-    }
 
+    if(elData){
+      if(r && r.ultima_atualizacao){
+        const d = new Date(r.ultima_atualizacao);
+        elData.textContent = d.toLocaleString("pt-BR");
+      } else {
+        elData.textContent = "--";
+      }
+
+      const agora = new Date().toLocaleString("pt-BR");
+      elData.textContent += " • " + agora;
+    }
 
     const bolinha = document.getElementById("statusSistema");
     if(bolinha){
