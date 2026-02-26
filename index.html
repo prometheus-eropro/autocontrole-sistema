@@ -751,10 +751,9 @@ tr:nth-child(even){
   <div class="header-right">
 
     <div class="usuario-info">
-  <div class="usuario-nome" id="usuarioLogado">Usuário</div>
-  <div class="usuario-perfil" id="perfilLogado">Perfil</div>
+  <div><strong>Usuário:</strong> <span id="usuarioLogado"></span></div>
+  <div><strong>Perfil:</strong> <span id="perfilLogado"></span></div>
 </div>
-
     <button onclick="logout()" class="btn-sair">
       Sair
     </button>
@@ -998,9 +997,7 @@ style="background:#0f172a;">
     <textarea id="vd_obs" placeholder="Observações"></textarea>
 
     <button onclick="registrarVenda()">Registrar Venda</button>
-<button onclick="imprimirRelatorioFinal()" style="background:#1e3a8a;">
-🖨 Relatório Final do Veículo
-</button>
+<button id="btnRelatorioFinal">Relatório Final do Veículo</button>
 
   </div>
 </div>
@@ -1222,7 +1219,17 @@ let CLIENTE_ID = "";
 let PERFIL = "";
 let PLANO = "";
 /* ========= HELPERS ========= */
-
+function fmtDataBR(x){
+  if(!x) return "";
+  // se vier ISO (com T), converte
+  try{
+    const d = new Date(x);
+    if(!isNaN(d.getTime())){
+      return d.toLocaleString("pt-BR");
+    }
+  }catch(e){}
+  return String(x); // fallback
+}
 function v(id){
   const el=document.getElementById(id);
   return el ? (el.value||"").trim() : "";
@@ -1646,7 +1653,7 @@ function carregarPainelProprietario(){
           <td>${v.marca}</td>
           <td>${v.modelo}</td>
           <td>R$ ${v.valor_venda || 0}</td>
-          <td>${v.data_entrada || ""}</td>
+          <td>${fmtDataBR(v.data_entrada || "")}</td>
         </tr>`;
     });
 
@@ -1796,7 +1803,7 @@ function carregarRelatorios(){
 
             <div id="detalhe_${index}" style="display:none;margin-top:10px;font-size:13px;color:#334155;">
               <b>Tipo:</b> ${v.tipo_veiculo || ""}<br>
-              <b>Data Entrada:</b> ${v.data_entrada || ""}
+              <b>Data Entrada:</b> ${fmtDataBR(v.data_entrada || "")}
             </div>
 
           </div>
@@ -1835,7 +1842,7 @@ Dias em Estoque
           <td>${v.cor || ""}</td>
           <td>${v.tipo_veiculo || ""}</td>
           <td>R$ ${Number(v.valor_venda || 0).toLocaleString('pt-BR')}</td>
-         <td>${v.data_entrada || ""}</td>
+         <td>${fmtDataBR(v.data_entrada || "")}</td>
 <td ${ (PERFIL === "ADMIN" || PERFIL === "PROPRIETARIO") ? "" : "style='display:none'" }>
 ${v.dias_em_estoque || 0}
 </td>
@@ -2045,6 +2052,8 @@ document.getElementById("blocoCadastroVendedor").style.display = "block";
   document.getElementById("blocoCadastroVendedor").style.display = "none";
   esconderMenuPorAba("abaProprietario");
 
+const btnRel = document.getElementById("btnRelatorioFinal");
+if(btnRel) btnRel.style.display = "none";
 const btn = document.getElementById("btnSalvarVendedor");
 if(btn) btn.style.display = "none";
   const blocoVendas = document.getElementById("blocoVendasRelatorio");
@@ -2104,15 +2113,16 @@ function carregarMinhasVendas(){
     if(!r.ok) return;
 
     let html = "<table>";
-    html += "<tr><th>Data</th><th>Veículo</th><th>Valor</th><th>Comissão</th></tr>";
+    html += "<tr><th>Data</th><th>Placa</th><th>Veículo</th><th>Valor</th><th>Comissão</th></tr>";
 
     r.itens.forEach(v=>{
       html += `
         <tr>
-          <td>${v.data_venda}</td>
-          <td>${v.placa}</td>
-          <td>R$ ${v.valor_venda}</td>
-          <td>R$ ${v.valor_comissao || 0}</td>
+          <td>${fmtDataBR(v.data_venda)}</td>
+<td>${v.placa || ""}</td>
+<td>${v.veiculo || (v.marca ? (v.marca+" "+v.modelo) : "")}</td>
+<td>R$ ${v.valor_venda || ""}</td>
+<td>R$ ${v.comissao || v.valor_comissao || ""}</td>
         </tr>
       `;
     });
@@ -2357,8 +2367,9 @@ window.addEventListener("DOMContentLoaded", function(){
   if(elUser) elUser.textContent = nomeUsuario;
   if(elPerf) elPerf.textContent = PERFIL;
 
-  aplicarPermissoes(PERFIL);
-  carregarListas();
+aplicarPermissoes(PERFIL);
+carregarListas();
+carregarInfoSistema(); // ✅ faltava
 
   // 🔥 ESTA LINHA ESTAVA FALTANDO
   carregarInfoSistema();
@@ -2421,16 +2432,16 @@ function carregarMinhasCompras(){
     if(!r.ok) return;
 
     let html = "<table>";
-    html += "<tr><th>Data</th><th>Placa</th><th>Valor Compra</th><th>Comissão</th></tr>";
+    html += "<tr><th>Data</th><th>Placa</th><th>Veículo</th><th>Valor Compra</th><th>Comissão</th></tr>";
 
     r.itens.forEach(v=>{
       html += `
 <tr>
-  <td>${v.data_entrada}</td>
-  <td>${v.placa}</td>
-  <td>R$ ${v.valor_compra}</td>
-  <td>R$ ${v.valor_comissao || 0}</td>
-</tr>
+  <td>${fmtDataBR(v.data_entrada)}</td>
+<td>${v.placa || ""}</td>
+<td>${v.veiculo || (v.marca ? (v.marca+" "+v.modelo) : "")}</td>
+<td>R$ ${v.valor_compra || ""}</td>
+<td>R$ ${v.comissao || v.valor_comissao_compra || ""}</td></tr>
 `;
     });
 
@@ -2574,8 +2585,14 @@ function carregarInfoSistema(){
     if(!r.ok) return;
 
     const elData = document.getElementById("dataAtualizacao");
-    if(elData){
-      elData.textContent = r.ultima_atualizacao || "-";
+   if(elData){
+  if(r && r.ultima_atualizacao){
+    const d = new Date(r.ultima_atualizacao);
+    elData.textContent = d.toLocaleString("pt-BR");
+  } else {
+    elData.textContent = "--";
+  }
+}
 const agora = new Date().toLocaleString("pt-BR");
 elData.textContent += " • " + agora;
     }
@@ -2588,6 +2605,28 @@ elData.textContent += " • " + agora;
     }
 
   });
+}
+
+function trocarSenha(){
+
+  const usuario = localStorage.getItem("usuario");
+  const senhaAtual = document.getElementById("senhaAtual").value;
+  const novaSenha = document.getElementById("novaSenha").value;
+
+  fetch(GAS_URL,{
+    method:"POST",
+    body:new URLSearchParams({
+      action:"alterarSenha",
+      usuario,
+      senha_atual:senhaAtual,
+      nova_senha:novaSenha
+    })
+  })
+  .then(r=>r.json())
+  .then(resp=>{
+    alert(resp.msg || "Senha alterada.");
+  });
+
 }
 
 
