@@ -738,7 +738,7 @@ tr:nth-child(even){
 <div class="nome-loja" id="nomeLoja"></div>
       <div class="info-sistema">
   <div>
-    <span class="label-info">Última atualização</span><br>
+    <span class="label-info">Última atualização (Horário do Sistema)</span><br>
     <span id="dataAtualizacao" class="valor-info">--</span>
   </div>
 </div>
@@ -1243,8 +1243,10 @@ function jsonp(params, callback){
   // 🔥 PERMITE LOGIN SEM CLIENTE_ID
   if(params.action !== "loginUsuario"){
     if(!CLIENTE_ID || !PERFIL){
-      return;
-    }
+  alert("Sessão expirada. Faça login novamente.");
+  logout();
+  return;
+}
 
     params.cliente_id = CLIENTE_ID;
     params.perfil = PERFIL;
@@ -1353,11 +1355,28 @@ setSelect(
 
 /* ========= AÇÕES ========= */
 function salvarEntrada(){
+const placa = normalizarPlaca_(v("v_placa"));
+if(!placaValida_(placa)){
+  return alert("Placa inválida. Ex: ABC1234 ou ABC1D23.");
+}
+const padraoProp = localStorage.getItem("proprietario_vendedor_id") || "";
+const indicou = v("comp_vendedor_loja") || padraoProp;
+
+if(!indicou){
+  return alert("Selecione quem indicou/fez a compra (ou configure o proprietário como padrão).");
+}
+
+if(!v("v_placa")) return alert("Informe a placa.");
+if(!v("v_marca")) return alert("Informe a marca.");
+if(!v("v_modelo")) return alert("Informe o modelo.");
+if(!v("v_cor")) return alert("Informe a cor.");
+if(!num(v("v_valor_compra"))) return alert("Informe o valor de compra.");
+if(!num(v("v_valor_venda"))) return alert("Informe o valor para venda.");
 
   const payload = {
     action:"cadastrarEntrada",
 
-    placa: v("v_placa"),
+    placa: placa,
     marca: v("v_marca"),
     modelo: v("v_modelo"),
     ano_fabricacao: v("v_ano_fabricacao"),
@@ -1410,6 +1429,20 @@ if(!navigator.onLine){
     } else alert("Erro: " + (r.msg||""));
   });
 }
+
+function placaValida_(placa){
+  const p = String(placa||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  // Antiga: ABC1234
+  const antiga = /^[A-Z]{3}[0-9]{4}$/;
+  // Mercosul: ABC1D23
+  const mercosul = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/;
+  return antiga.test(p) || mercosul.test(p);
+}
+
+function normalizarPlaca_(placa){
+  return String(placa||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+}
+
 function lancarDespesa(){
 
   const payload = {
@@ -1485,7 +1518,6 @@ function registrarVenda(){
   jsonp({action:"totalDespesasVeiculo", id_veiculo}, (r)=>{
     if(!r.ok) return alert("Erro ao checar despesas.");
     const total = Number(r.total||0);
-
     if(total === 0){
       if(!confirm("Veículo sem despesas. Deseja continuar?")) return;
     }
@@ -1515,7 +1547,16 @@ function enviarVenda(){
   } else {
     valorFixo = valorUnico;
   }
+const cond = v("vd_condicao");
 
+if(cond === "PARCELADO"){
+  if(!num(v("vd_entrada")) && num(v("vd_valor_venda")) > 0){
+    // entrada pode ser 0, então não obrigo, ok
+  }
+  const n = parseInt(v("vd_parcelas") || "0", 10);
+  if(n <= 0) return alert("Informe o número de parcelas.");
+  if(!num(v("vd_valor_parcela"))) return alert("Informe/gera o valor da parcela.");
+}
   const payload = {
     action:"registrarVenda",
 
@@ -1532,7 +1573,7 @@ function enviarVenda(){
     valor_financiado:num(v("vd_valor_financiado")),
 
     comprador_nome:v("c_nome"),
-    comprador_doc:v("c_doc"),
+   comprador_cpf_cnpj: v("c_doc"),
     comprador_telefone:v("c_telefone"),
     comprador_email:v("c_email"),
     comprador_endereco:v("c_endereco"),
@@ -1906,7 +1947,7 @@ function fazerLogin(){
     localStorage.setItem("plano", PLANO);
     localStorage.setItem("nome_loja", r.nome_loja || "");
     localStorage.setItem("nome_usuario", r.nome_usuario || usuario);
-
+    localStorage.setItem("proprietario_vendedor_id", r.proprietario_vendedor_id || "");
     // ===== APLICA PERMISSÕES =====
     aplicarPermissoes(PERFIL);
 
@@ -2371,9 +2412,7 @@ aplicarPermissoes(PERFIL);
 carregarListas();
 carregarInfoSistema(); // ✅ faltava
 
-  // 🔥 ESTA LINHA ESTAVA FALTANDO
-  carregarInfoSistema();
-
+  
   } else {
     if(tela) tela.style.display = "flex";
     if(sistema) sistema.style.display = "none";
@@ -2608,28 +2647,42 @@ function carregarInfoSistema(){
 }
 
 function trocarSenha(){
-
-  const usuario = localStorage.getItem("usuario");
+  const usuario = localStorage.getItem("nome_usuario") || "";
   const senhaAtual = document.getElementById("senhaAtual").value;
   const novaSenha = document.getElementById("novaSenha").value;
 
-  fetch(GAS_URL,{
-    method:"POST",
-    body:new URLSearchParams({
-      action:"alterarSenha",
-      usuario,
-      senha_atual:senhaAtual,
-      nova_senha:novaSenha
-    })
-  })
-  .then(r=>r.json())
-  .then(resp=>{
+  jsonp({
+    action:"alterarSenha",
+    usuario,
+    senha_atual: senhaAtual,
+    nova_senha: novaSenha
+  }, function(resp){
     alert(resp.msg || "Senha alterada.");
   });
+}function recalcularParcelasVenda_(){
+  const cond = v("vd_condicao");
+  if(cond !== "PARCELADO") return;
 
+  const valor = num(v("vd_valor_venda"));
+  const entrada = num(v("vd_entrada"));
+  const n = parseInt(v("vd_parcelas") || "0", 10);
+
+  if(valor <= 0 || n <= 0) return;
+
+  const restante = Math.max(0, valor - entrada);
+  const parcela = restante / n;
+
+  const el = document.getElementById("vd_valor_parcela");
+  if(el){
+    el.value = parcela.toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
 }
 
-
+["vd_valor_venda","vd_entrada","vd_parcelas"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener("input", recalcularParcelasVenda_);
+});
+document.getElementById("vd_condicao")?.addEventListener("change", recalcularParcelasVenda_);
 </script>
 <nav class="bottom-nav">
 
