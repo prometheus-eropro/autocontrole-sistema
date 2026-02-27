@@ -626,6 +626,7 @@ tr:nth-child(even){
 }
 .header-sistema{
   display:flex;
+ flex-wrap:wrap;
   justify-content:space-between;
   align-items:center;
   background:#0f172a;
@@ -699,7 +700,26 @@ tr:nth-child(even){
   color:#22c55e;
   font-weight:600;
 }
+@media (max-width: 900px){
 
+  .header-sistema{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .header-right{
+    width:100%;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
+
+  .logo-sistema{
+    width:80px;
+  }
+
+}
 </style>
 
 </head>
@@ -967,18 +987,12 @@ style="background:#0f172a;">
         <option>Financiamento</option>
       </select>
 
-      <select id="vd_condicao">
+      <select id="vd_condicao" onchange="toggleCondicaoPagamento()">
         <option value="AVISTA">À vista</option>
         <option value="PARCELADO">Parcelado</option>
         <option value="FINANCIADO">Financiado</option>
       </select>
 
-      <input id="vd_entrada" placeholder="Entrada (R$)">
-      <input id="vd_parcelas" placeholder="Nº Parcelas">
-      <input id="vd_valor_parcela" placeholder="Valor Parcela (R$)">
-      <input id="vd_banco" placeholder="Banco (se financiado)">
-      <input id="vd_valor_financiado" placeholder="Valor Financiado (R$)">
-    </div>
 
     <hr>
 
@@ -993,8 +1007,51 @@ style="background:#0f172a;">
       <input id="c_cidade" placeholder="Cidade">
       <input id="c_estado" placeholder="Estado">
     </div>
+<hr>
 
+<!-- VEÍCULO NA TROCA -->
+<div class="badge">Veículo na Troca</div>
+
+<label style="display:flex;gap:10px;align-items:center;margin-top:10px;">
+  <input type="checkbox" id="vd_tem_troca" onchange="toggleTroca()" style="width:auto;margin:0;">
+  Tem veículo na troca?
+</label>
+
+<div id="blocoTroca" style="display:none;margin-top:10px;">
+ <div class="grid">
+  <input id="tr_placa" placeholder="Placa do veículo na troca">
+  <input id="tr_marca" placeholder="Marca">
+  <input id="tr_modelo" placeholder="Modelo">
+  <input id="tr_ano" placeholder="Ano">
+  <input id="tr_cor" placeholder="Cor"> <!-- 🔥 ADICIONE AQUI -->
+  <input id="tr_valor_avaliado" placeholder="Valor Avaliado (R$)">
+  <input id="tr_valor_venda" placeholder="Valor para Venda no Estoque (R$)">
+</div>
+
+  <textarea id="tr_obs" placeholder="Observações da troca (opcional)"></textarea>
+</div>
+
+<hr>
+
+<!-- PARCELAMENTO / FINANCIAMENTO (EXIBE CONFORME CONDIÇÃO) -->
+<div id="blocoParcelado" style="display:none;">
+  <div class="badge">Parcelamento pela Loja</div>
+  <div class="grid">
+    <input id="vd_entrada" placeholder="Entrada (R$)">
+    <input id="vd_parcelas" placeholder="Nº Parcelas">
+    <input id="vd_valor_parcela" placeholder="Valor Parcela (R$)">
+  </div>
+</div>
+
+<div id="blocoFinanciado" style="display:none;">
+  <div class="badge">Financiamento</div>
+  <div class="grid">
+    <input id="vd_banco" placeholder="Banco (se financiado)">
+    <input id="vd_valor_financiado" placeholder="Valor Financiado (R$)">
+  </div>
+</div>
     <textarea id="vd_obs" placeholder="Observações"></textarea>
+
 
     <button onclick="registrarVenda()">Registrar Venda</button>
 <button id="btnRelatorioFinal">Relatório Final do Veículo</button>
@@ -1586,7 +1643,17 @@ if(cond === "PARCELADO"){
     percentual_comissao: percentual,
     valor_comissao_fixo: valorFixo,
 
-    observacoes:v("vd_obs")
+    observacoes:v("vd_obs"),
+
+tem_troca: document.getElementById("vd_tem_troca")?.checked ? "SIM" : "NAO",
+troca_placa: v("tr_placa"),
+troca_marca: v("tr_marca"),
+troca_modelo: v("tr_modelo"),
+troca_ano: v("tr_ano"),
+troca_cor: v("tr_cor"),
+troca_valor_avaliado: num(v("tr_valor_avaliado")),
+troca_valor_venda: num(v("tr_valor_venda")),
+troca_obs: v("tr_obs"),
   };
 
   jsonp(payload, (rr)=>{
@@ -2035,6 +2102,8 @@ formatarMoedaInput("vd_valor_unico");
 formatarMoedaInput("vd_entrada");
 formatarMoedaInput("vd_valor_parcela");
 formatarMoedaInput("vd_valor_financiado");
+formatarMoedaInput("tr_valor_avaliado");
+formatarMoedaInput("tr_valor_venda");
 
 function aplicarPermissoes(perfil){
 
@@ -2684,6 +2753,33 @@ function trocarSenha(){
   if(el) el.addEventListener("input", recalcularParcelasVenda_);
 });
 document.getElementById("vd_condicao")?.addEventListener("change", recalcularParcelasVenda_);
+function toggleTroca(){
+  const tem = document.getElementById("vd_tem_troca")?.checked;
+  const bloco = document.getElementById("blocoTroca");
+  if(bloco) bloco.style.display = tem ? "block" : "none";
+}
+
+function toggleCondicaoPagamento(){
+
+  const cond = v("vd_condicao");
+
+  const blocoParcelado = document.getElementById("blocoParcelado");
+  const blocoFinanciado = document.getElementById("blocoFinanciado");
+
+  if(blocoParcelado) blocoParcelado.style.display = "none";
+  if(blocoFinanciado) blocoFinanciado.style.display = "none";
+
+  if(cond === "PARCELADO"){
+    blocoParcelado.style.display = "block";
+  }
+
+  if(cond === "FINANCIADO"){
+    blocoFinanciado.style.display = "block";
+  }
+
+  recalcularParcelasVenda_();
+}
+
 </script>
 <nav class="bottom-nav">
 
