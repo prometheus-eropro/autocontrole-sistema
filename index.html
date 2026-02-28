@@ -1360,7 +1360,7 @@ function enviarVenda(){
   } else {
     valorFixo = valorUnico;
   }
-const cond = v("vd_condicao");
+const cond = v("vd_forma_pag");
 
 if(cond === "PARCELADO"){
   if(!num(v("vd_entrada")) && num(v("vd_valor_venda")) > 0){
@@ -1377,7 +1377,7 @@ if(cond === "PARCELADO"){
     data_venda:v("vd_data"),
     valor_venda:num(v("vd_valor_venda")),
     forma_pagamento:v("vd_forma_pag"),
-    condicao_pagamento:v("vd_condicao"),
+    condicao_pagamento:v("vd_forma_pag"),
 
     entrada:num(v("vd_entrada")),
     numero_parcelas:v("vd_parcelas"),
