@@ -511,11 +511,16 @@ button {
   <div class="menu-btn" onclick="abrirAba('abaDespesas')">💰 Despesas</div>
   <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
   <div class="menu-btn" onclick="abrirAba('abaProprietario')">📊 Proprietário</div>
-  <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
+  <div class="menu-btn" onclick="abrirAba('abaEstoque')">📦 Estoque</div>
+<div class="menu-btn" onclick="abrirAba('abaRelatorios')">📊 Relatórios</div>
   <div class="menu-btn" onclick="abrirAba('abaMinhasVendas')">
   📌 Minhas Vendas</div>
 <div class="menu-btn" onclick="abrirAba('abaMinhasCompras')">
 📦 Minhas Compras
+</div>
+
+<div class="menu-btn" onclick="abrirAba('abaUsuarios')">
+👥 Usuários
 </div>
 
 
@@ -932,8 +937,46 @@ font-weight:600;">
 
   </div>
 </div>
+<!-- =======================
+  ABA USUÁRIOS
+======================= -->
+<div id="abaUsuarios" class="aba" style="display:none;">
+  <div class="card">
 
-<div id="abaRelatorio" class="aba" style="display:none;">
+    <h2>Gerenciar Usuários</h2>
+    <hr>
+
+    <h3>Criar Novo Usuário</h3>
+
+    <div class="grid">
+      <input id="novo_usuario" placeholder="Usuário">
+      <input id="nova_senha_usuario" type="password" placeholder="Senha">
+
+      <select id="novo_perfil">
+        <option value="">Perfil</option>
+        <option value="VENDEDOR">VENDEDOR</option>
+        <option value="ESTOQUE">ESTOQUE</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
+    </div>
+
+    <button onclick="criarUsuario()">Criar Usuário</button>
+
+    <hr>
+
+    <h3>Alterar Senha de Usuário</h3>
+
+    <div class="grid">
+      <input id="usuario_alterar" placeholder="Usuário">
+      <input id="nova_senha_alterar" type="password" placeholder="Nova Senha">
+    </div>
+
+    <button onclick="alterarSenhaAdmin()">Alterar Senha</button>
+
+  </div>
+</div>
+
+<div id="abaEstoque" class="aba" style="display:none;">
   <div class="card">
 
     <!-- ============================= -->
@@ -953,6 +996,47 @@ font-weight:600;">
     <div class="table-wrapper">
       <div id="relatorioEstoque"></div>
     </div>
+</div>
+<!-- =======================
+  ABA RELATÓRIOS
+======================= -->
+<div id="abaRelatorios" class="aba" style="display:none;">
+  <div class="card">
+
+    <h2>Relatório de Vendas</h2>
+    <hr>
+
+    <div class="grid" style="margin-bottom:15px;">
+
+      <select id="filtro_vendedor_venda">
+        <option value="">Todos os vendedores</option>
+      </select>
+
+      <div>
+        <label>Data início</label>
+        <input id="filtro_data_inicio_venda" type="date">
+      </div>
+
+      <div>
+        <label>Data fim</label>
+        <input id="filtro_data_fim_venda" type="date">
+      </div>
+
+      <input id="filtro_placa_venda" placeholder="Filtrar por Placa">
+      <input id="filtro_cpf_venda" placeholder="Filtrar por CPF">
+
+      <button onclick="carregarVendasFiltradas()">
+        Filtrar Vendas
+      </button>
+
+    </div>
+
+    <div class="table-wrapper">
+      <div id="relatorioVendasFiltrado"></div>
+    </div>
+
+  </div>
+</div>
     <!-- ============================= -->
     <!-- RELATÓRIO DE VENDAS -->
     <!-- ============================= -->
@@ -1023,7 +1107,12 @@ font-weight:600;">
     </div>
   </div>
 </div>
+<hr>
+<h3>Alterar Senha</h3>
 
+<input id="senhaAtual" type="password" placeholder="Senha Atual">
+<input id="novaSenha" type="password" placeholder="Nova Senha">
+<button onclick="trocarSenha()">Alterar Senha</button>
 <script>
 
 /* ========= CONFIG ========= */
@@ -1868,14 +1957,11 @@ formatarMoedaInput("tr_valor_venda");
 
 function aplicarPermissoes(perfil){
 
-  if(!perfil){
-    return; // 🔥 evita aviso antes do login
-  }
+  if(!perfil) return;
 
-  
-  perfil = String(perfil || "").toUpperCase();
+  perfil = String(perfil).toUpperCase();
 
-  // Esconde tudo primeiro
+  // 🔥 Esconde tudo primeiro
   document.querySelectorAll(".menu-btn").forEach(btn=>{
     btn.style.display = "none";
   });
@@ -1889,84 +1975,93 @@ function aplicarPermissoes(perfil){
   });
 
   // =========================
-  // PROPRIETARIO
+  // MASTER E PROPRIETARIO
   // =========================
-  if(perfil === "PROPRIETARIO"){
+  if(perfil === "MASTER" || perfil === "PROPRIETARIO"){
 
-  mostrarTodosMenus();
+    mostrarTodosMenus();
+
+    setTimeout(()=>{
+      abrirAba("abaProprietario");
+      carregarPainelProprietario();
+    },100);
+
+    return;
+  }
+
+  // =========================
+  // ADMIN (sem financeiro)
+  // =========================
+  if(perfil === "ADMIN"){
+
+  mostrarMenu("abaVeiculo");
+  mostrarMenu("abaDespesas");
+  mostrarMenu("abaVenda");
+  mostrarMenu("abaEstoque");
+  mostrarMenu("abaRelatorios");
+  mostrarMenu("abaMinhasVendas");
+  mostrarMenu("abaUsuarios"); // 🔥 NOVO
+
+  esconderMenuPorAba("abaProprietario");
 
   setTimeout(()=>{
-    abrirAba("abaProprietario");
-    carregarPainelProprietario();
+    abrirAba("abaVeiculo");
   },100);
 
   return;
 }
-  // =========================
-  // ADMIN
-  // =========================
-esconderMenuPorAba("abaProprietario");
-  if(perfil === "ADMIN"){
-document.getElementById("blocoCadastroVendedor").style.display = "block";
-    mostrarMenu("abaVeiculo");
-    mostrarMenu("abaDespesas");
-    mostrarMenu("abaVenda");
-    mostrarMenu("abaRelatorio");
-    mostrarMenu("abaMinhasVendas");
-    return;
-  }
 
   // =========================
   // VENDEDOR
   // =========================
   if(perfil === "VENDEDOR"){
 
-  mostrarMenu("abaVenda");
-  mostrarMenu("abaRelatorio");
-  mostrarMenu("abaMinhasVendas");
-  mostrarMenu("abaMinhasCompras");
-  document.getElementById("blocoCadastroVendedor").style.display = "none";
-  esconderMenuPorAba("abaProprietario");
+    mostrarMenu("abaEstoque");
+    mostrarMenu("abaMinhasVendas");
+    mostrarMenu("abaMinhasCompras");
 
-const btnRel = document.getElementById("btnRelatorioFinal");
-if(btnRel) btnRel.style.display = "none";
-const btn = document.getElementById("btnSalvarVendedor");
-if(btn) btn.style.display = "none";
-  const blocoVendas = document.getElementById("blocoVendasRelatorio");
-  if(blocoVendas){
-    blocoVendas.style.display = "none";
+    // Esconde tudo que é cadastro/edição
+    const btnSalvarVendedor = document.getElementById("btnSalvarVendedor");
+    if(btnSalvarVendedor) btnSalvarVendedor.style.display = "none";
+
+    const blocoCadastroVendedor = document.getElementById("blocoCadastroVendedor");
+    if(blocoCadastroVendedor) blocoCadastroVendedor.style.display = "none";
+
+    const blocoVendas = document.getElementById("blocoVendasRelatorio");
+    if(blocoVendas) blocoVendas.style.display = "none";
+
+    esconderMenuPorAba("abaProprietario");
+
+    setTimeout(()=>{
+      abrirAba("abaEstoque");
+      carregarRelatorios(); // apenas estoque
+    },100);
+
+    return;
   }
 
-  return;
-}
+// =========================
+// ESTOQUE (SOMENTE VISUALIZAÇÃO)
+// =========================
+if(perfil === "ESTOQUE"){
 
-  // =========================
-  // ESTOQUE (SOMENTE ESTOQUE)
-  // =========================
-  if(perfil === "ESTOQUE"){
+  mostrarMenu("abaEstoque");
 
-  // Esconde todos menus
-  document.querySelectorAll(".menu-btn").forEach(btn=>{
-    btn.style.display = "none";
-  });
-
-  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    btn.style.display = "none";
-  });
-
-  // Mostra somente Relatórios
-  mostrarMenu("abaRelatorio");
+  esconderMenuPorAba("abaProprietario");
+  esconderMenuPorAba("abaVeiculo");
+  esconderMenuPorAba("abaDespesas");
+  esconderMenuPorAba("abaVenda");
+  esconderMenuPorAba("abaRelatorios");
+  esconderMenuPorAba("abaMinhasVendas");
+  esconderMenuPorAba("abaMinhasCompras");
 
   setTimeout(()=>{
-    abrirAba("abaRelatorio");
+    abrirAba("abaEstoque");
     carregarRelatorios();
   },100);
 
   return;
 }
-
-}
-
 function esconderMenuPorAba(idAba){
 
   // Desktop
@@ -2563,13 +2658,69 @@ function abrirFichaCompra(){
 function abrirFichaVenda(){
   window.open("ficha_venda_branco.html","_blank");
 }
+
+function criarUsuario(){
+
+  const usuario = v("novo_usuario");
+  const senha = v("nova_senha_usuario");
+  const perfilNovo = v("novo_perfil");
+
+  if(!usuario || !senha || !perfilNovo)
+    return alert("Preencha todos os campos.");
+
+  console.log("Criando usuário:", usuario, perfilNovo);
+
+  jsonp({
+    action:"criarUsuario",
+    usuario_novo: usuario,
+    senha_nova: senha,
+    perfil_novo: perfilNovo
+  }, function(r){
+
+    console.log("Resposta criarUsuario:", r);
+
+    alert(r.msg || "Usuário criado.");
+
+  });
+
+}
+
+function alterarSenhaAdmin(){
+
+  const usuario = v("usuario_alterar");
+  const novaSenha = v("nova_senha_alterar");
+
+  if(!usuario || !novaSenha)
+    return alert("Preencha usuário e nova senha.");
+
+  console.log("Alterando senha de:", usuario);
+
+  jsonp({
+    action:"alterarSenha",
+    usuario: usuario,
+    nova_senha: novaSenha
+  }, function(r){
+
+    console.log("Resposta alterarSenha:", r);
+
+    alert(r.msg || "Senha alterada.");
+
+  });
+
+}
+
+
 </script>
 <nav class="bottom-nav">
 
+  <div onclick="abrirAba('abaUsuarios')">
+👥<span>Usuários</span>
+</div>
   <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
   <div onclick="abrirAba('abaDespesas')">💰<span>Despesas</span></div>
   <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
-  <div onclick="abrirAba('abaRelatorio')">📑<span>Estoque</span></div>
+  <div onclick="abrirAba('abaEstoque')">📦<span>Estoque</span></div>
+<div onclick="abrirAba('abaRelatorios')">📊<span>Relatórios</span></div>
   <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
   <div onclick="abrirAba('abaMinhasVendas')">📌<span>Vendas</span></div>
   <div onclick="abrirAba('abaMinhasCompras')">📦<span>Compras</span></div>
