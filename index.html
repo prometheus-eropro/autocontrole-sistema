@@ -715,20 +715,32 @@ Cadastro do veículo + dono no documento + vendedor
 
       <input id="vd_valor_venda" placeholder="Valor da Venda (R$)">
 
-      <select id="vd_forma_pag">
-        <option value="">Forma Pagamento</option>
-        <option>Dinheiro</option>
-        <option>Pix</option>
-        <option>Cartão</option>
-        <option>Financiamento</option>
-      </select>
-
-      <select id="vd_condicao" onchange="toggleCondicaoPagamento()">
-  <option value="">Condição Pagamento</option>
-  <option value="AVISTA">À vista</option>
-  <option value="PARCELADO">Parcelado</option>
-  <option value="FINANCIADO">Financiado</option>
+      <select id="vd_forma_pag" onchange="toggleFormaPagamento()">
+  <option value="">Forma Pagamento</option>
+  <option value="DINHEIRO">Dinheiro</option>
+  <option value="PIX">Pix</option>
+  <option value="CARTAO">Cartão</option>
+  <option value="PARCELADO_LOJA">Parcelado pela Loja</option>
+  <option value="FINANCIAMENTO">Financiamento Banco</option>
 </select>
+
+<!-- PARCELAMENTO / FINANCIAMENTO (EXIBE CONFORME CONDIÇÃO) -->
+<div id="blocoParcelado" style="display:none;">
+  <div class="badge">Parcelamento pela Loja</div>
+  <div class="grid">
+    <input id="vd_entrada" placeholder="Entrada (R$)">
+    <input id="vd_parcelas" placeholder="Nº Parcelas">
+    <input id="vd_valor_parcela" placeholder="Valor Parcela (R$)">
+  </div>
+</div>
+
+<div id="blocoFinanciado" style="display:none;">
+  <div class="badge">Financiamento</div>
+  <div class="grid">
+    <input id="vd_banco" placeholder="Banco (se financiado)">
+    <input id="vd_valor_financiado" placeholder="Valor Financiado (R$)">
+  </div>
+</div>
 
    <hr>
 
@@ -790,23 +802,6 @@ Cadastro do veículo + dono no documento + vendedor
 
 <hr>
 
-<!-- PARCELAMENTO / FINANCIAMENTO (EXIBE CONFORME CONDIÇÃO) -->
-<div id="blocoParcelado" style="display:none;">
-  <div class="badge">Parcelamento pela Loja</div>
-  <div class="grid">
-    <input id="vd_entrada" placeholder="Entrada (R$)">
-    <input id="vd_parcelas" placeholder="Nº Parcelas">
-    <input id="vd_valor_parcela" placeholder="Valor Parcela (R$)">
-  </div>
-</div>
-
-<div id="blocoFinanciado" style="display:none;">
-  <div class="badge">Financiamento</div>
-  <div class="grid">
-    <input id="vd_banco" placeholder="Banco (se financiado)">
-    <input id="vd_valor_financiado" placeholder="Valor Financiado (R$)">
-  </div>
-</div>
     <textarea id="vd_obs" placeholder="Observações"></textarea>
 
 
@@ -1898,16 +1893,15 @@ function aplicarPermissoes(perfil){
   // =========================
   if(perfil === "PROPRIETARIO"){
 
-  document.getElementById("blocoCadastroVendedor").style.display = "block";
-
   mostrarTodosMenus();
 
-  abrirAba("abaProprietario");
-  carregarPainelProprietario();
+  setTimeout(()=>{
+    abrirAba("abaProprietario");
+    carregarPainelProprietario();
+  },100);
 
   return;
 }
-
   // =========================
   // ADMIN
   // =========================
@@ -1951,19 +1945,24 @@ if(btn) btn.style.display = "none";
   // =========================
   if(perfil === "ESTOQUE"){
 
+  // Esconde todos menus
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    btn.style.display = "none";
+  });
+
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    btn.style.display = "none";
+  });
+
+  // Mostra somente Relatórios
   mostrarMenu("abaRelatorio");
 
-  abrirAba("abaRelatorio"); // 🔥 abre direto
-  carregarRelatorios();     // 🔥 carrega estoque
-
-  const blocoVendas = document.getElementById("blocoVendasRelatorio");
-  if(blocoVendas){
-    blocoVendas.style.display = "none";
-  }
+  setTimeout(()=>{
+    abrirAba("abaRelatorio");
+    carregarRelatorios();
+  },100);
 
   return;
-}
-
 }
 
 function esconderMenuPorAba(idAba){
@@ -2538,9 +2537,9 @@ function toggleTroca(){
   if(bloco) bloco.style.display = tem ? "block" : "none";
 }
 
-function toggleCondicaoPagamento(){
+function toggleFormaPagamento(){
 
-  const condicao = document.getElementById("vd_condicao").value;
+  const forma = v("vd_forma_pag");
 
   const blocoParcelado = document.getElementById("blocoParcelado");
   const blocoFinanciado = document.getElementById("blocoFinanciado");
@@ -2548,11 +2547,11 @@ function toggleCondicaoPagamento(){
   if(blocoParcelado) blocoParcelado.style.display = "none";
   if(blocoFinanciado) blocoFinanciado.style.display = "none";
 
-  if(condicao === "PARCELADO"){
+  if(forma === "PARCELADO_LOJA"){
     if(blocoParcelado) blocoParcelado.style.display = "block";
   }
 
-  if(condicao === "FINANCIADO"){
+  if(forma === "FINANCIAMENTO"){
     if(blocoFinanciado) blocoFinanciado.style.display = "block";
   }
 }
