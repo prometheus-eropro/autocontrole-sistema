@@ -1,7 +1,7 @@
 // ==============================
 // CONTROLE DE VERSÃO DO APP
 // ==============================
-const APP_VERSION = "2.4.0";
+const APP_VERSION = "2.4.1";
 const CACHE_NAME = "autocontrole-" + APP_VERSION;
 
 // Arquivos essenciais
