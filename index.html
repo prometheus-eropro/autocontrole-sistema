@@ -20,8 +20,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
+
 /* ===== RESET ===== */
-*{ box-sizing:border-box; }
+*{
+  box-sizing:border-box;
+}
 
 body{
   font-family:'Segoe UI', Arial, sans-serif;
@@ -31,16 +34,28 @@ body{
   color:#0f172a;
 }
 
+/* ===== CONTAINER ===== */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:25px;
+}
+
 /* ===== CARD ===== */
 .card{
-  background:#fff;
+  background:#ffffff;
   padding:28px;
   border-radius:18px;
   margin-bottom:25px;
   box-shadow:0 8px 25px rgba(0,0,0,.06);
+  transition:.25s;
 }
 
-/* ===== MENU DESKTOP ===== */
+.card:hover{
+  transform:translateY(-3px);
+}
+
+/* ===== MENU ===== */
 .menu-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
@@ -55,15 +70,23 @@ body{
   border-radius:18px;
   text-align:center;
   font-weight:600;
+  font-size:15px;
   cursor:pointer;
   transition:.3s;
+  box-shadow:0 10px 20px rgba(0,0,0,.12);
+}
+
+.menu-btn:hover{
+  transform:translateY(-6px);
+  box-shadow:0 15px 30px rgba(0,0,0,.18);
 }
 
 /* ===== INPUTS ===== */
 input,select,textarea{
   width:100%;
   padding:14px;
-  margin:8px 0 14px 0;
+  margin-top:8px;
+  margin-bottom:14px;
   border-radius:12px;
   border:1px solid #e2e8f0;
   font-size:14px;
@@ -73,7 +96,7 @@ input,select,textarea{
 input:focus,select:focus,textarea:focus{
   outline:none;
   border-color:#16a34a;
-  background:#fff;
+  background:#ffffff;
 }
 
 /* ===== BOTÕES ===== */
@@ -85,10 +108,26 @@ button{
   border-radius:12px;
   font-weight:600;
   cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+/* ===== FINANCEIRO DESTAQUE ===== */
+.financeiro-box{
+  background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+  padding:18px;
+  border-radius:14px;
+  margin-bottom:15px;
+  font-weight:600;
 }
 
 /* ===== TABELA ===== */
-.table-wrapper{ overflow-x:auto; }
+.table-wrapper{
+  overflow-x:auto;
+}
 
 table{
   border-collapse:collapse;
@@ -107,14 +146,121 @@ td{
   border-bottom:1px solid #e2e8f0;
 }
 
-/* ===== HEADER SISTEMA ===== */
+tr:nth-child(even){
+  background:#f8fafc;
+}
+
+/* =========================================================
+   MOBILE / APP PROFISSIONAL
+========================================================= */
+
+@media (max-width:900px){
+
+  body{
+    padding-top:75px;
+    padding-bottom:85px;
+  }
+
+  .container{
+    padding:16px;
+  }
+
+  .card{
+    padding:18px;
+    border-radius:16px;
+  }
+
+  /* MENU SOME NO MOBILE */
+  .menu-grid{
+    display:none;
+  }
+
+  /* BOTÕES MAIORES NO CELULAR */
+  button{
+    padding:16px;
+    font-size:15px;
+    border-radius:14px;
+  }
+
+  input,select,textarea{
+    padding:16px;
+    font-size:15px;
+  }
+
+  /* HEADER FIXO */
+  .app-header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:65px;
+    background:#0f172a;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    font-weight:700;
+    z-index:1000;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+  }
+
+  /* NAV INFERIOR MELHORADA */
+  .bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:75px;
+    background:#ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    border-top:1px solid #e2e8f0;
+    box-shadow:0 -4px 15px rgba(0,0,0,.08);
+    z-index:1000;
+  }
+
+  .bottom-nav div{
+    width:70px;
+    text-align:center;
+    font-size:12px;
+    font-weight:600;
+    color:#1e293b;
+    cursor:pointer;
+  }
+
+  .bottom-nav div span{
+    display:block;
+    font-size:10px;
+    margin-top:2px;
+  }
+
+}
+
+/* ESCONDE NAV NO DESKTOP */
+.bottom-nav{
+  display:none;
+}
+
+@media (max-width:900px){
+  .bottom-nav{
+    display:flex;
+  }
+}
+
+/* =========================================================
+   HEADER SISTEMA (MANTIDO IGUAL + AJUSTE MOBILE)
+========================================================= */
+
 .header-sistema{
   display:flex;
+  flex-wrap:wrap;
   justify-content:space-between;
   align-items:center;
   background:#0f172a;
   color:#fff;
-  padding:18px 25px;
+  padding:20px 25px;
   border-radius:20px;
   margin-bottom:25px;
 }
@@ -125,95 +271,73 @@ td{
   gap:15px;
 }
 
-.logo-sistema{ width:90px; }
+.logo-sistema{
+  width:110px;
+}
 
 .header-right{
   display:flex;
   align-items:center;
-  gap:18px;
+  gap:20px;
 }
 
 .btn-sair{
   background:#dc2626;
+  border:none;
   padding:10px 16px;
+  color:#fff;
   border-radius:10px;
+  cursor:pointer;
   font-weight:700;
 }
 
-/* ===== STATUS ===== */
-.bolinha{
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background:#22c55e;
-  display:inline-block;
-  margin-right:6px;
+.btn-sair:hover{
+  background:#b91c1c;
 }
 
-/* =========================================
-   MOBILE / APP
-========================================= */
+/* MOBILE HEADER */
 @media (max-width:900px){
-
-  body{
-    padding-bottom:85px;
-  }
-
-  .menu-grid{
-    display:none;
-  }
 
   .header-sistema{
     flex-direction:column;
     align-items:flex-start;
-    gap:12px;
+    gap:10px;
     padding:18px;
-  }
-
-  .logo-sistema{
-    width:70px;
   }
 
   .header-right{
     width:100%;
     flex-direction:column;
     align-items:flex-start;
-    gap:8px;
+    gap:6px;
   }
 
-  /* ===== NAV INFERIOR MELHORADA ===== */
-  .bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    height:80px;
-    background:#fff;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    border-top:1px solid #e2e8f0;
-    box-shadow:0 -4px 10px rgba(0,0,0,.08);
-    z-index:1000;
-  }
-
-  .bottom-nav div{
-    flex:1;
-    text-align:center;
-    font-size:13px;
-    font-weight:600;
-    padding:8px 0;
-  }
-
-  .bottom-nav div span{
-    display:block;
-    font-size:11px;
-    margin-top:4px;
+  .logo-sistema{
+    width:85px;
   }
 
 }
 
-.bottom-nav{ display:none; }
+/* ===== STATUS BOLINHA ===== */
+.bolinha{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  display:inline-block;
+  background:#22c55e;
+  margin-right:6px;
+}
+
+#statusIndicator{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  box-shadow:0 0 10px rgba(0,0,0,0.4);
+  transition:all .3s ease;
+}
 
 </style>
 
@@ -529,7 +653,7 @@ Cadastro do veículo + dono no documento + vendedor
   <input id="tr_modelo" placeholder="Modelo">
  <input id="tr_ano_fab" placeholder="Ano Fabricação">
 <input id="tr_ano_modelo" placeholder="Ano Modelo">
-  <input id="tr_cor" placeholder="Cor"> <!-- 🔥 ADICIONE AQUI --
+  <input id="tr_cor" placeholder="Cor">
 <select id="tr_tipo_veiculo">
   <option value="">Selecione o tipo</option>
   <option value="AUTO">Automóvel</option>
@@ -2207,23 +2331,30 @@ function carregarInfoSistema(){
     action:"infoSistema"
   }, function(r){
 
-    if(!r.ok) return;
-
     const elData = document.getElementById("dataAtualizacao");
+    if(!elData) return;
 
-    if(elData){
-      if(r && r.build){
-  elData.textContent = "Versão " + r.versao + " • " + r.build;
-}
-        const d = new Date(r.ultima_atualizacao);
-        elData.textContent = d.toLocaleString("pt-BR");
-      } else {
-        elData.textContent = "--";
-      }
-
-      const agora = new Date().toLocaleString("pt-BR");
-      elData.textContent += " • " + agora;
+    if(!r || !r.ok){
+      elData.textContent = "--";
+      return;
     }
+
+    let texto = "";
+
+    if(r.versao){
+      texto += "Versão " + r.versao;
+    }
+
+    if(r.build){
+      texto += " • Build " + r.build;
+    }
+
+    if(r.ultima_atualizacao){
+      const d = new Date(r.ultima_atualizacao);
+      texto += " • " + d.toLocaleString("pt-BR");
+    }
+
+    elData.textContent = texto || "--";
 
     const bolinha = document.getElementById("statusSistema");
     if(bolinha){
@@ -2233,8 +2364,6 @@ function carregarInfoSistema(){
 
   });
 }
-
-
 function trocarSenha(){
   const usuario = localStorage.getItem("nome_usuario") || "";
   const senhaAtual = document.getElementById("senhaAtual").value;
