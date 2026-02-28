@@ -415,7 +415,37 @@ tr:nth-child(even){
   box-shadow:0 0 10px rgba(0,0,0,0.4);
   transition:all .3s ease;
 }
+button {
+  min-height: 55px;
+  font-size: 18px;
+  border-radius: 12px;
+}
 
+.menu-btn {
+  min-height: 60px;
+  font-size: 18px;
+}
+
+@media(max-width:768px){
+
+  button {
+    width:100%;
+    font-size:20px;
+  }
+
+  .menu-grid {
+    grid-template-columns:1fr;
+  }
+
+}
+.bottom-nav div{
+  padding:12px 5px;
+  font-size:13px;
+}
+
+.bottom-nav div:active{
+  transform:scale(0.95);
+}
 </style>
 
 </head>
@@ -694,13 +724,13 @@ Cadastro do veículo + dono no documento + vendedor
       </select>
 
       <select id="vd_condicao" onchange="toggleCondicaoPagamento()">
-        <option value="AVISTA">À vista</option>
-        <option value="PARCELADO">Parcelado</option>
-        <option value="FINANCIADO">Financiado</option>
-      </select>
+  <option value="">Condição Pagamento</option>
+  <option value="AVISTA">À vista</option>
+  <option value="PARCELADO">Parcelado</option>
+  <option value="FINANCIADO">Financiado</option>
+</select>
 
-
-    <hr>
+   <hr>
 
     <!-- Comprador -->
     <div class="badge">Comprador</div>
@@ -731,12 +761,26 @@ Cadastro do veículo + dono no documento + vendedor
  <input id="tr_ano_fab" placeholder="Ano Fabricação">
 <input id="tr_ano_modelo" placeholder="Ano Modelo">
   <input id="tr_cor" placeholder="Cor">
+<input id="tr_chassi" placeholder="Chassi" 
+  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
+
+<input id="tr_renavam" placeholder="Renavam" 
+  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
+
+<input id="tr_proprietario" placeholder="Nome Proprietário da Troca" 
+  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
+
+<input id="tr_doc" placeholder="CPF/CNPJ Proprietário" 
+  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
 <select id="tr_tipo_veiculo">
   <option value="">Selecione o tipo</option>
   <option value="AUTO">Automóvel</option>
   <option value="MOTO">Motocicleta</option>
   <option value="CAMIONETE">Camionete</option>
-</select>
+  <option value="CAMINHAO">Caminhão</option>
+  <option value="QUADRICICLO">Quadriciclo</option>
+  </select>
+
   <input id="tr_valor_avaliado" placeholder="Valor Avaliado (R$)">
   <input id="tr_valor_venda" placeholder="Valor para Venda no Estoque (R$)">
 </div>
@@ -1369,6 +1413,10 @@ troca_modelo: v("tr_modelo"),
 troca_ano_fab: v("tr_ano_fab"),
 troca_ano_modelo: v("tr_ano_modelo"),
 troca_cor: v("tr_cor"),
+troca_chassi: v("tr_chassi"),
+troca_renavam: v("tr_renavam"),
+troca_proprietario: v("tr_proprietario"),
+troca_doc: v("tr_doc"),
 troca_tipo_veiculo: v("tr_tipo_veiculo"), // ← AQUI
 troca_valor_avaliado: num(v("tr_valor_avaliado")),
 troca_valor_venda: num(v("tr_valor_venda")),  
@@ -1849,10 +1897,16 @@ function aplicarPermissoes(perfil){
   // PROPRIETARIO
   // =========================
   if(perfil === "PROPRIETARIO"){
-document.getElementById("blocoCadastroVendedor").style.display = "block";
-    mostrarTodosMenus();
-    return;
-  }
+
+  document.getElementById("blocoCadastroVendedor").style.display = "block";
+
+  mostrarTodosMenus();
+
+  abrirAba("abaProprietario");
+  carregarPainelProprietario();
+
+  return;
+}
 
   // =========================
   // ADMIN
@@ -2486,25 +2540,23 @@ function toggleTroca(){
 
 function toggleCondicaoPagamento(){
 
-  const cond = v("vd_condicao");
+  const condicao = document.getElementById("vd_condicao").value;
 
   const blocoParcelado = document.getElementById("blocoParcelado");
   const blocoFinanciado = document.getElementById("blocoFinanciado");
 
-  if(blocoParcelado) blocoParcelado.style.display = "none";
-  if(blocoFinanciado) blocoFinanciado.style.display = "none";
+  blocoParcelado.style.display = "none";
+  blocoFinanciado.style.display = "none";
 
-  if(cond === "PARCELADO"){
+  if(condicao === "PARCELADO"){
     blocoParcelado.style.display = "block";
   }
 
-  if(cond === "FINANCIADO"){
+  if(condicao === "FINANCIADO"){
     blocoFinanciado.style.display = "block";
   }
-
-  recalcularParcelasVenda_();
 }
-function abrirFichaCompra(){
+}function abrirFichaCompra(){
   window.open("ficha_compra_branco.html","_blank");
 }
 
