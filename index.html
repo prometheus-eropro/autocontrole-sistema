@@ -1701,9 +1701,9 @@ function abrirAba(id){
     carregarMinhasCompras();
   }
 
-  if(id === "abaRelatorio"){
-    carregarRelatorios();
-  }
+  if(id === "abaRelatorios"){
+  carregarRelatorios();
+}
 
   if(id === "abaProprietario"){
     carregarPainelProprietario();
@@ -1954,6 +1954,7 @@ formatarMoedaInput("tr_valor_venda");
 
 function aplicarPermissoes(perfil){
 
+console.log("Aplicando permissões para:", perfil);
   if(!perfil) return;
 
   perfil = String(perfil).toUpperCase();
@@ -1971,25 +1972,43 @@ function aplicarPermissoes(perfil){
     aba.style.display = "none";
   });
 
-  // =========================
-  // MASTER E PROPRIETARIO
-  // =========================
-  if(perfil === "MASTER" || perfil === "PROPRIETARIO"){
+// =========================
+// MASTER
+// =========================
+if(perfil === "MASTER"){
 
-    mostrarTodosMenus();
+  mostrarTodosMenus();
 
-    setTimeout(()=>{
-      abrirAba("abaProprietario");
-      carregarPainelProprietario();
-    },100);
+  setTimeout(()=>{
+    abrirAba("abaProprietario");
+    carregarPainelProprietario();
+  },100);
 
-    return;
+  return;
+}
+
+// =========================
+// PROPRIETARIO
+// =========================
+if(perfil === "PROPRIETARIO"){
+
+  mostrarTodosMenus();
+
+  if(PLANO !== "COMPLETO"){
+    esconderMenuPorAba("abaRelatorios");
   }
 
+  setTimeout(()=>{
+    abrirAba("abaProprietario");
+    carregarPainelProprietario();
+  },100);
+
+  return;
+}
   // =========================
   // ADMIN (sem financeiro)
   // =========================
-  if(perfil === "ADMIN"){
+ if(perfil === "ADMIN"){
 
   mostrarMenu("abaVeiculo");
   mostrarMenu("abaDespesas");
@@ -1997,7 +2016,7 @@ function aplicarPermissoes(perfil){
   mostrarMenu("abaEstoque");
   mostrarMenu("abaRelatorios");
   mostrarMenu("abaMinhasVendas");
-  mostrarMenu("abaUsuarios"); // 🔥 NOVO
+  mostrarMenu("abaUsuarios");
 
   esconderMenuPorAba("abaProprietario");
 
@@ -2007,36 +2026,29 @@ function aplicarPermissoes(perfil){
 
   return;
 }
-
   // =========================
   // VENDEDOR
   // =========================
-  if(perfil === "VENDEDOR"){
+if(perfil === "VENDEDOR"){
 
-    mostrarMenu("abaEstoque");
-    mostrarMenu("abaMinhasVendas");
-    mostrarMenu("abaMinhasCompras");
+  mostrarMenu("abaEstoque");
+  mostrarMenu("abaMinhasVendas");
+  mostrarMenu("abaMinhasCompras");
 
-    // Esconde tudo que é cadastro/edição
-    const btnSalvarVendedor = document.getElementById("btnSalvarVendedor");
-    if(btnSalvarVendedor) btnSalvarVendedor.style.display = "none";
+  esconderMenuPorAba("abaProprietario");
+  esconderMenuPorAba("abaVeiculo");
+  esconderMenuPorAba("abaDespesas");
+  esconderMenuPorAba("abaVenda");
+  esconderMenuPorAba("abaRelatorios");
+  esconderMenuPorAba("abaUsuarios");
 
-    const blocoCadastroVendedor = document.getElementById("blocoCadastroVendedor");
-    if(blocoCadastroVendedor) blocoCadastroVendedor.style.display = "none";
+  setTimeout(()=>{
+    abrirAba("abaEstoque");
+    carregarRelatorios();
+  },100);
 
-    const blocoVendas = document.getElementById("blocoVendasRelatorio");
-    if(blocoVendas) blocoVendas.style.display = "none";
-
-    esconderMenuPorAba("abaProprietario");
-
-    setTimeout(()=>{
-      abrirAba("abaEstoque");
-      carregarRelatorios(); // apenas estoque
-    },100);
-
-    return;
-  }
-
+  return;
+}
 // =========================
 // ESTOQUE (SOMENTE VISUALIZAÇÃO)
 // =========================
@@ -2059,8 +2071,10 @@ if(perfil === "ESTOQUE"){
 
   return;
 }
-function esconderMenuPorAba(idAba){
 
+} // 🔥 FECHA aplicarPermissoes AQUI
+
+function esconderMenuPorAba(idAba){
   // Desktop
   document.querySelectorAll(".menu-btn").forEach(btn=>{
     if(btn.getAttribute("onclick")?.includes(idAba)){
