@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FICHA DE VENDA</title>
+
+<style>
+@page { size:A4; margin:12mm; }
+body{ font-family:Arial; font-size:12px; }
+h2{ text-align:center; margin:6px 0 4px 0; }
+
+.titulo{
+  background:#000; color:#fff; padding:6px 8px;
+  margin-top:14px; font-weight:bold; font-size:13px;
+}
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  column-gap:26px;
+  row-gap:8px;
+  margin-top:8px;
+}
+.grid-3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  column-gap:18px;
+  row-gap:8px;
+  margin-top:8px;
+}
+.linha{ border-bottom:1px solid #000; height:18px; margin-top:4px; }
+.full{ grid-column:1 / -1; }
+
+.footer{
+  margin-top:26px;
+  text-align:center;
+  font-size:11px;
+  color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<h2 id="nomeLoja"></h2>
+<div style="text-align:center;">FICHA DE VENDA DE VEÍCULO</div>
+
+<div class="titulo">DADOS DO VEÍCULO</div>
+<div class="grid-2">
+  <div><b>Placa</b><div class="linha"></div></div>
+  <div><b>Tipo</b><div class="linha"></div></div>
+
+  <div><b>Marca</b><div class="linha"></div></div>
+  <div><b>Modelo</b><div class="linha"></div></div>
+
+  <div><b>Ano Fabricação</b><div class="linha"></div></div>
+  <div><b>Ano Modelo</b><div class="linha"></div></div>
+
+  <div><b>Cor</b><div class="linha"></div></div>
+  <div><b>Combustível</b><div class="linha"></div></div>
+
+  <div><b>Chassi</b><div class="linha"></div></div>
+  <div><b>Renavam</b><div class="linha"></div></div>
+
+  <div><b>Valor Venda</b><div class="linha"></div></div>
+  <div><b>Data Venda</b><div class="linha"></div></div>
+</div>
+
+<div class="titulo">FORMA DE PAGAMENTO</div>
+<div class="grid-3">
+  <div><b>Forma</b><div class="linha"></div></div>
+  <div><b>Condição</b><div class="linha"></div></div>
+  <div><b>Entrada</b><div class="linha"></div></div>
+
+  <div><b>Parcelado (x vezes)</b><div class="linha"></div></div>
+  <div><b>Valor Parcela</b><div class="linha"></div></div>
+  <div><b>Banco / Financeira</b><div class="linha"></div></div>
+</div>
+
+<div class="titulo">VEÍCULO NA TROCA (se houver)</div>
+
+<div class="grid-2">
+  <div><b>Placa</b><div class="linha"></div></div>
+  <div><b>Tipo</b><div class="linha"></div></div>
+
+  <div><b>Marca</b><div class="linha"></div></div>
+  <div><b>Modelo</b><div class="linha"></div></div>
+
+  <div><b>Ano Fabricação</b><div class="linha"></div></div>
+  <div><b>Ano Modelo</b><div class="linha"></div></div>
+
+  <div><b>Cor</b><div class="linha"></div></div>
+  <div><b>Combustível</b><div class="linha"></div></div>
+
+  <div><b>Chassi</b><div class="linha"></div></div>
+  <div><b>Renavam</b><div class="linha"></div></div>
+
+  <div><b>Valor Avaliado</b><div class="linha"></div></div>
+  <div><b>Observações</b><div class="linha"></div></div>
+</div>
+<div class="titulo">COMPRADOR</div>
+<div class="grid-2">
+  <div><b>Nome</b><div class="linha"></div></div>
+  <div><b>Telefone</b><div class="linha"></div></div>
+
+  <div><b>CPF/CNPJ</b><div class="linha"></div></div>
+  <div><b>Email</b><div class="linha"></div></div>
+
+  <div class="full"><b>Endereço Completo</b><div class="linha"></div></div>
+  <div><b>Cidade/UF</b><div class="linha"></div></div>
+</div>
+
+<div class="titulo">COMISSÃO DO VENDEDOR</div>
+<div class="grid-3">
+  <div><b>Vendedor</b><div class="linha"></div></div>
+  <div><b>Tipo (% / R$)</b><div class="linha"></div></div>
+  <div><b>Valor</b><div class="linha"></div></div>
+</div>
+
+<div style="margin-top:22px;text-align:center;">
+  <div style="border-bottom:1px solid #000;height:22px;width:60%;margin:0 auto;"></div>
+  <div style="font-size:11px;">Assinatura Responsável</div>
+</div>
+
+<div class="footer">
+AutoControle — Sistema Profissional de Gestão Veicular<br>
+Tecnologia com ConsciêncIA gera resultado.<br>
+Licenciado para: <span id="cliente"></span>
+</div>
+
+<script>
+document.getElementById("nomeLoja").innerText =
+  localStorage.getItem("nome_loja") || "LOJA";
+document.getElementById("cliente").innerText =
+  localStorage.getItem("nome_loja") || "Cliente";
+</script>
+
+</body>
+</html>

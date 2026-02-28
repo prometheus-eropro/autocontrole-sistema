@@ -20,11 +20,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-
 /* ===== RESET ===== */
-*{
-  box-sizing:border-box;
-}
+*{ box-sizing:border-box; }
 
 body{
   font-family:'Segoe UI', Arial, sans-serif;
@@ -34,28 +31,16 @@ body{
   color:#0f172a;
 }
 
-/* ===== CONTAINER ===== */
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:25px;
-}
-
 /* ===== CARD ===== */
 .card{
-  background:#ffffff;
+  background:#fff;
   padding:28px;
   border-radius:18px;
   margin-bottom:25px;
   box-shadow:0 8px 25px rgba(0,0,0,.06);
-  transition:.25s;
 }
 
-.card:hover{
-  transform:translateY(-3px);
-}
-
-/* ===== MENU ===== */
+/* ===== MENU DESKTOP ===== */
 .menu-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
@@ -70,23 +55,15 @@ body{
   border-radius:18px;
   text-align:center;
   font-weight:600;
-  font-size:15px;
   cursor:pointer;
   transition:.3s;
-  box-shadow:0 10px 20px rgba(0,0,0,.12);
-}
-
-.menu-btn:hover{
-  transform:translateY(-6px);
-  box-shadow:0 15px 30px rgba(0,0,0,.18);
 }
 
 /* ===== INPUTS ===== */
 input,select,textarea{
   width:100%;
   padding:14px;
-  margin-top:8px;
-  margin-bottom:14px;
+  margin:8px 0 14px 0;
   border-radius:12px;
   border:1px solid #e2e8f0;
   font-size:14px;
@@ -96,7 +73,7 @@ input,select,textarea{
 input:focus,select:focus,textarea:focus{
   outline:none;
   border-color:#16a34a;
-  background:#ffffff;
+  background:#fff;
 }
 
 /* ===== BOTÕES ===== */
@@ -108,26 +85,10 @@ button{
   border-radius:12px;
   font-weight:600;
   cursor:pointer;
-  transition:.2s;
-}
-
-button:hover{
-  transform:scale(1.02);
-}
-
-/* ===== FINANCEIRO DESTAQUE ===== */
-.financeiro-box{
-  background:linear-gradient(135deg,#dcfce7,#bbf7d0);
-  padding:18px;
-  border-radius:14px;
-  margin-bottom:15px;
-  font-weight:600;
 }
 
 /* ===== TABELA ===== */
-.table-wrapper{
-  overflow-x:auto;
-}
+.table-wrapper{ overflow-x:auto; }
 
 table{
   border-collapse:collapse;
@@ -146,492 +107,16 @@ td{
   border-bottom:1px solid #e2e8f0;
 }
 
-tr:nth-child(even){
-  background:#f8fafc;
-}
-
-/* ===== MOBILE ===== */
-@media(max-width:768px){
-  .container{
-    padding:15px;
-  }
-
-  .menu-grid{
-    grid-template-columns:1fr 1fr;
-  }
-}
-/* =========================================
-   MODO APP (Somente Mobile / Tablet)
-========================================= */
-
-@media (max-width: 900px){
-
-  body{
-    padding-top:70px;
-    padding-bottom:75px;
-  }
-
-  /* HEADER FIXO */
-  .app-header{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:60px;
-    background:#0f172a;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    font-weight:600;
-    z-index:1000;
-  }
-
-  /* ESCONDE MENU GRID ANTIGO NO MOBILE */
-  .menu-grid{
-    display:none;
-  }
-
-  /* NAV INFERIOR */
-  .bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:70px;
-  background:#ffffff;
-  display:flex;
-  align-items:center;
-  overflow-x:auto;
-  overflow-y:hidden;
-  white-space:nowrap;
-  border-top:1px solid #e2e8f0;
-  box-shadow:0 -4px 10px rgba(0,0,0,.08);
-  z-index:1000;
-}
-
-.bottom-nav::-webkit-scrollbar{
-  display:none;
-}
-
-.bottom-nav div{
-  flex:0 0 auto;
-  width:85px;
-  text-align:center;
-  font-size:11px;
-  color:#1e293b;
-  cursor:pointer;
-  padding-top:6px;
-}
-
-.bottom-nav div span{
-  display:block;
-  font-size:10px;
-}
-}
-.bottom-nav{
-  display:none;
-}
-/* ESCONDE POR PADRÃO */
-.bottom-nav{
-  display:none;
-}
-
-/* MOSTRA APENAS MOBILE */
-@media (max-width: 900px){
-  .bottom-nav{
-    display:flex;
-  }
-}
-.section-title{
-  font-size:22px;
-  font-weight:700;
-  color:#0f172a;
-  margin-bottom:4px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.section-subtitle{
-  font-size:13px;
-  color:#64748b;
-  margin-bottom:18px;
-  font-weight:500;
-}
-
-.section-divider{
-  height:3px;
-  width:60px;
-  background:linear-gradient(90deg,#16a34a,#0ea5e9);
-  border-radius:4px;
-  margin-bottom:20px;
-}
-.section-title{
-  font-size:24px;
-  font-weight:800;
-  text-align:center;
-  color:#0f172a;
-  margin-bottom:6px;
-}
-
-.section-subtitle{
-  font-size:14px;
-  text-align:center;
-  color:#64748b;
-  margin-bottom:12px;
-}
-
-.section-divider{
-  height:3px;
-  width:80px;
-  margin:0 auto 25px auto;
-  background:linear-gradient(90deg,#16a34a,#0ea5e9);
-  border-radius:4px;
-}
-.top-user-bar{
+/* ===== HEADER SISTEMA ===== */
+.header-sistema{
   display:flex;
   justify-content:space-between;
   align-items:center;
   background:#0f172a;
-  color:#ffffff;
-  padding:10px 20px;
-  border-radius:12px;
-  margin-bottom:20px;
-  font-size:14px;
-}
-
-.user-info{
-  font-weight:600;
-}
-
-.logout-btn{
-  background:#ef4444;
   color:#fff;
-  border:none;
-  padding:6px 14px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-}
-
-.logout-btn:hover{
-  background:#dc2626;
-}
-/* ===== PADRÃO GLOBAL DE TÍTULOS ===== */
-
-.card h2,
-.card h3,
-.card h1{
-  text-align:center;
-  font-size:22px;
-  font-weight:800;
-  margin-bottom:6px;
-  color:#0f172a;
-}
-
-.card p.subtitle,
-.card small{
-  text-align:center;
-  display:block;
-  font-size:14px;
-  color:#64748b;
-  margin-bottom:15px;
-}
-.card h2::after,
-.card h3::after{
-  content:"";
-  display:block;
-  width:80px;
-  height:3px;
-  margin:12px auto 20px auto;
-  background:linear-gradient(90deg,#16a34a,#0ea5e9);
-  border-radius:4px;
-}
-#statusIndicator{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  box-shadow:0 0 10px rgba(0,0,0,0.4);
-  transition:all .3s ease;
-}
-.logo-principal{
-  width:180px;
-  max-width:100%;
-  display:block;
-  margin:0 auto 20px auto;
-}
-.header-sistema{
-  text-align:center;
-  padding:40px 20px;
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-  color:#fff;
-  border-radius:20px;
-  margin-bottom:30px;
-}
-
-.header-sistema h1{
-  font-size:28px;
-  margin-bottom:8px;
-}
-
-.header-sistema h3{
-  color:#22c55e;
-  margin-bottom:12px;
-}
-
-.usuario-logado{
-  font-size:16px;
-  opacity:0.9;
-}
-.header-sistema-unico{
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-  color:#fff;
-  padding:30px;
+  padding:18px 25px;
   border-radius:20px;
   margin-bottom:25px;
-}
-
-.header-unico{
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-  color:#fff;
-  text-align:center;
-  padding:40px 20px;
-  border-radius:20px;
-  margin-bottom:30px;
-}
-
-.logo-header{
-  width:160px;
-  margin-bottom:20px;
-}
-
-.header-unico h1{
-  font-size:30px;
-  margin:0;
-}
-
-.subtitulo{
-  display:block;
-  margin-top:5px;
-  font-size:14px;
-  color:#22c55e;
-}
-
-.dados-empresa{
-  margin-top:20px;
-  font-size:15px;
-  line-height:1.6;
-}
-
-.btn-sair{
-  margin-top:25px;
-  padding:14px;
-  width:100%;
-  max-width:400px;
-  background:#dc2626;
-  border:none;
-  border-radius:12px;
-  color:#fff;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.btn-sair:hover{
-  background:#b91c1c;
-}@media(max-width:768px){
-
-  .header-topo{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .header-usuario{
-    text-align:left;
-    margin-top:15px;
-  }
-
-}
-.capa-sistema{
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  color:#fff;
-}
-
-.logo-capa{
-  width:160px;
-  margin-bottom:20px;
-}
-
-.btn-entrar{
-  margin-top:25px;
-  padding:15px 40px;
-  font-size:18px;
-  border:none;
-  border-radius:12px;
-  background:#16a34a;
-  color:#fff;
-  cursor:pointer;
-}
-
-/* ===== TELA LOGIN ===== */
-#telaLogin{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-  z-index:9999;
-}
-
-.login-card{
-  width:min(520px, 100%);
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  padding:34px 28px;
-  text-align:center;
-  box-shadow:0 20px 55px rgba(0,0,0,.35);
-  backdrop-filter: blur(10px);
-}
-
-.login-logo{
-  width:160px;
-  max-width:60%;
-  display:block;
-  margin:0 auto 14px auto;
-}
-
-.login-title{
-  margin:0;
-  font-size:34px;
-  font-weight:900;
-  color:#fff;
-}
-
-.login-sub{
-  margin:6px 0 0 0;
-  color:#22c55e;
-  font-weight:700;
-  font-size:14px;
-}
-
-.login-slogan{
-  margin:14px 0 18px 0;
-  color:rgba(255,255,255,.75);
-  font-size:13px;
-}
-
-.login-card input{
-  background:rgba(255,255,255,.95) !important;
-  border:0 !important;
-  border-radius:14px !important;
-  padding:14px 16px !important;
-  margin:10px 0 !important;
-  font-size:15px !important;
-}
-
-.login-btn{
-  width:100%;
-  padding:14px 16px;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:800;
-  border:0;
-  cursor:pointer;
-  background:linear-gradient(135deg,#16a34a,#15803d);
-  color:#fff;
-  margin-top:10px;
-}
-
-.login-footer{
-  margin-top:14px;
-  color:rgba(255,255,255,.70);
-  font-size:12px;
-  line-height:1.4;
-}
-
-/* ===== CABEÇALHO DO SISTEMA (O “SEGUNDO”) ===== */
-.system-head{
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-  color:#fff;
-  padding:28px 22px;
-  border-radius:22px;
-  margin-bottom:22px;
-  text-align:center;
-  box-shadow:0 12px 30px rgba(0,0,0,.16);
-}
-
-.system-head .head-logo{
-  width:110px;           /* AUMENTA LOGO AQUI */
-  max-width:40%;
-  display:block;
-  margin:0 auto 10px auto;
-}
-
-.system-head h1{
-  margin:0;
-  font-size:26px;
-  font-weight:900;
-}
-
-.system-head .sub{
-  display:block;
-  margin-top:6px;
-  color:#22c55e;
-  font-weight:800;
-  font-size:13px;
-}
-
-.system-head .info{
-  margin-top:14px;
-  font-size:14px;
-  line-height:1.6;
-  opacity:.95;
-}
-
-.system-head .info strong{
-  color:#fff;
-}
-
-.system-head .btn-sair-topo{
-  margin:16px auto 0 auto;
-  display:block;
-  width:100%;
-  max-width:420px;
-  padding:14px 16px;
-  border-radius:14px;
-  border:0;
-  background:#dc2626;
-  color:#fff;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.system-head .btn-sair-topo:hover{
-  background:#b91c1c;
-}
-.header-sistema{
-  display:flex;
- flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:center;
-  background:#0f172a;
-  color:#fff;
-  padding:15px 25px;
 }
 
 .header-left{
@@ -640,86 +125,96 @@ tr:nth-child(even){
   gap:15px;
 }
 
-.logo-sistema{
-  width:100px;
-}
+.logo-sistema{ width:90px; }
 
 .header-right{
   display:flex;
   align-items:center;
-  gap:20px;
+  gap:18px;
 }
 
 .btn-sair{
   background:#dc2626;
-  border:none;
-  padding:8px 15px;
-  color:#fff;
-  border-radius:8px;
-  cursor:pointer;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
 }
+
+/* ===== STATUS ===== */
 .bolinha{
   width:12px;
   height:12px;
   border-radius:50%;
-  display:inline-block;
   background:#22c55e;
+  display:inline-block;
   margin-right:6px;
 }
-.info-sistema{
-  font-size:13px;
-  opacity:.85;
-}
 
-.label-info{
-  color:#94a3b8;
-  font-size:11px;
-}
+/* =========================================
+   MOBILE / APP
+========================================= */
+@media (max-width:900px){
 
-.valor-info{
-  font-weight:700;
-  font-size:14px;
-}
-.usuario-nome{
-  font-weight:800;
-  font-size:15px;
-}
+  body{
+    padding-bottom:85px;
+  }
 
-.usuario-perfil{
-  font-size:12px;
-  color:#22c55e;
-  font-weight:700;
-}
-#nomeSistema{
-  font-size:22px;
-  font-weight:900;
-}
-
-.nome-loja{
-  font-size:13px;
-  color:#22c55e;
-  font-weight:600;
-}
-@media (max-width: 900px){
+  .menu-grid{
+    display:none;
+  }
 
   .header-sistema{
     flex-direction:column;
     align-items:flex-start;
-    gap:10px;
+    gap:12px;
+    padding:18px;
+  }
+
+  .logo-sistema{
+    width:70px;
   }
 
   .header-right{
     width:100%;
     flex-direction:column;
     align-items:flex-start;
-    gap:6px;
+    gap:8px;
   }
 
-  .logo-sistema{
-    width:80px;
+  /* ===== NAV INFERIOR MELHORADA ===== */
+  .bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:80px;
+    background:#fff;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    border-top:1px solid #e2e8f0;
+    box-shadow:0 -4px 10px rgba(0,0,0,.08);
+    z-index:1000;
+  }
+
+  .bottom-nav div{
+    flex:1;
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+    padding:8px 0;
+  }
+
+  .bottom-nav div span{
+    display:block;
+    font-size:11px;
+    margin-top:4px;
   }
 
 }
+
+.bottom-nav{ display:none; }
+
 </style>
 
 </head>
@@ -880,10 +375,20 @@ Cadastro do veículo + dono no documento + vendedor
 <input id="comp_valor_unico" placeholder="Informe valor ou %">    </div>
 
     <button onclick="salvarEntrada()">Salvar Entrada do Veículo</button>
-<button onclick="window.open('ficha_entrada.html','_blank')"
-style="background:#0f172a;">
-🖨 Imprimir Ficha em Branco
-</button>
+
+<div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+  
+  <button onclick="abrirFichaCompra()" 
+  style="background:#0f172a;">
+  🖨 Ficha Compra (Branco)
+  </button>
+
+  <button onclick="abrirFichaVenda()" 
+  style="background:#1e293b;">
+  🖨 Ficha Venda (Branco)
+  </button>
+
+</div>
 
   </div>
 </div>
@@ -1022,8 +527,15 @@ style="background:#0f172a;">
   <input id="tr_placa" placeholder="Placa do veículo na troca">
   <input id="tr_marca" placeholder="Marca">
   <input id="tr_modelo" placeholder="Modelo">
-  <input id="tr_ano" placeholder="Ano">
-  <input id="tr_cor" placeholder="Cor"> <!-- 🔥 ADICIONE AQUI -->
+ <input id="tr_ano_fab" placeholder="Ano Fabricação">
+<input id="tr_ano_modelo" placeholder="Ano Modelo">
+  <input id="tr_cor" placeholder="Cor"> <!-- 🔥 ADICIONE AQUI --
+<select id="tr_tipo_veiculo">
+  <option value="">Selecione o tipo</option>
+  <option value="AUTO">Automóvel</option>
+  <option value="MOTO">Motocicleta</option>
+  <option value="CAMIONETE">Camionete</option>
+</select>
   <input id="tr_valor_avaliado" placeholder="Valor Avaliado (R$)">
   <input id="tr_valor_venda" placeholder="Valor para Venda no Estoque (R$)">
 </div>
@@ -1054,7 +566,11 @@ style="background:#0f172a;">
 
 
     <button onclick="registrarVenda()">Registrar Venda</button>
-<button id="btnRelatorioFinal">Relatório Final do Veículo</button>
+<button id="btnRelatorioFinal" 
+onclick="imprimirRelatorioFinal()" 
+style="background:#0f172a;margin-top:10px;">
+🖨 Ficha Final do Veículo
+</button>
 
   </div>
 </div>
@@ -1649,12 +1165,13 @@ tem_troca: document.getElementById("vd_tem_troca")?.checked ? "SIM" : "NAO",
 troca_placa: v("tr_placa"),
 troca_marca: v("tr_marca"),
 troca_modelo: v("tr_modelo"),
-troca_ano: v("tr_ano"),
+troca_ano_fab: v("tr_ano_fab"),
+troca_ano_modelo: v("tr_ano_modelo"),
 troca_cor: v("tr_cor"),
+troca_tipo_veiculo: v("tr_tipo_veiculo"), // ← AQUI
 troca_valor_avaliado: num(v("tr_valor_avaliado")),
-troca_valor_venda: num(v("tr_valor_venda")),
-troca_obs: v("tr_obs"),
-  };
+troca_valor_venda: num(v("tr_valor_venda")),  
+};
 
   jsonp(payload, (rr)=>{
     if(rr.ok){
@@ -2695,7 +2212,9 @@ function carregarInfoSistema(){
     const elData = document.getElementById("dataAtualizacao");
 
     if(elData){
-      if(r && r.ultima_atualizacao){
+      if(r && r.build){
+  elData.textContent = "Versão " + r.versao + " • " + r.build;
+}
         const d = new Date(r.ultima_atualizacao);
         elData.textContent = d.toLocaleString("pt-BR");
       } else {
@@ -2779,7 +2298,13 @@ function toggleCondicaoPagamento(){
 
   recalcularParcelasVenda_();
 }
+function abrirFichaCompra(){
+  window.open("ficha_compra_branco.html","_blank");
+}
 
+function abrirFichaVenda(){
+  window.open("ficha_venda_branco.html","_blank");
+}
 </script>
 <nav class="bottom-nav">
 

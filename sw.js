@@ -1,5 +1,10 @@
-const CACHE_NAME = "autocontrole-v2"; // MUDE O NÚMERO SEMPRE QUE ATUALIZAR
+// ==============================
+// CONTROLE DE VERSÃO DO APP
+// ==============================
+const APP_VERSION = "2.4.0";
+const CACHE_NAME = "autocontrole-" + APP_VERSION;
 
+// Arquivos essenciais
 const urlsToCache = [
   "/",
   "/index.html",
@@ -8,6 +13,9 @@ const urlsToCache = [
   "/icon-512.png"
 ];
 
+// ==============================
+// INSTALL
+// ==============================
 self.addEventListener("install", event => {
   self.skipWaiting();
   event.waitUntil(
@@ -16,20 +24,28 @@ self.addEventListener("install", event => {
   );
 });
 
+// ==============================
+// ACTIVATE (Remove cache antigo)
+// ==============================
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
       )
     )
   );
   self.clients.claim();
 });
 
+// ==============================
+// FETCH
+// ==============================
 self.addEventListener("fetch", event => {
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    fetch(event.request)
+      .catch(() => caches.match(event.request))
   );
 });
