@@ -2545,18 +2545,19 @@ function toggleCondicaoPagamento(){
   const blocoParcelado = document.getElementById("blocoParcelado");
   const blocoFinanciado = document.getElementById("blocoFinanciado");
 
-  blocoParcelado.style.display = "none";
-  blocoFinanciado.style.display = "none";
+  if(blocoParcelado) blocoParcelado.style.display = "none";
+  if(blocoFinanciado) blocoFinanciado.style.display = "none";
 
   if(condicao === "PARCELADO"){
-    blocoParcelado.style.display = "block";
+    if(blocoParcelado) blocoParcelado.style.display = "block";
   }
 
   if(condicao === "FINANCIADO"){
-    blocoFinanciado.style.display = "block";
+    if(blocoFinanciado) blocoFinanciado.style.display = "block";
   }
 }
-}function abrirFichaCompra(){
+
+function abrirFichaCompra(){
   window.open("ficha_compra_branco.html","_blank");
 }
 
