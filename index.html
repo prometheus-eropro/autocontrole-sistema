@@ -1698,42 +1698,44 @@ function carregarPainelProprietario(){
 
 function abrirAba(nome){
 
-  console.log("Abrindo aba:", nome);
+  // esconde todas as abas
+  document.querySelectorAll(".aba").forEach(aba=>{
+    aba.style.display = "none";
+  });
 
-  const area = document.getElementById("conteudoSistema");
-
-  if(!area){
-    console.error("Div conteudoSistema não existe.");
-    return;
-  }
-
-  area.innerHTML = "<div style='padding:30px'>Carregando...</div>";
-
-  const callback = "cb_" + Date.now();
-
-  window[callback] = function(resp){
-
-    delete window[callback];
-
-    if(!resp || !resp.ok){
-      area.innerHTML = "<div style='padding:30px;color:red'>Erro ao carregar</div>";
-      return;
-    }
-
-    if(resp.itens){
-      area.innerHTML = montarTabela(resp.itens);
-    } else if(resp.dados){
-      area.innerHTML = montarTabela(resp.dados);
-    } else {
-      area.innerHTML = "<div style='padding:30px'>Sem dados</div>";
-    }
-
+  // mapeamento nome -> id
+  const mapa = {
+    cadastrarEntrada: "abaVeiculo",
+    lancarDespesa: "abaDespesas",
+    registrarVenda: "abaVenda",
+    relatorioEstoque: "abaEstoque",
+    relatorioMinhasVendas: "abaMinhasVendas",
+    relatorioMinhasCompras: "abaMinhasCompras",
+    painelProprietario: "abaProprietario",
+    usuarios: "abaUsuarios"
   };
 
-  const script = document.createElement("script");
-  script.src = GAS_URL + "?action=" + nome + "&vendedor_loja_id=" + (localStorage.getItem("vendedor_loja_id") || "") + "&callback=" + callback;
-  document.body.appendChild(script);
+  const id = mapa[nome];
+
+  if(id){
+    document.getElementById(id).style.display = "block";
+  }
+
+  // carregar dados quando necessário
+  if(nome === "relatorioEstoque"){
+    carregarRelatorios();
+  }
+
+  if(nome === "relatorioMinhasVendas"){
+    carregarMinhasVendas();
+  }
+
+  if(nome === "painelProprietario"){
+    carregarPainelProprietario();
+  }
+
 }
+
 function carregarRelatorios(){
 
   jsonp({action:"relatorioEstoque"}, function(r){
