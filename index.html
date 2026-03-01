@@ -3,7 +3,9 @@
 <head>
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <!-- Ícone padrão -->
 <link rel="icon" type="image/png" href="icon-192.png">
 
@@ -446,6 +448,12 @@ button {
 .bottom-nav div:active{
   transform:scale(0.95);
 }
+@media(max-width:768px){
+  .menu-secundario {
+    display:none;
+  }
+}
+
 </style>
 
 </head>
@@ -1932,129 +1940,55 @@ formatarMoedaInput("vd_valor_financiado");
 formatarMoedaInput("tr_valor_avaliado");
 formatarMoedaInput("tr_valor_venda");
 
-function aplicarPermissoes(perfil){
+function validarPermissao_(perfil, acao){
 
-console.log("Aplicando permissões para:", perfil);
-  if(!perfil) return;
+  perfil = String(perfil || "").toUpperCase();
 
-  perfil = String(perfil).toUpperCase();
+  const permissoes = {
 
-  // 🔥 Esconde tudo primeiro
-  document.querySelectorAll(".menu-btn").forEach(btn=>{
-    btn.style.display = "none";
-  });
+    MASTER: ["*"],
 
-  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    btn.style.display = "none";
-  });
+    PROPRIETARIO: ["*"],
 
-  document.querySelectorAll(".aba").forEach(aba=>{
-    aba.style.display = "none";
-  });
+    ADMIN: [
+      "cadastrarEntrada",
+      "listarVeiculosEstoque",
+      "listarVendedoresLojaAtivos",
+      "cadastrarVendedorLoja",
+      "lancarDespesa",
+      "registrarVenda",
+      "relatorioEstoque",
+      "relatorioVendasPorVendedor",
+      "relatorioMinhasVendas",
+      "relatorioMinhasCompras",
+      "relatorioVeiculosVendidos",
+      "relatorioCompletoVeiculo",
+      "totalDespesasVeiculo",
+      "resumoPorPeriodo",
+      "validarSenhaEstoque",
+      "infoSistema",
+      "alterarSenha"
+    ],
 
-// =========================
-// MASTER
-// =========================
-if(perfil === "MASTER"){
+    ESTOQUE: [
+      "listarVeiculosEstoque",
+      "relatorioEstoque"
+    ],
 
-  mostrarTodosMenus();
+    VENDEDOR: [
+      "relatorioEstoque",
+      "relatorioMinhasVendas",
+      "relatorioMinhasCompras"
+    ]
 
-  setTimeout(()=>{
-    abrirAba("abaProprietario");
-    carregarPainelProprietario();
-  },100);
+  };
 
-  return;
-}
+  const regras = permissoes[perfil] || [];
 
-// =========================
-// PROPRIETARIO
-// =========================
-if(perfil === "PROPRIETARIO"){
+  if(regras.includes("*")) return true;
 
-  mostrarTodosMenus();
-
-  if(PLANO !== "COMPLETO"){
-    esconderMenuPorAba("abaRelatorios");
-  }
-
-  setTimeout(()=>{
-    abrirAba("abaProprietario");
-    carregarPainelProprietario();
-  },100);
-
-  return;
-}
-  // =========================
-  // ADMIN (sem financeiro)
-  // =========================
- if(perfil === "ADMIN"){
-
-  mostrarMenu("abaVeiculo");
-  mostrarMenu("abaDespesas");
-  mostrarMenu("abaVenda");
-  mostrarMenu("abaEstoque");
-  mostrarMenu("abaRelatorios");
-  mostrarMenu("abaMinhasVendas");
-  mostrarMenu("abaUsuarios");
-
-  esconderMenuPorAba("abaProprietario");
-
-  setTimeout(()=>{
-    abrirAba("abaVeiculo");
-  },100);
-
-  return;
-}
-  // =========================
-  // VENDEDOR
-  // =========================
-if(perfil === "VENDEDOR"){
-
-  mostrarMenu("abaEstoque");
-  mostrarMenu("abaMinhasVendas");
-  mostrarMenu("abaMinhasCompras");
-
-  esconderMenuPorAba("abaProprietario");
-  esconderMenuPorAba("abaVeiculo");
-  esconderMenuPorAba("abaDespesas");
-  esconderMenuPorAba("abaVenda");
-  esconderMenuPorAba("abaRelatorios");
-  esconderMenuPorAba("abaUsuarios");
-
-  setTimeout(()=>{
-    abrirAba("abaEstoque");
-    carregarRelatorios();
-  },100);
-
-  return;
-}
-// =========================
-// ESTOQUE (SOMENTE VISUALIZAÇÃO)
-// =========================
-if(perfil === "ESTOQUE"){
-
-  mostrarMenu("abaEstoque");
-
-  esconderMenuPorAba("abaProprietario");
-  esconderMenuPorAba("abaVeiculo");
-  esconderMenuPorAba("abaDespesas");
-  esconderMenuPorAba("abaVenda");
-  esconderMenuPorAba("abaRelatorios");
-  esconderMenuPorAba("abaMinhasVendas");
-  esconderMenuPorAba("abaMinhasCompras");
-
-  setTimeout(()=>{
-    abrirAba("abaEstoque");
-    carregarRelatorios();
-  },100);
-
-  return;
-}
-
-} // 🔥 FECHA aplicarPermissoes AQUI
-
-function esconderMenuPorAba(idAba){
+  return regras.includes(acao);
+}function esconderMenuPorAba(idAba){
   // Desktop
   document.querySelectorAll(".menu-btn").forEach(btn=>{
     if(btn.getAttribute("onclick")?.includes(idAba)){
@@ -2295,7 +2229,7 @@ function carregarVendasProprietarioFiltradas(){
 
 if ('serviceWorker' in navigator) {
   if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js?v=2.4.1');
+  navigator.serviceWorker.register('/sw.js?v=2.5.0');
 }
 }
 function voltarHome(){
