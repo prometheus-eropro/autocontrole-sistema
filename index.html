@@ -554,8 +554,6 @@ Carregando... Aguarde.
 
 </div>
 
-</div>
-
 <!-- =======================
   ABA VEÍCULO (ENTRADA)
 ======================= -->
@@ -1718,7 +1716,9 @@ function carregarPainelProprietario(){
 
 }
 
-function abrirAba(nome){
+window.abrirAba = function(nome){
+
+  console.log("🔥 CLICOU:", nome);
 
   // esconder todas
   document.querySelectorAll(".aba").forEach(aba=>{
@@ -1733,29 +1733,23 @@ function abrirAba(nome){
     relatorioMinhasVendas: "abaMinhasVendas",
     relatorioMinhasCompras: "abaMinhasCompras",
     painelProprietario: "abaProprietario",
+    proprietario: "abaProprietario",
     usuarios: "abaUsuarios"
   };
 
   const id = mapa[nome];
 
-  if(id){
-    document.getElementById(id).style.display = "block";
+  console.log("➡️ ID DA ABA:", id);
+
+  const aba = document.getElementById(id);
+
+  if(!aba){
+    console.error("❌ ABA NÃO ENCONTRADA:", id);
+    return;
   }
 
-  // carregar dados quando necessário
-  if(nome === "relatorioEstoque"){
-  carregarEstoque();
-}
-
-  if(nome === "relatorioMinhasVendas"){
-    carregarMinhasVendas();
-  }
-
-  if(nome === "painelProprietario"){
-    carregarPainelProprietario();
-  }
-}
-
+  aba.style.display = "block";
+};
 function carregarRelatorios(){
 
   jsonp({action:"relatorioEstoque"}, function(r){
@@ -2835,7 +2829,5 @@ function carregarEstoque(){
 
 </nav>
 <div id="statusIndicator"></div>
-</div>
-
 </body>
 </html>
