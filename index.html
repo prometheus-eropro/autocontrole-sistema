@@ -1951,24 +1951,24 @@ function validarPermissao_(perfil, acao){
     PROPRIETARIO: ["*"],
 
     ADMIN: [
-      "cadastrarEntrada",
-      "listarVeiculosEstoque",
-      "listarVendedoresLojaAtivos",
-      "cadastrarVendedorLoja",
-      "lancarDespesa",
-      "registrarVenda",
-      "relatorioEstoque",
-      "relatorioVendasPorVendedor",
-      "relatorioMinhasVendas",
-      "relatorioMinhasCompras",
-      "relatorioVeiculosVendidos",
-      "relatorioCompletoVeiculo",
-      "totalDespesasVeiculo",
-      "resumoPorPeriodo",
-      "validarSenhaEstoque",
-      "infoSistema",
-      "alterarSenha"
-    ],
+  "cadastrarEntrada",
+  "listarVeiculosEstoque",
+  "listarVendedoresLojaAtivos",
+  "cadastrarVendedorLoja",
+  "lancarDespesa",
+  "registrarVenda",
+  "relatorioEstoque",
+  "relatorioVendasPorVendedor",
+  "relatorioMinhasVendas",
+  "relatorioMinhasCompras",
+  "relatorioCompletoVeiculo",
+  "totalDespesasVeiculo",
+  "resumoPorPeriodo",
+  "listarParcelas",
+  "registrarPagamentoParcela",
+  "criarUsuario",
+  "alterarSenha"
+],
 
     ESTOQUE: [
       "listarVeiculosEstoque",
@@ -2647,6 +2647,19 @@ async function forcarAtualizacao(){
     }
   }catch(e){}
   location.reload(true);
+}
+function aplicarPermissoes(perfil){
+
+  perfil = String(perfil || "").toUpperCase();
+
+  document.querySelectorAll("[data-role]").forEach(btn=>{
+    const roles = btn.getAttribute("data-role")
+      .split(",")
+      .map(r => r.trim().toUpperCase());
+
+    btn.style.display = roles.includes(perfil) ? "" : "none";
+  });
+
 }
 </script>
 <nav class="bottom-nav">
