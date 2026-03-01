@@ -1169,6 +1169,13 @@ function num(x){
   return Number(String(x).replace(/\./g,'').replace(',','.')) || 0;
 }
 function jsonp(params, callback){
+
+  // 🔒 BLOQUEIO FRONTEND POR PERFIL
+  if(params.action && !validarPermissao_(PERFIL, params.action)){
+    console.warn("Bloqueado no frontend:", params.action);
+    return;
+  }
+
 showLoading();
   // 🔥 PERMITE LOGIN SEM CLIENTE_ID
   if(params.action !== "loginUsuario"){
