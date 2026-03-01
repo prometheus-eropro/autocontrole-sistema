@@ -168,6 +168,7 @@ input,select,textarea{
   background:#f8fafc;
 }
 
+
 input:focus,select:focus,textarea:focus{
   outline:none;
   border-color:#16a34a;
@@ -459,6 +460,22 @@ button {
 </head>
 
 <body>
+<div id="loadingOverlay" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,0.4);
+z-index:9999;
+align-items:center;
+justify-content:center;
+font-size:22px;
+color:white;
+font-weight:bold;">
+Carregando... Aguarde.
+</div>
 <!-- ===== TELA DE LOGIN (ÚNICA) ===== -->
 <div id="telaLogin">
   <div class="login-card">
@@ -513,24 +530,28 @@ button {
     </button>
   </div>
 </header>
+<div id="menuSistema"></div>
 
+<div id="conteudoSistema" style="margin-top:30px;"></div>
 <div class="menu-grid">
-  <div class="menu-btn" onclick="abrirAba('abaVeiculo')">🚗 Veículo</div>
-  <div class="menu-btn" onclick="abrirAba('abaDespesas')">💰 Despesas</div>
-  <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
-  <div class="menu-btn" onclick="abrirAba('abaProprietario')">📊 Proprietário</div>
-  <div class="menu-btn" onclick="abrirAba('abaEstoque')">📦 Estoque</div>
-<div class="menu-btn" onclick="abrirAba('abaRelatorios')">📊 Relatórios</div>
-  <div class="menu-btn" onclick="abrirAba('abaMinhasVendas')">
-  📌 Minhas Vendas</div>
-<div class="menu-btn" onclick="abrirAba('abaMinhasCompras')">
-📦 Minhas Compras
-</div>
 
-<div class="menu-btn" onclick="abrirAba('abaUsuarios')">
-👥 Usuários
-</div>
+  <!-- OPERACIONAL -->
+  <button data-role="ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('cadastrarEntrada')">Veículo</button>
+  <button data-role="ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('lancarDespesa')">Despesas</button>
+  <button data-role="ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('registrarVenda')">Venda</button>
 
+  <!-- RELATÓRIOS -->
+  <button data-role="ADMIN,PROPRIETARIO,MASTER,ESTOQUE,VENDEDOR" onclick="abrirAba('relatorioEstoque')">Estoque</button>
+  <button data-role="VENDEDOR,ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('relatorioMinhasVendas')">Minhas Vendas</button>
+  <button data-role="VENDEDOR,ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('relatorioMinhasCompras')">Minhas Compras</button>
+
+  <!-- GERENCIAL -->
+  <button data-role="PROPRIETARIO,MASTER" onclick="abrirAba('painelProprietario')">Proprietário</button>
+
+  <!-- USUÁRIOS -->
+  <button data-role="MASTER,PROPRIETARIO" onclick="abrirAba('usuarios')">Usuários</button>
+
+</div>
 
 </div>
 
@@ -1129,7 +1150,7 @@ function num(x){
   return Number(String(x).replace(/\./g,'').replace(',','.')) || 0;
 }
 function jsonp(params, callback){
-
+showLoading();
   // 🔥 PERMITE LOGIN SEM CLIENTE_ID
   if(params.action !== "loginUsuario"){
     if(!CLIENTE_ID || !PERFIL){
@@ -1166,6 +1187,14 @@ function jsonp(params, callback){
 
   script.src = GAS_URL + "?" + new URLSearchParams(params).toString();
   document.body.appendChild(script);
+
+window[cbName] = function(data){
+  hideLoading();
+  callback(data);
+  delete window[cbName];
+  script.remove();
+};
+
 }
 
 function setSelect(el, items, placeholder){
@@ -1316,7 +1345,7 @@ if(!navigator.onLine){
       alert("Entrada salva! ID veículo: " + r.id_veiculo);
       limparFormularioEntrada();
       carregarListas();
-    } else alert("Erro: " + (r.msg||""));
+    } else mostrarErro("Erro: " + (r.msg||""));
   });
 }
 
@@ -1667,37 +1696,44 @@ function carregarPainelProprietario(){
 
 }
 
-function abrirAba(id){
+function abrirAba(nome){
 
-  document.querySelectorAll(".aba").forEach(el=>{
-    el.style.display = "none";
-  });
+  console.log("Abrindo aba:", nome);
 
-  const aba = document.getElementById(id);
-  if(!aba){
-    console.warn("Aba não encontrada:", id);
+  const area = document.getElementById("conteudoSistema");
+
+  if(!area){
+    console.error("Div conteudoSistema não existe.");
     return;
   }
 
-  aba.style.display = "block";
+  area.innerHTML = "<div style='padding:30px'>Carregando...</div>";
 
-  if(id === "abaMinhasVendas"){
-    carregarMinhasVendas();
-  }
+  const callback = "cb_" + Date.now();
 
-  if(id === "abaMinhasCompras"){
-    carregarMinhasCompras();
-  }
+  window[callback] = function(resp){
 
-  if(id === "abaRelatorios"){
-  carregarRelatorios();
+    delete window[callback];
+
+    if(!resp || !resp.ok){
+      area.innerHTML = "<div style='padding:30px;color:red'>Erro ao carregar</div>";
+      return;
+    }
+
+    if(resp.itens){
+      area.innerHTML = montarTabela(resp.itens);
+    } else if(resp.dados){
+      area.innerHTML = montarTabela(resp.dados);
+    } else {
+      area.innerHTML = "<div style='padding:30px'>Sem dados</div>";
+    }
+
+  };
+
+  const script = document.createElement("script");
+  script.src = GAS_URL + "?action=" + nome + "&vendedor_loja_id=" + (localStorage.getItem("vendedor_loja_id") || "") + "&callback=" + callback;
+  document.body.appendChild(script);
 }
-
-  if(id === "abaProprietario"){
-    carregarPainelProprietario();
-  }
-}
-
 function carregarRelatorios(){
 
   jsonp({action:"relatorioEstoque"}, function(r){
@@ -2661,6 +2697,45 @@ function aplicarPermissoes(perfil){
   });
 
 }
+function montarTabela(lista){
+
+  if(!lista.length) return "<div style='padding:30px'>Nenhum registro encontrado</div>";
+
+  let html = "<table style='width:100%;border-collapse:collapse'>";
+  
+  html += "<tr>";
+  Object.keys(lista[0]).forEach(k=>{
+    html += "<th style='border:1px solid #ddd;padding:8px;background:#111;color:white'>" + k + "</th>";
+  });
+  html += "</tr>";
+
+  lista.forEach(r=>{
+    html += "<tr>";
+    Object.values(r).forEach(v=>{
+      html += "<td style='border:1px solid #ddd;padding:8px'>" + (v ?? "") + "</td>";
+    });
+    html += "</tr>";
+  });
+
+  html += "</table>";
+
+  return html;
+}
+function showLoading(){
+  const el = document.getElementById("loadingOverlay");
+  if(el) el.style.display = "flex";
+}
+
+function hideLoading(){
+  const el = document.getElementById("loadingOverlay");
+  if(el) el.style.display = "none";
+}
+function mostrarErro(msg){
+  hideLoading();
+  alert(msg);
+}
+
+
 </script>
 <nav class="bottom-nav">
 
