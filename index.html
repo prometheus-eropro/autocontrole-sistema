@@ -468,6 +468,9 @@ body {
   display:none;
   width:100%;
 }
+.aba{
+  display:none;
+}
 
 </style>
 
@@ -1734,6 +1737,7 @@ window.abrirAba = function(nome){
 
   console.log("🔥 CLICOU:", nome);
 
+  // 🔴 ESCONDE TODAS
   document.querySelectorAll(".aba").forEach(aba=>{
     aba.style.display = "none";
   });
@@ -1755,11 +1759,22 @@ window.abrirAba = function(nome){
   const aba = document.getElementById(id);
   if(!aba) return;
 
+  // 🟢 MOSTRA SOMENTE ELA
   aba.style.display = "block";
 
-  // 🔥 AUTO LOAD DE DADOS
+  // 🔝 VOLTA PARA O TOPO
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // 🔐 REAPLICA PERMISSÕES
+  aplicarPermissoes(PERFIL);
+
+  // 🔄 CARREGA DADOS DA ABA
   if(nome === "relatorioEstoque"){
     carregarEstoque();
+  }
+
+  if(nome === "painelProprietario"){
+    carregarPainelProprietario();
   }
 
   if(nome === "relatorioMinhasVendas"){
@@ -1770,17 +1785,9 @@ window.abrirAba = function(nome){
     carregarMinhasCompras();
   }
 
-  if(nome === "painelProprietario"){
-    carregarPainelProprietario();
-  }
-
-  // 🔥 GARANTE PERMISSÃO SEMPRE
-  aplicarPermissoes(PERFIL);
-
-  // 🔥 GARANTE STATUS ATUALIZADO
+  // 🔄 ATUALIZA INFO SISTEMA
   carregarInfoSistema();
 };
-
 
 function carregarRelatorios(){
 
