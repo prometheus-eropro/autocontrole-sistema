@@ -571,7 +571,7 @@ Carregando... Aguarde.
 <!-- =======================
   ABA VEÍCULO (ENTRADA)
 ======================= -->
-<div id="abaVeiculo" class="aba" style="display:none">
+<div id="abaVeiculo" class="aba" >
 
   <div class="card">
 
@@ -677,7 +677,7 @@ Cadastro do veículo + dono no documento + vendedor
 <!-- =======================
   ABA DESPESA
 ======================= -->
-<div id="abaDespesas" class="aba" style="display:none;">
+<div id="abaDespesas" class="aba>
 
  <div class="card">
     <h2>Lançar Despesa</h2>
@@ -710,7 +710,7 @@ Cadastro do veículo + dono no documento + vendedor
 <!-- =======================
   ABA VENDA
 ======================= -->
-<div id="abaVenda" class="aba" style="display:none;">
+<div id="abaVenda" class="aba>
 
   <div class="card">
     <h2>Registrar Venda</h2>
@@ -775,7 +775,7 @@ Cadastro do veículo + dono no documento + vendedor
 </select>
 
 <!-- PARCELAMENTO / FINANCIAMENTO (EXIBE CONFORME CONDIÇÃO) -->
-<div id="blocoParcelado" style="display:none;">
+<div id="blocoParcelado>
   <div class="badge">Parcelamento pela Loja</div>
   <div class="grid">
     <input id="vd_entrada" placeholder="Entrada (R$)">
@@ -784,7 +784,7 @@ Cadastro do veículo + dono no documento + vendedor
   </div>
 </div>
 
-<div id="blocoFinanciado" style="display:none;">
+<div id="blocoFinanciado" >
   <div class="badge">Financiamento</div>
   <div class="grid">
     <input id="vd_banco" placeholder="Banco (se financiado)">
@@ -864,7 +864,7 @@ style="background:#0f172a;margin-top:10px;">
 
   </div>
 </div>
-<div id="abaProprietario" class="aba" style="display:none;">
+<div id="abaProprietario" class="aba>
   <div class="card">
     <h2>Painel do Proprietário</h2>
 <div id="upgradePlano" style="display:none;
@@ -985,7 +985,7 @@ font-weight:600;">
 <!-- =======================
   ABA USUÁRIOS
 ======================= -->
-<div id="abaUsuarios" class="aba" style="display:none;">
+<div id="abaUsuarios" class="aba>
   <div class="card">
 
     <h2>Gerenciar Usuários</h2>
@@ -1021,7 +1021,7 @@ font-weight:600;">
   </div>
 </div>
 
-<div id="abaEstoque" class="aba" style="display:none;">
+<div id="abaEstoque" class="aba">
   <div class="card">
 
     <!-- ============================= -->
@@ -1046,7 +1046,7 @@ font-weight:600;">
 <!-- =======================
   ABA RELATÓRIOS
 ======================= -->
-<div id="abaRelatorios" class="aba" style="display:none;">
+<div id="abaRelatorios" class="aba" >
   <div class="card">
 
     <h2>Relatório de Vendas</h2>
@@ -1086,7 +1086,7 @@ font-weight:600;">
     <!-- =======================
          ABA MINHAS VENDAS
      ======================= -->
-<div id="abaMinhasVendas" class="aba" style="display:none;">
+<div id="abaMinhasVendas" class="aba">
   <div class="card">
 
     <div class="section-title">💰 Minhas Vendas</div>
@@ -1100,7 +1100,7 @@ font-weight:600;">
 
   </div>
 </div>
-<div id="abaMinhasCompras" class="aba" style="display:none;">
+<div id="abaMinhasCompras" class="aba" >
   <div class="card">
     <div class="section-title">📦 Minhas Compras</div>
 <div class="section-subtitle">Veículos adquiridos pelo usuário logado</div>
@@ -1132,7 +1132,7 @@ font-weight:600;">
 <!-- =======================
   ABA CONFIG
 ======================= -->
-<div id="abaConfig" class="aba" style="display:none;">
+<div id="abaConfig" class="aba" >
   <div class="card">
     <h2>⚙ Configurações</h2>
     <hr>
@@ -1761,14 +1761,16 @@ window.abrirAba = function(nome){
   const aba = document.getElementById(id);
 
   if(!aba){
-    console.error("ID não encontrado:", id);
+    console.error("Elemento não encontrado:", id);
     return;
   }
 
-  // 🔥 Garante renderização
+  // 🔥 força visibilidade real
   aba.style.display = "block";
-  aba.scrollIntoView({ behavior: "smooth" });
+  aba.style.visibility = "visible";
+  aba.style.opacity = "1";
 
+  aba.scrollIntoView({behavior:"smooth"});
 };
 
 function carregarRelatorios(){
