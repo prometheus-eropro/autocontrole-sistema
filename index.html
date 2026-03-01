@@ -1734,7 +1734,6 @@ window.abrirAba = function(nome){
 
   console.log("🔥 CLICOU:", nome);
 
-  // Esconde todas
   document.querySelectorAll(".aba").forEach(aba=>{
     aba.style.display = "none";
   });
@@ -1747,31 +1746,41 @@ window.abrirAba = function(nome){
     relatorioMinhasVendas: "abaMinhasVendas",
     relatorioMinhasCompras: "abaMinhasCompras",
     painelProprietario: "abaProprietario",
-    proprietario: "abaProprietario",
     usuarios: "abaUsuarios"
   };
 
   const id = mapa[nome];
-
-  if(!id){
-    console.error("Aba não mapeada:", nome);
-    return;
-  }
+  if(!id) return;
 
   const aba = document.getElementById(id);
+  if(!aba) return;
 
-  if(!aba){
-    console.error("Elemento não encontrado:", id);
-    return;
+  aba.style.display = "block";
+
+  // 🔥 AUTO LOAD DE DADOS
+  if(nome === "relatorioEstoque"){
+    carregarEstoque();
   }
 
-  // 🔥 força visibilidade real
-  aba.style.display = "block";
-  aba.style.visibility = "visible";
-  aba.style.opacity = "1";
+  if(nome === "relatorioMinhasVendas"){
+    carregarMinhasVendas();
+  }
 
-  aba.scrollIntoView({behavior:"smooth"});
+  if(nome === "relatorioMinhasCompras"){
+    carregarMinhasCompras();
+  }
+
+  if(nome === "painelProprietario"){
+    carregarPainelProprietario();
+  }
+
+  // 🔥 GARANTE PERMISSÃO SEMPRE
+  aplicarPermissoes(PERFIL);
+
+  // 🔥 GARANTE STATUS ATUALIZADO
+  carregarInfoSistema();
 };
+
 
 function carregarRelatorios(){
 
@@ -1951,19 +1960,20 @@ function fazerLogin(){
     carregarListas();
     carregarInfoSistema();
 
-    // 🔥 ABRE ABA PADRÃO
-    if(PERFIL === "PROPRIETARIO"){
-      abrirAba("painelProprietario");
-    }
-    else if(PERFIL === "ESTOQUE"){
-      abrirAba("relatorioEstoque");
-    }
-    else if(PERFIL === "ADMIN"){
-      abrirAba("cadastrarEntrada");
-    }
-    else if(PERFIL === "VENDEDOR"){
-      abrirAba("relatorioMinhasVendas");
-    }
+    // 🔥 ABRE ABA PADRÃO POR PERFIL
+
+if(PERFIL === "PROPRIETARIO"){
+  abrirAba("painelProprietario");
+}
+else if(PERFIL === "ADMIN"){
+  abrirAba("cadastrarEntrada");
+}
+else if(PERFIL === "VENDEDOR"){
+  abrirAba("relatorioEstoque");
+}
+else if(PERFIL === "ESTOQUE"){
+  abrirAba("relatorioEstoque");
+}
 
   });
 
