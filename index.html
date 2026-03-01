@@ -1698,12 +1698,11 @@ function carregarPainelProprietario(){
 
 function abrirAba(nome){
 
-  // esconde todas as abas
+  // esconder todas
   document.querySelectorAll(".aba").forEach(aba=>{
     aba.style.display = "none";
   });
 
-  // mapeamento nome -> id
   const mapa = {
     cadastrarEntrada: "abaVeiculo",
     lancarDespesa: "abaDespesas",
@@ -1733,7 +1732,6 @@ function abrirAba(nome){
   if(nome === "painelProprietario"){
     carregarPainelProprietario();
   }
-
 }
 
 function carregarRelatorios(){
