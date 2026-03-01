@@ -1900,25 +1900,26 @@ console.clear();
 function fazerLogin(){
 
   const usuario = v("login_usuario");
-  const senha = v("login_senha");
+  const senha   = v("login_senha");
 
-  if(!usuario || !senha) 
+  if(!usuario || !senha)
     return alert("Informe usuário e senha.");
 
   jsonp({
-    action:"loginUsuario",
+    action: "loginUsuario",
     usuario,
     senha
   }, function(r){
 
     if(!r || !r.ok){
-      return alert("Login inválido.");
+      alert("Login inválido.");
+      return;
     }
 
-    // ===== SALVA VARIÁVEIS GLOBAIS =====
+    // ===== SALVA DADOS GLOBAIS =====
     CLIENTE_ID = r.cliente_id;
-    PERFIL = String(r.perfil || "").toUpperCase();
-    PLANO = String(r.plano || "BASICO").toUpperCase();
+    PERFIL     = String(r.perfil || "").toUpperCase();
+    PLANO      = String(r.plano || "BASICO").toUpperCase();
 
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
@@ -1926,46 +1927,47 @@ function fazerLogin(){
     localStorage.setItem("nome_loja", r.nome_loja || "");
     localStorage.setItem("nome_usuario", r.nome_usuario || usuario);
     localStorage.setItem("proprietario_vendedor_id", r.proprietario_vendedor_id || "");
-    // ===== APLICA PERMISSÕES =====
-    aplicarPermissoes(PERFIL);
+
+    // 🔥 SALVA USUÁRIO LOGADO (USADO NA chamarAPI)
+    window.usuarioLogado = {
+      cliente_id: CLIENTE_ID,
+      perfil: PERFIL,
+      nome_usuario: r.nome_usuario || usuario,
+      plano: PLANO
+    };
 
     // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
-    const telaLogin = document.getElementById("telaLogin");
-    const sistema = document.getElementById("sistema");
+    document.getElementById("telaLogin").style.display = "none";
+    document.getElementById("sistema").style.display   = "block";
 
-    if(telaLogin) telaLogin.style.display = "none";
-    if(sistema) sistema.style.display = "block";
+    // ===== CABEÇALHO =====
+    document.getElementById("nomeLoja").textContent     = r.nome_loja || "";
+    document.getElementById("usuarioLogado").textContent = r.nome_usuario || usuario;
+    document.getElementById("perfilLogado").textContent  = PERFIL;
 
-    // ===== PREENCHE CABEÇALHO =====
-    const elLoja = document.getElementById("nomeLoja");
-    const elUser = document.getElementById("usuarioLogado");
-    const elPerf = document.getElementById("perfilLogado");
-    
-    if(elLoja) elLoja.textContent = r.nome_loja || "";
-    if(elUser) elUser.textContent = r.nome_usuario || usuario;
-    if(elPerf) elPerf.textContent = r.perfil || "";
+    aplicarPermissoes(PERFIL);
+    carregarListas();
+    carregarInfoSistema();
 
-    // ===== CARREGA DADOS DO SISTEMA =====
-carregarListas();
-carregarInfoSistema();
-// 🔥 ABRE ABA PADRÃO POR PERFIL
-if(PERFIL === "PROPRIETARIO"){
-  abrirAba("painelProprietario");
-}
-else if(PERFIL === "ESTOQUE"){
-  abrirAba("relatorioEstoque");
-}
-else if(PERFIL === "ADMIN"){
-  abrirAba("cadastrarEntrada");
-}
-else if(PERFIL === "VENDEDOR"){
-  abrirAba("relatorioMinhasVendas");
-}
-if(PERFIL === "ESTOQUE"){
-  abrirAba("relatorioEstoque");
-}
+    // 🔥 ABRE ABA PADRÃO
+    if(PERFIL === "PROPRIETARIO"){
+      abrirAba("painelProprietario");
+    }
+    else if(PERFIL === "ESTOQUE"){
+      abrirAba("relatorioEstoque");
+    }
+    else if(PERFIL === "ADMIN"){
+      abrirAba("cadastrarEntrada");
+    }
+    else if(PERFIL === "VENDEDOR"){
+      abrirAba("relatorioMinhasVendas");
+    }
+
   });
+
 }
+
+
 function salvarOffline(payload){
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   fila.push(payload);
@@ -2347,6 +2349,13 @@ window.addEventListener("DOMContentLoaded", function(){
   CLIENTE_ID = clienteSalvo;
   PERFIL = String(perfilSalvo || "").toUpperCase();
   PLANO = planoSalvo || "BASICO";
+
+window.usuarioLogado = {
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL,
+  nome_usuario: nomeUsuario,
+  plano: PLANO
+};
 
   if(tela) tela.style.display = "none";
   if(sistema) sistema.style.display = "block";
@@ -2836,6 +2845,58 @@ function carregarEstoque(){
   });
 
 }
+
+// ===============================
+// 🔥 FUNÇÃO PADRÃO DE CHAMADA API
+// ===============================
+function chamarAPI(params, callbackSucesso, callbackErro){
+
+  if(!window.usuarioLogado || !usuarioLogado.cliente_id){
+    console.error("Usuário não logado ou cliente_id ausente");
+    return;
+  }
+
+  const callbackName = "cb_" + Date.now();
+
+  // cria função global temporária
+  window[callbackName] = function(res){
+
+    delete window[callbackName];
+    script.remove();
+
+    if(res.ok){
+      if(callbackSucesso) callbackSucesso(res);
+    }else{
+      console.error("Erro API:", res.msg);
+      if(callbackErro){
+        callbackErro(res);
+      }else{
+        alert(res.msg || "Erro na requisição");
+      }
+    }
+  };
+
+  const script = document.createElement("script");
+
+  const dados = {
+    ...params,
+    cliente_id: usuarioLogado.cliente_id,
+    perfil: usuarioLogado.perfil,
+    nome_usuario: usuarioLogado.nome_usuario,
+    callback: callbackName
+  };
+
+  script.src = GAS_URL + "?" + new URLSearchParams(dados).toString();
+
+  script.onerror = function(){
+    delete window[callbackName];
+    script.remove();
+    alert("Erro de conexão com servidor.");
+  };
+
+  document.body.appendChild(script);
+}
+
 </script>
 <nav class="bottom-nav">
 
