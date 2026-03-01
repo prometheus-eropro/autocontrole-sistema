@@ -1933,7 +1933,19 @@ function fazerLogin(){
     // ===== CARREGA DADOS DO SISTEMA =====
 carregarListas();
 carregarInfoSistema();
-
+// 🔥 ABRE ABA PADRÃO POR PERFIL
+if(PERFIL === "PROPRIETARIO"){
+  abrirAba("painelProprietario");
+}
+else if(PERFIL === "ESTOQUE"){
+  abrirAba("relatorioEstoque");
+}
+else if(PERFIL === "ADMIN"){
+  abrirAba("cadastrarEntrada");
+}
+else if(PERFIL === "VENDEDOR"){
+  abrirAba("relatorioMinhasVendas");
+}
 if(PERFIL === "ESTOQUE"){
   abrirAba("relatorioEstoque");
 }
@@ -2335,6 +2347,21 @@ window.addEventListener("DOMContentLoaded", function(){
 aplicarPermissoes(PERFIL);
 carregarListas();
 carregarInfoSistema(); // ✅ faltava
+
+// 🔥 ABRE ABA PADRÃO AO RECARREGAR
+if(PERFIL === "PROPRIETARIO"){
+  abrirAba("painelProprietario");
+}
+else if(PERFIL === "ESTOQUE"){
+  abrirAba("relatorioEstoque");
+}
+else if(PERFIL === "ADMIN"){
+  abrirAba("cadastrarEntrada");
+}
+else if(PERFIL === "VENDEDOR"){
+  abrirAba("relatorioMinhasVendas");
+}
+
 if(PERFIL === "ESTOQUE"){
   abrirAba("relatorioEstoque");
 }
