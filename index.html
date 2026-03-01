@@ -519,6 +519,7 @@ Carregando... Aguarde.
   <span id="statusSistema" class="bolinha"></span>
   Sistema
 </div>
+<div id="sistema">
   <div class="header-right">
 
     <div class="usuario-info">
@@ -1121,7 +1122,7 @@ font-weight:600;">
     </small>
   </div>
 </div>
-
+</div>
 <script>
 
 /* ========= CONFIG ========= */
@@ -2739,17 +2740,14 @@ function mostrarErro(msg){
 </script>
 <nav class="bottom-nav">
 
-  <div onclick="abrirAba('abaUsuarios')">
-👥<span>Usuários</span>
-</div>
-  <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
-  <div onclick="abrirAba('abaDespesas')">💰<span>Despesas</span></div>
-  <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
-  <div onclick="abrirAba('abaEstoque')">📦<span>Estoque</span></div>
-  <div onclick="abrirAba('abaRelatorios')">📊<span>Relatórios</span></div>
-  <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
-  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Vendas</span></div>
-  <div onclick="abrirAba('abaMinhasCompras')">📦<span>Compras</span></div>
+  <div onclick="abrirAba('usuarios')">👥<span>Usuários</span></div>
+  <div onclick="abrirAba('cadastrarEntrada')">🚗<span>Veículo</span></div>
+  <div onclick="abrirAba('lancarDespesa')">💰<span>Despesas</span></div>
+  <div onclick="abrirAba('registrarVenda')">📝<span>Venda</span></div>
+  <div onclick="abrirAba('relatorioEstoque')">📦<span>Estoque</span></div>
+  <div onclick="abrirAba('painelProprietario')">📊<span>Financeiro</span></div>
+  <div onclick="abrirAba('relatorioMinhasVendas')">📌<span>Vendas</span></div>
+  <div onclick="abrirAba('relatorioMinhasCompras')">📦<span>Compras</span></div>
 
 </nav>
 <div id="statusIndicator"></div>
