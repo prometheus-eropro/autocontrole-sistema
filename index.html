@@ -1171,15 +1171,6 @@ function num(x){
 function jsonp(params, callback){
 
   // 🔒 BLOQUEIO FRONTEND POR PERFIL
-  // 🔒 BLOQUEIO FRONTEND POR PERFIL
-if(
-  params.action &&
-  params.action !== "loginUsuario" &&
-  !validarPermissao_(PERFIL, params.action)
-){
-  console.warn("Bloqueado no frontend:", params.action);
-  return;
-}
 
 showLoading();
   // 🔥 PERMITE LOGIN SEM CLIENTE_ID
