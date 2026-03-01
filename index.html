@@ -1937,6 +1937,10 @@ function fazerLogin(){
     // ===== CARREGA DADOS DO SISTEMA =====
 carregarListas();
 carregarInfoSistema();
+
+if(PERFIL === "ESTOQUE"){
+  abrirAba("relatorioEstoque");
+}
   });
 }
 function salvarOffline(payload){
@@ -2335,7 +2339,9 @@ window.addEventListener("DOMContentLoaded", function(){
 aplicarPermissoes(PERFIL);
 carregarListas();
 carregarInfoSistema(); // ✅ faltava
-
+if(PERFIL === "ESTOQUE"){
+  abrirAba("relatorioEstoque");
+}
   
   } else {
     if(tela) tela.style.display = "flex";
