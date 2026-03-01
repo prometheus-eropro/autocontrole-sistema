@@ -464,6 +464,10 @@ body {
     display:none;
   }
 }
+.aba{
+  display:none;
+  width:100%;
+}
 
 </style>
 
@@ -1730,7 +1734,7 @@ window.abrirAba = function(nome){
 
   console.log("🔥 CLICOU:", nome);
 
-  // esconder todas
+  // Esconde todas
   document.querySelectorAll(".aba").forEach(aba=>{
     aba.style.display = "none";
   });
@@ -1749,19 +1753,24 @@ window.abrirAba = function(nome){
 
   const id = mapa[nome];
 
-  console.log("➡️ ID DA ABA:", id);
+  if(!id){
+    console.error("Aba não mapeada:", nome);
+    return;
+  }
 
   const aba = document.getElementById(id);
 
   if(!aba){
-    console.error("❌ ABA NÃO ENCONTRADA:", id);
+    console.error("ID não encontrado:", id);
     return;
   }
 
+  // 🔥 Garante renderização
   aba.style.display = "block";
-aba.style.position = "relative";
-aba.style.zIndex = "1";
+  aba.scrollIntoView({ behavior: "smooth" });
+
 };
+
 function carregarRelatorios(){
 
   jsonp({action:"relatorioEstoque"}, function(r){
