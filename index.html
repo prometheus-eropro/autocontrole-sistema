@@ -299,20 +299,20 @@ tr:nth-child(even){
   }
 
   .bottom-nav div{
-    width:70px;
-    text-align:center;
-    font-size:12px;
-    font-weight:600;
-    color:#1e293b;
-    cursor:pointer;
-  }
+  flex:1;
+  min-width:72px;
+  text-align:center;
+  font-size:13px;
+  font-weight:700;
+  color:#1e293b;
+  cursor:pointer;
+}
 
-  .bottom-nav div span{
-    display:block;
-    font-size:10px;
-    margin-top:2px;
-  }
-
+.bottom-nav div span{
+  display:block;
+  font-size:11px;
+  margin-top:3px;
+}
 }
 
 /* ESCONDE NAV NO DESKTOP */
@@ -570,7 +570,10 @@ Cadastro do veículo + dono no documento + vendedor
       <input id="p_nome" placeholder="Nome Proprietário">
       <input id="p_cpf" placeholder="CPF/CNPJ Proprietário">
       <input id="p_rg" placeholder="RG Proprietário">
-      <input id="p_nascimento" type="date">
+      <div>
+  <label>Data de Nascimento</label>
+  <input id="p_nascimento" type="date">
+</div>
       <input id="p_telefone" placeholder="Telefone">
       <input id="p_email" placeholder="Email">
       <input id="p_endereco" placeholder="Endereço" style="grid-column:1/-1;">
@@ -997,6 +1000,7 @@ font-weight:600;">
       <div id="relatorioEstoque"></div>
     </div>
 </div>
+</div> 
 <!-- =======================
   ABA RELATÓRIOS
 ======================= -->
@@ -1037,52 +1041,9 @@ font-weight:600;">
 
   </div>
 </div>
-    <!-- ============================= -->
-    <!-- RELATÓRIO DE VENDAS -->
-    <!-- ============================= -->
-    <div id="blocoVendasRelatorio">
-  <h2 style="margin-top:40px;">Relatório de Vendas</h2>
-  <hr>
-
-  <!-- TODO o bloco de vendas fica aqui dentro -->
-
-    <hr>
-
-    <div class="grid" style="margin-bottom:15px;">
-
-      <select id="filtro_vendedor_venda">
-        <option value="">Todos os vendedores</option>
-      </select>
-
-      <div>
-        <label>Data início</label>
-        <input id="filtro_data_inicio_venda" type="date">
-      </div>
-
-      <div>
-        <label>Data fim</label>
-        <input id="filtro_data_fim_venda" type="date">
-      </div>
-
-      <input id="filtro_placa_venda" placeholder="Filtrar por Placa">
-      <input id="filtro_cpf_venda" placeholder="Filtrar por CPF">
-
-      <button onclick="carregarVendasFiltradas()">
-        Filtrar Vendas
-      </button>
-
-    </div>
-
-    <div class="table-wrapper">
-      <div id="relatorioVendasFiltrado"></div>
-    </div>
-</div>
-
-  </div>
-</div>
-<!-- =======================
-  ABA MINHAS VENDAS
-======================= -->
+    <!-- =======================
+         ABA MINHAS VENDAS
+     ======================= -->
 <div id="abaMinhasVendas" class="aba" style="display:none;">
   <div class="card">
 
@@ -1107,12 +1068,31 @@ font-weight:600;">
     </div>
   </div>
 </div>
-<hr>
-<h3>Alterar Senha</h3>
 
-<input id="senhaAtual" type="password" placeholder="Senha Atual">
-<input id="novaSenha" type="password" placeholder="Nova Senha">
-<button onclick="trocarSenha()">Alterar Senha</button>
+<!-- =======================
+  ABA CONFIG
+======================= -->
+<div id="abaConfig" class="aba" style="display:none;">
+  <div class="card">
+    <h2>⚙ Configurações</h2>
+    <hr>
+
+    <h3>Alterar minha senha</h3>
+    <input id="senhaAtual" type="password" placeholder="Senha Atual">
+    <input id="novaSenha" type="password" placeholder="Nova Senha">
+    <button onclick="trocarSenha()">Alterar Senha</button>
+
+    <hr>
+    <h3>Atualização forçada</h3>
+    <button onclick="forcarAtualizacao()" style="background:#0f172a;">
+      🔄 Forçar atualização do sistema
+    </button>
+    <small style="display:block;margin-top:10px;color:#64748b;">
+      Isso limpa cache e recarrega (útil quando o celular fica preso numa versão antiga).
+    </small>
+  </div>
+</div>
+
 <script>
 
 /* ========= CONFIG ========= */
@@ -2314,7 +2294,9 @@ function carregarVendasProprietarioFiltradas(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
+  if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js?v=2.4.1');
+}
 }
 function voltarHome(){
   document.querySelectorAll(".aba").forEach(el=>{
@@ -2719,7 +2701,19 @@ function alterarSenhaAdmin(){
   });
 
 }
-
+async function forcarAtualizacao(){
+  try{
+    if('caches' in window){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+  }catch(e){}
+  location.reload(true);
+}
 </script>
 <nav class="bottom-nav">
 
