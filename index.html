@@ -1723,8 +1723,8 @@ function abrirAba(nome){
 
   // carregar dados quando necessário
   if(nome === "relatorioEstoque"){
-    carregarRelatorios();
-  }
+  carregarEstoque();
+}
 
   if(nome === "relatorioMinhasVendas"){
     carregarMinhasVendas();
@@ -2735,7 +2735,35 @@ function mostrarErro(msg){
   hideLoading();
   alert(msg);
 }
+function carregarEstoque(){
 
+  jsonp({
+    action:"relatorioEstoque"
+  }, function(resp){
+
+    if(!resp.ok){
+      alert(resp.msg);
+      return;
+    }
+
+    const tabela = document.getElementById("tabelaEstoque");
+    tabela.innerHTML = "";
+
+    resp.itens.forEach(v=>{
+      tabela.innerHTML += `
+        <tr>
+          <td>${v.placa}</td>
+          <td>${v.marca}</td>
+          <td>${v.modelo}</td>
+          <td>${v.ano_fabricacao}</td>
+          <td>${v.valor_venda}</td>
+        </tr>
+      `;
+    });
+
+  });
+
+}
 
 </script>
 <nav class="bottom-nav">
