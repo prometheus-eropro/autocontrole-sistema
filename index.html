@@ -1023,7 +1023,7 @@ font-weight:600;">
 </button>
     <div class="grid" style="margin-bottom:15px;">
       <input id="filtro_modelo" placeholder="Filtrar por Modelo">
-      <button onclick="carregarRelatorios()">Filtrar Estoque</button>
+      <button onclick="carregarEstoque()">Filtrar Estoque</button>
     </div>
 
     <div class="table-wrapper">
@@ -1094,8 +1094,26 @@ font-weight:600;">
 <div class="section-subtitle">Veículos adquiridos pelo usuário logado</div>
 <div class="section-divider"></div>
     <div class="table-wrapper">
-      <div id="relatorioMinhasCompras"></div>
-    </div>
+
+  <table class="tabela-padrao">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Ano Fab.</th>
+        <th>Ano Mod.</th>
+        <th>Cor</th>
+        <th>Valor</th>
+        <th>Dias em Estoque</th>
+      </tr>
+    </thead>
+
+    <tbody id="tabelaEstoque">
+    </tbody>
+  </table>
+
+</div>
   </div>
 </div>
 
@@ -2737,34 +2755,36 @@ function mostrarErro(msg){
 }
 function carregarEstoque(){
 
-  jsonp({
-    action:"relatorioEstoque"
-  }, function(resp){
+  jsonp({ action:"relatorioEstoque" }, function(r){
 
-    if(!resp.ok){
-      alert(resp.msg);
-      return;
-    }
+    if(!r.ok) return;
 
     const tabela = document.getElementById("tabelaEstoque");
+
     tabela.innerHTML = "";
 
-    resp.itens.forEach(v=>{
+    r.itens.forEach(v=>{
+
+      const dias = v.dias_estoque || 0;
+
       tabela.innerHTML += `
         <tr>
           <td>${v.placa}</td>
           <td>${v.marca}</td>
           <td>${v.modelo}</td>
           <td>${v.ano_fabricacao}</td>
-          <td>${v.valor_venda}</td>
+          <td>${v.ano_modelo}</td>
+          <td>${v.cor}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>${dias}</td>
         </tr>
       `;
+
     });
 
   });
 
 }
-
 </script>
 <nav class="bottom-nav">
 
