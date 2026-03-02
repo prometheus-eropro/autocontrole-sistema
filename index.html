@@ -1777,7 +1777,9 @@ troca_valor_venda: v("troca_valor_venda"),  };
     }
   });
 
-}/* ===== LIMPEZAS ===== */
+}
+
+/* ===== LIMPEZAS ===== */
 function limparFormularioEntrada(){
   document.querySelectorAll("#abaVeiculo input").forEach(el=>el.value="");
   document.getElementById("tipo_veiculo").selectedIndex = 0;
@@ -3137,81 +3139,6 @@ function alterarStatusUsuario(){
   });
 
 }
-function alterarStatusUsuario_(e){
-
-  const p = e.parameter;
-
-  const usuarioAlvo = String(p.usuario_alvo || "").trim();
-  const novoStatus  = String(p.novo_status || "").toUpperCase();
-  const perfilLogado = String(p.perfil || "").toUpperCase();
-  const clienteId = String(p.cliente_id || "");
-
-  if(!usuarioAlvo || !["SIM","NAO"].includes(novoStatus)){
-    return { ok:false, msg:"Dados inválidos." };
-  }
-
-  const sh = SpreadsheetApp
-    .openById("15NqtFk8oTUjmyiaRYvXWLwkaG-cs_KeZHbjwza-CGmQ")
-    .getSheetByName("usuarios_AutoControle");
-
-  const dados = sh.getDataRange().getValues();
-  const headers = dados[0];
-  const map = {};
-  headers.forEach((h,i)=> map[h]=i);
-
-  let linha = 0;
-  let perfilAlvo = "";
-  let clienteAlvo = "";
-
-  for(let i=1;i<dados.length;i++){
-    if(String(dados[i][map["usuario"]]||"").toLowerCase() === usuarioAlvo.toLowerCase()){
-      linha = i+1;
-      perfilAlvo = String(dados[i][map["perfil"]]||"").toUpperCase();
-      clienteAlvo = String(dados[i][map["cliente_id"]]||"");
-      break;
-    }
-  }
-
-  if(!linha) return { ok:false, msg:"Usuário não encontrado." };
-
-  // ==============================
-  // 🔐 REGRAS DE PERMISSÃO
-  // ==============================
-
-  // MASTER pode tudo
-  if(perfilLogado === "MASTER"){
-    // ok
-  }
-
-  // PROPRIETARIO → só da empresa dele
-  else if(perfilLogado === "PROPRIETARIO"){
-
-    if(clienteAlvo !== clienteId){
-      return { ok:false, msg:"Não pertence à sua empresa." };
-    }
-
-  }
-
-  // ADMIN → apenas VENDEDOR
-  else if(perfilLogado === "ADMIN"){
-
-    if(perfilAlvo !== "VENDEDOR"){
-      return { ok:false, msg:"ADMIN só pode alterar VENDEDOR." };
-    }
-
-  }
-
-  else{
-    return { ok:false, msg:"Sem permissão." };
-  }
-
-  // ==============================
-
-  sh.getRange(linha, map["ativo"]+1).setValue(novoStatus);
-
-  return { ok:true };
-}
-
 </script>
 <nav class="bottom-nav">
 
