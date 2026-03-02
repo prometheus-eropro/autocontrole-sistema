@@ -2170,6 +2170,7 @@ function salvarOffline(payload){
 }
 
 function sincronizarOffline(){
+
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   if(fila.length === 0) return;
 
@@ -2177,14 +2178,22 @@ function sincronizarOffline(){
 
   let contador = 0;
 
-  fila.forEach(dados=>{
+  fila.forEach(dados => {
+
     jsonp(dados, function(r){
+
       contador++;
 
       if(contador === fila.length){
         localStorage.removeItem("fila_offline");
         console.log("Sincronização concluída.");
       }
+
+    });
+
+  });
+
+}
 
 function atualizarIndicadorOffline(){
   const fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
