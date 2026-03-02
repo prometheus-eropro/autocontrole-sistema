@@ -3,9 +3,7 @@
 <head>
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+
 <!-- Ícone padrão -->
 <link rel="icon" type="image/png" href="icon-192.png">
 
@@ -22,80 +20,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-/* =========================
-   TELA DE LOGIN
-========================= */
 
-#telaLogin{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-  background:linear-gradient(135deg,#0f172a,#1e293b);
-}
-
-.login-card{
-  background:#111827;
-  padding:45px;
-  border-radius:20px;
-  width:380px;
-  max-width:90%;
-  text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
-  color:#fff;
-}
-
-.login-logo{
-  width:120px;
-  margin-bottom:20px;
-}
-
-.login-title{
-  font-size:28px;
-  margin:0;
-}
-
-.login-sub{
-  font-size:14px;
-  color:#94a3b8;
-  margin-top:5px;
-}
-
-.login-slogan{
-  font-size:12px;
-  color:#22c55e;
-  margin-bottom:25px;
-}
-
-.login-card input{
-  background:#1f2937;
-  border:1px solid #374151;
-  color:#fff;
-}
-
-.login-card input::placeholder{
-  color:#9ca3af;
-}
-
-.login-btn{
-  width:100%;
-  margin-top:10px;
-  background:linear-gradient(135deg,#16a34a,#15803d);
-}
-
-.login-footer{
-  margin-top:25px;
-  font-size:12px;
-  color:#9ca3af;
-}
-input {
-  color: #ffffff !important;
-  caret-color: #22c55e;
-}
-
-input:focus {
- color: #0f172a !important;
-}
 /* ===== RESET ===== */
 *{
   box-sizing:border-box;
@@ -168,7 +93,6 @@ input,select,textarea{
   background:#f8fafc;
 }
 
-
 input:focus,select:focus,textarea:focus{
   outline:none;
   border-color:#16a34a;
@@ -225,46 +149,26 @@ td{
 tr:nth-child(even){
   background:#f8fafc;
 }
-.logo img {
-  height: 60px;
-  width: auto;
-  object-fit: contain;
-}
-/* =========================================================
-   MOBILE / APP PROFISSIONAL
-========================================================= */
 
-@media (max-width:900px){
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  .container{
+    padding:15px;
+  }
+
+  .menu-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+/* =========================================
+   MODO APP (Somente Mobile / Tablet)
+========================================= */
+
+@media (max-width: 900px){
 
   body{
-    padding-top:75px;
-    padding-bottom:85px;
-  }
-
-  .container{
-    padding:16px;
-  }
-
-  .card{
-    padding:18px;
-    border-radius:16px;
-  }
-
-  /* MENU SOME NO MOBILE */
-  .menu-grid{
-    display:none;
-  }
-
-  /* BOTÕES MAIORES NO CELULAR */
-  button{
-    padding:16px;
-    font-size:15px;
-    border-radius:14px;
-  }
-
-  input,select,textarea{
-    padding:16px;
-    font-size:15px;
+    padding-top:70px;
+    padding-bottom:75px;
   }
 
   /* HEADER FIXO */
@@ -273,76 +177,460 @@ tr:nth-child(even){
     top:0;
     left:0;
     right:0;
-    height:65px;
+    height:60px;
     background:#0f172a;
     color:#fff;
     display:flex;
     align-items:center;
     justify-content:space-between;
     padding:0 18px;
-    font-weight:700;
+    font-weight:600;
     z-index:1000;
-    box-shadow:0 4px 12px rgba(0,0,0,.2);
   }
 
-  /* NAV INFERIOR MELHORADA */
+  /* ESCONDE MENU GRID ANTIGO NO MOBILE */
+  .menu-grid{
+    display:none;
+  }
+
+  /* NAV INFERIOR */
   .bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    height:75px;
-    background:#ffffff;
-    display:flex;
-    align-items:center;
-    justify-content:space-around;
-    border-top:1px solid #e2e8f0;
-    box-shadow:0 -4px 15px rgba(0,0,0,.08);
-    z-index:1000;
-  }
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:70px;
+  background:#ffffff;
+  display:flex;
+  align-items:center;
+  overflow-x:auto;
+  overflow-y:hidden;
+  white-space:nowrap;
+  border-top:1px solid #e2e8f0;
+  box-shadow:0 -4px 10px rgba(0,0,0,.08);
+  z-index:1000;
+}
 
-  .bottom-nav div{
-  flex:1;
-  min-width:72px;
+.bottom-nav::-webkit-scrollbar{
+  display:none;
+}
+
+.bottom-nav div{
+  flex:0 0 auto;
+  width:85px;
   text-align:center;
-  font-size:13px;
-  font-weight:700;
+  font-size:11px;
   color:#1e293b;
   cursor:pointer;
+  padding-top:6px;
 }
 
 .bottom-nav div span{
   display:block;
-  font-size:11px;
-  margin-top:3px;
+  font-size:10px;
 }
 }
-
-/* ESCONDE NAV NO DESKTOP */
+.bottom-nav{
+  display:none;
+}
+/* ESCONDE POR PADRÃO */
 .bottom-nav{
   display:none;
 }
 
-@media (max-width:900px){
+/* MOSTRA APENAS MOBILE */
+@media (max-width: 900px){
   .bottom-nav{
     display:flex;
   }
 }
+.section-title{
+  font-size:22px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:4px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 
-/* =========================================================
-   HEADER SISTEMA (MANTIDO IGUAL + AJUSTE MOBILE)
-========================================================= */
+.section-subtitle{
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:18px;
+  font-weight:500;
+}
 
+.section-divider{
+  height:3px;
+  width:60px;
+  background:linear-gradient(90deg,#16a34a,#0ea5e9);
+  border-radius:4px;
+  margin-bottom:20px;
+}
+.section-title{
+  font-size:24px;
+  font-weight:800;
+  text-align:center;
+  color:#0f172a;
+  margin-bottom:6px;
+}
+
+.section-subtitle{
+  font-size:14px;
+  text-align:center;
+  color:#64748b;
+  margin-bottom:12px;
+}
+
+.section-divider{
+  height:3px;
+  width:80px;
+  margin:0 auto 25px auto;
+  background:linear-gradient(90deg,#16a34a,#0ea5e9);
+  border-radius:4px;
+}
+.top-user-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#0f172a;
+  color:#ffffff;
+  padding:10px 20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  font-size:14px;
+}
+
+.user-info{
+  font-weight:600;
+}
+
+.logout-btn{
+  background:#ef4444;
+  color:#fff;
+  border:none;
+  padding:6px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.logout-btn:hover{
+  background:#dc2626;
+}
+/* ===== PADRÃO GLOBAL DE TÍTULOS ===== */
+
+.card h2,
+.card h3,
+.card h1{
+  text-align:center;
+  font-size:22px;
+  font-weight:800;
+  margin-bottom:6px;
+  color:#0f172a;
+}
+
+.card p.subtitle,
+.card small{
+  text-align:center;
+  display:block;
+  font-size:14px;
+  color:#64748b;
+  margin-bottom:15px;
+}
+.card h2::after,
+.card h3::after{
+  content:"";
+  display:block;
+  width:80px;
+  height:3px;
+  margin:12px auto 20px auto;
+  background:linear-gradient(90deg,#16a34a,#0ea5e9);
+  border-radius:4px;
+}
+#statusIndicator{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  box-shadow:0 0 10px rgba(0,0,0,0.4);
+  transition:all .3s ease;
+}
+.logo-principal{
+  width:180px;
+  max-width:100%;
+  display:block;
+  margin:0 auto 20px auto;
+}
+.header-sistema{
+  text-align:center;
+  padding:40px 20px;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  border-radius:20px;
+  margin-bottom:30px;
+}
+
+.header-sistema h1{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.header-sistema h3{
+  color:#22c55e;
+  margin-bottom:12px;
+}
+
+.usuario-logado{
+  font-size:16px;
+  opacity:0.9;
+}
+.header-sistema-unico{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  padding:30px;
+  border-radius:20px;
+  margin-bottom:25px;
+}
+
+.header-unico{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  text-align:center;
+  padding:40px 20px;
+  border-radius:20px;
+  margin-bottom:30px;
+}
+
+.logo-header{
+  width:160px;
+  margin-bottom:20px;
+}
+
+.header-unico h1{
+  font-size:30px;
+  margin:0;
+}
+
+.subtitulo{
+  display:block;
+  margin-top:5px;
+  font-size:14px;
+  color:#22c55e;
+}
+
+.dados-empresa{
+  margin-top:20px;
+  font-size:15px;
+  line-height:1.6;
+}
+
+.btn-sair{
+  margin-top:25px;
+  padding:14px;
+  width:100%;
+  max-width:400px;
+  background:#dc2626;
+  border:none;
+  border-radius:12px;
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn-sair:hover{
+  background:#b91c1c;
+}@media(max-width:768px){
+
+  .header-topo{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .header-usuario{
+    text-align:left;
+    margin-top:15px;
+  }
+
+}
+.capa-sistema{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+}
+
+.logo-capa{
+  width:160px;
+  margin-bottom:20px;
+}
+
+.btn-entrar{
+  margin-top:25px;
+  padding:15px 40px;
+  font-size:18px;
+  border:none;
+  border-radius:12px;
+  background:#16a34a;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* ===== TELA LOGIN ===== */
+#telaLogin{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  z-index:9999;
+}
+
+.login-card{
+  width:min(520px, 100%);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  padding:34px 28px;
+  text-align:center;
+  box-shadow:0 20px 55px rgba(0,0,0,.35);
+  backdrop-filter: blur(10px);
+}
+
+.login-logo{
+  width:160px;
+  max-width:60%;
+  display:block;
+  margin:0 auto 14px auto;
+}
+
+.login-title{
+  margin:0;
+  font-size:34px;
+  font-weight:900;
+  color:#fff;
+}
+
+.login-sub{
+  margin:6px 0 0 0;
+  color:#22c55e;
+  font-weight:700;
+  font-size:14px;
+}
+
+.login-slogan{
+  margin:14px 0 18px 0;
+  color:rgba(255,255,255,.75);
+  font-size:13px;
+}
+
+.login-card input{
+  background:rgba(255,255,255,.95) !important;
+  border:0 !important;
+  border-radius:14px !important;
+  padding:14px 16px !important;
+  margin:10px 0 !important;
+  font-size:15px !important;
+}
+
+.login-btn{
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:800;
+  border:0;
+  cursor:pointer;
+  background:linear-gradient(135deg,#16a34a,#15803d);
+  color:#fff;
+  margin-top:10px;
+}
+
+.login-footer{
+  margin-top:14px;
+  color:rgba(255,255,255,.70);
+  font-size:12px;
+  line-height:1.4;
+}
+
+/* ===== CABEÇALHO DO SISTEMA (O “SEGUNDO”) ===== */
+.system-head{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  padding:28px 22px;
+  border-radius:22px;
+  margin-bottom:22px;
+  text-align:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
+}
+
+.system-head .head-logo{
+  width:110px;           /* AUMENTA LOGO AQUI */
+  max-width:40%;
+  display:block;
+  margin:0 auto 10px auto;
+}
+
+.system-head h1{
+  margin:0;
+  font-size:26px;
+  font-weight:900;
+}
+
+.system-head .sub{
+  display:block;
+  margin-top:6px;
+  color:#22c55e;
+  font-weight:800;
+  font-size:13px;
+}
+
+.system-head .info{
+  margin-top:14px;
+  font-size:14px;
+  line-height:1.6;
+  opacity:.95;
+}
+
+.system-head .info strong{
+  color:#fff;
+}
+
+.system-head .btn-sair-topo{
+  margin:16px auto 0 auto;
+  display:block;
+  width:100%;
+  max-width:420px;
+  padding:14px 16px;
+  border-radius:14px;
+  border:0;
+  background:#dc2626;
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.system-head .btn-sair-topo:hover{
+  background:#b91c1c;
+}
 .header-sistema{
   display:flex;
-  flex-wrap:wrap;
   justify-content:space-between;
   align-items:center;
   background:#0f172a;
   color:#fff;
-  padding:20px 25px;
-  border-radius:20px;
-  margin-bottom:25px;
+  padding:15px 25px;
 }
 
 .header-left{
@@ -352,7 +640,7 @@ tr:nth-child(even){
 }
 
 .logo-sistema{
-  width:110px;
+  width:50px;
 }
 
 .header-right{
@@ -364,41 +652,11 @@ tr:nth-child(even){
 .btn-sair{
   background:#dc2626;
   border:none;
-  padding:10px 16px;
+  padding:8px 15px;
   color:#fff;
-  border-radius:10px;
+  border-radius:8px;
   cursor:pointer;
-  font-weight:700;
 }
-
-.btn-sair:hover{
-  background:#b91c1c;
-}
-
-/* MOBILE HEADER */
-@media (max-width:900px){
-
-  .header-sistema{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
-    padding:18px;
-  }
-
-  .header-right{
-    width:100%;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:6px;
-  }
-
-  .logo-sistema{
-    width:85px;
-  }
-
-}
-
-/* ===== STATUS BOLINHA ===== */
 .bolinha{
   width:12px;
   height:12px;
@@ -407,92 +665,17 @@ tr:nth-child(even){
   background:#22c55e;
   margin-right:6px;
 }
-
-#statusIndicator{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  box-shadow:0 0 10px rgba(0,0,0,0.4);
-  transition:all .3s ease;
+.linha-check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:10px 0;
 }
-button {
-  min-height: 55px;
-  font-size: 18px;
-  border-radius: 12px;
-}
-
-.menu-btn {
-  min-height: 60px;
-  font-size: 18px;
-}
-body {
-  min-height: 100vh;
-}
-
-.aba {
-  margin-top: 30px;
-}
-
-#sistema {
-  padding-bottom: 80px;
-}
-@media(max-width:768px){
-
-  button {
-    width:100%;
-    font-size:20px;
-  }
-
-  .menu-grid {
-    grid-template-columns:1fr;
-  }
-
-}
-.bottom-nav div{
-  padding:12px 5px;
-  font-size:13px;
-}
-
-.bottom-nav div:active{
-  transform:scale(0.95);
-}
-@media(max-width:768px){
-  .menu-secundario {
-    display:none;
-  }
-}
-.aba{
-  display:none;
-  width:100%;
-}
-.aba{
-  display:none;
-}
-
 </style>
 
 </head>
 
 <body>
-<div id="loadingOverlay" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-right:0;
-bottom:0;
-background:rgba(0,0,0,0.4);
-z-index:9999;
-align-items:center;
-justify-content:center;
-font-size:22px;
-color:white;
-font-weight:bold;">
-Carregando... Aguarde.
-</div>
 <!-- ===== TELA DE LOGIN (ÚNICA) ===== -->
 <div id="telaLogin">
   <div class="login-card">
@@ -522,59 +705,62 @@ Carregando... Aguarde.
   <div class="header-left">
     <img src="logo.png" class="logo-sistema">
     <div>
-      <h2 id="nomeSistema">AutoControle</h2>
-<div class="nome-loja" id="nomeLoja"></div>
-      <div class="info-sistema">
-  <div>
-    <span class="label-info">Última atualização (Horário do Sistema)</span><br>
-    <span id="dataAtualizacao" class="valor-info">--</span>
-  </div>
-</div>
+      <h2 id="nomeLoja">Nome da Loja</h2>
+<small>
+Última atualização: <span id="dataAtualizacao"></span>
+&nbsp; | &nbsp;
+Versão: <span id="versaoSistema"></span>
+</small>
     </div>
   </div>
 <div class="status-box">
   <span id="statusSistema" class="bolinha"></span>
   Sistema
 </div>
-
   <div class="header-right">
-
     <div class="usuario-info">
-  <div><strong>Usuário:</strong> <span id="usuarioLogado"></span></div>
-  <div><strong>Perfil:</strong> <span id="perfilLogado"></span></div>
-</div>
+      <strong id="usuarioLogado"></strong><br>
+      <small id="perfilLogado"></small>
+    </div>
+
     <button onclick="logout()" class="btn-sair">
       Sair
     </button>
   </div>
 </header>
-<div id="menuSistema"></div>
 
-<div id="conteudoSistema" style="margin-top:30px;"></div>
+<div id="alertaParcelas"
+     style="
+     display:none;
+     background:#fee2e2;
+     color:#991b1b;
+     padding:15px;
+     border-radius:12px;
+     margin:15px;
+     font-weight:600;">
+</div>
+
 <div class="menu-grid">
-
-  <!-- OPERACIONAL -->
-  <button data-role="ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('cadastrarEntrada')">Veículo</button>
-  <button data-role="ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('lancarDespesa')">Despesas</button>
-  <button data-role="ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('registrarVenda')">Venda</button>
-
-  <!-- RELATÓRIOS -->
-  <button data-role="ADMIN,PROPRIETARIO,MASTER,ESTOQUE,VENDEDOR" onclick="abrirAba('relatorioEstoque')">Estoque</button>
-  <button data-role="VENDEDOR,ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('relatorioMinhasVendas')">Minhas Vendas</button>
-  <button data-role="VENDEDOR,ADMIN,PROPRIETARIO,MASTER" onclick="abrirAba('relatorioMinhasCompras')">Minhas Compras</button>
-
-  <!-- GERENCIAL -->
-  <button data-role="PROPRIETARIO,MASTER" onclick="abrirAba('painelProprietario')">Proprietário</button>
-
-  <!-- USUÁRIOS -->
-  <button data-role="MASTER,PROPRIETARIO" onclick="abrirAba('usuarios')">Usuários</button>
+  <div class="menu-btn" onclick="abrirAba('abaVeiculo')">🚗 Veículo</div>
+  <div class="menu-btn" onclick="abrirAba('abaDespesas')">💰 Despesas</div>
+  <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
+  <div class="menu-btn" onclick="abrirAba('abaProprietario')">📊 Proprietário</div>
+  <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
+  <div class="menu-btn" onclick="abrirAba('abaMinhasVendas')">
+  📌 Minhas Vendas</div>
+<div class="menu-btn" onclick="abrirAba('abaMinhasCompras')">
+📦 Minhas Compras
+</div>
+<div class="menu-btn" onclick="abrirAba('abaConfiguracoes')">
+⚙️ Configurações
+</div>
 
 </div>
 
 <!-- =======================
   ABA VEÍCULO (ENTRADA)
 ======================= -->
-<div id="abaVeiculo" class="aba" >
+<div id="abaVeiculo" class="aba" style="display:none">
 
   <div class="card">
 
@@ -615,10 +801,7 @@ Cadastro do veículo + dono no documento + vendedor
       <input id="p_nome" placeholder="Nome Proprietário">
       <input id="p_cpf" placeholder="CPF/CNPJ Proprietário">
       <input id="p_rg" placeholder="RG Proprietário">
-      <div>
-  <label>Data de Nascimento</label>
-  <input id="p_nascimento" type="date">
-</div>
+      <input id="p_nascimento" type="date">
       <input id="p_telefone" placeholder="Telefone">
       <input id="p_email" placeholder="Email">
       <input id="p_endereco" placeholder="Endereço" style="grid-column:1/-1;">
@@ -659,20 +842,10 @@ Cadastro do veículo + dono no documento + vendedor
 <input id="comp_valor_unico" placeholder="Informe valor ou %">    </div>
 
     <button onclick="salvarEntrada()">Salvar Entrada do Veículo</button>
-
-<div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
-  
-  <button onclick="abrirFichaCompra()" 
-  style="background:#0f172a;">
-  🖨 Ficha Compra (Branco)
-  </button>
-
-  <button onclick="abrirFichaVenda()" 
-  style="background:#1e293b;">
-  🖨 Ficha Venda (Branco)
-  </button>
-
-</div>
+<button onclick="window.open('ficha_entrada.html','_blank')"
+style="background:#0f172a;">
+🖨 Imprimir Ficha em Branco
+</button>
 
   </div>
 </div>
@@ -680,7 +853,7 @@ Cadastro do veículo + dono no documento + vendedor
 <!-- =======================
   ABA DESPESA
 ======================= -->
-<div id="abaDespesas" class="aba>
+<div id="abaDespesas" class="aba" style="display:none;">
 
  <div class="card">
     <h2>Lançar Despesa</h2>
@@ -713,7 +886,7 @@ Cadastro do veículo + dono no documento + vendedor
 <!-- =======================
   ABA VENDA
 ======================= -->
-<div id="abaVenda" class="aba>
+<div id="abaVenda" class="aba" style="display:none;">
 
   <div class="card">
     <h2>Registrar Venda</h2>
@@ -754,12 +927,12 @@ Cadastro do veículo + dono no documento + vendedor
     </div>
 </div>
 
-    <button id="btnSalvarVendedor" onclick="cadastrarVendedorLoja()">Salvar Vendedor</button>
+    <button onclick="cadastrarVendedorLoja()">Salvar Vendedor</button>
 
     <hr>
 
     <!-- Dados da Venda -->
-    
+    <div class="badge">Dados da venda</div>
     <div class="grid">
       <div>
         <label>Data da Venda</label>
@@ -768,34 +941,54 @@ Cadastro do veículo + dono no documento + vendedor
 
       <input id="vd_valor_venda" placeholder="Valor da Venda (R$)">
 
-      <select id="vd_forma_pag" onchange="toggleFormaPagamento()">
-  <option value="">Forma Pagamento</option>
-  <option value="DINHEIRO">Dinheiro</option>
-  <option value="PIX">Pix</option>
-  <option value="CARTAO">Cartão</option>
+      <hr>
+
+<div class="badge">💰 Estrutura Financeira da Venda</div>
+
+<div class="grid">
+
+<select id="vd_forma_pagamento" onchange="controlarFormaPagamento()">
+  <option value="">Selecione</option>
+  <option value="AVISTA">À Vista</option>
   <option value="PARCELADO_LOJA">Parcelado pela Loja</option>
-  <option value="FINANCIAMENTO">Financiamento Banco</option>
+  <option value="FINANCIADO">Financiamento Banco</option>
+  <option value="ENTRADA_PARCELADO">Entrada + Parcelado Loja</option>
+  <option value="ENTRADA_FINANCIADO">Entrada + Financiamento</option>
+  <option value="TROCA">Veículo na Troca</option>
+  <option value="ENTRADA_TROCA_PARCELADO">Entrada + Troca + Parcelado</option>
+  <option value="ENTRADA_TROCA_FINANCIADO">Entrada + Troca + Financiado</option>
 </select>
 
-<!-- PARCELAMENTO / FINANCIAMENTO (EXIBE CONFORME CONDIÇÃO) -->
-<div id="blocoParcelado>
-  <div class="badge">Parcelamento pela Loja</div>
-  <div class="grid">
-    <input id="vd_entrada" placeholder="Entrada (R$)">
-    <input id="vd_parcelas" placeholder="Nº Parcelas">
-    <input id="vd_valor_parcela" placeholder="Valor Parcela (R$)">
-  </div>
+<input id="vd_valor_total" placeholder="Valor Total da Venda (R$)">
+<input id="vd_valor_entrada" placeholder="Valor Entrada (R$)" style="display:none;">
+<input id="vd_valor_troca" placeholder="Valor Veículo Troca (R$)" style="display:none;">
+<input id="vd_valor_financiado" placeholder="Valor Financiado (R$)" style="display:none;">
+<div id="blocoFinanciamentoBanco" style="display:none;margin-top:10px;">
+  <input id="vd_qtd_parc_banco" placeholder="Qtd Parcelas Banco">
+  <input id="vd_valor_parc_banco" placeholder="Valor Parcela Banco">
+</div>
 </div>
 
-<div id="blocoFinanciado" >
-  <div class="badge">Financiamento</div>
-  <div class="grid">
-    <input id="vd_banco" placeholder="Banco (se financiado)">
-    <input id="vd_valor_financiado" placeholder="Valor Financiado (R$)">
-  </div>
-</div>
+<div id="blocoParcelas" style="display:none;margin-top:15px;">
+  <div class="badge">📆 Parcelas Loja</div>
 
-   <hr>
+  <div class="grid">
+    <input id="vd_qtd_parcelas" placeholder="Quantidade Parcelas">
+    <button type="button" onclick="gerarParcelas()">Gerar Parcelas</button>
+  </div>
+
+  <div id="listaParcelas" style="margin-top:15px;"></div>
+</div>
+  <div id="previewParcelas" style="
+    background:#f1f5f9;
+    padding:15px;
+    border-radius:10px;
+    margin-top:10px;
+    font-size:13px;">
+  </div>
+
+</div>
+    <hr>
 
     <!-- Comprador -->
     <div class="badge">Comprador</div>
@@ -808,66 +1001,75 @@ Cadastro do veículo + dono no documento + vendedor
       <input id="c_cidade" placeholder="Cidade">
       <input id="c_estado" placeholder="Estado">
     </div>
-<hr>
-
-<!-- VEÍCULO NA TROCA -->
-<div class="badge">Veículo na Troca</div>
-
-<label style="display:flex;gap:10px;align-items:center;margin-top:10px;">
-  <input type="checkbox" id="vd_tem_troca" onchange="toggleTroca()" style="width:auto;margin:0;">
-  Tem veículo na troca?
-</label>
-
-<div id="blocoTroca" style="display:none;margin-top:10px;">
- <div class="grid">
-  <input id="tr_placa" placeholder="Placa do veículo na troca">
-  <input id="tr_marca" placeholder="Marca">
-  <input id="tr_modelo" placeholder="Modelo">
- <input id="tr_ano_fab" placeholder="Ano Fabricação">
-<input id="tr_ano_modelo" placeholder="Ano Modelo">
-  <input id="tr_cor" placeholder="Cor">
-<input id="tr_chassi" placeholder="Chassi" 
-  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
-
-<input id="tr_renavam" placeholder="Renavam" 
-  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
-
-<input id="tr_proprietario" placeholder="Nome Proprietário da Troca" 
-  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
-
-<input id="tr_doc" placeholder="CPF/CNPJ Proprietário" 
-  style="width:100%; padding:12px; margin-top:10px; border-radius:8px;">
-<select id="tr_tipo_veiculo">
-  <option value="">Selecione o tipo</option>
-  <option value="AUTO">Automóvel</option>
-  <option value="MOTO">Motocicleta</option>
-  <option value="CAMIONETE">Camionete</option>
-  <option value="CAMINHAO">Caminhão</option>
-  <option value="QUADRICICLO">Quadriciclo</option>
-  </select>
-
-  <input id="tr_valor_avaliado" placeholder="Valor Avaliado (R$)">
-  <input id="tr_valor_venda" placeholder="Valor para Venda no Estoque (R$)">
-</div>
-
-  <textarea id="tr_obs" placeholder="Observações da troca (opcional)"></textarea>
-</div>
-
-<hr>
 
     <textarea id="vd_obs" placeholder="Observações"></textarea>
 
+<hr>
+
+<hr>
+
+<div class="badge">🚗 Veículo na Troca</div>
+
+<div style="margin-bottom:15px;">
+  <div style="display:flex;align-items:center;gap:8px;margin:10px 0;">
+  <input type="checkbox" id="temTroca">
+  <label for="temTroca" style="margin:0;">
+    Recebeu veículo na troca?
+  </label>
+</div>
+</div>
+
+<div id="blocoTroca" style="display:none;">
+
+  <h3>Dados do Veículo na Troca</h3>
+
+<input id="troca_placa" placeholder="Placa">
+<input id="troca_marca" placeholder="Marca">
+<input id="troca_modelo" placeholder="Modelo">
+<select id="troca_tipo_veiculo">
+  <option value="">Tipo do Veículo</option>
+  <option value="MOTO">Moto</option>
+  <option value="CARRO">Carro</option>
+  <option value="CAMIONETE">Camionete</option>
+  <option value="CAMINHAO">Caminhão</option>
+  <option value="QUADRICICLO">Quadriciclo</option>
+</select>
+
+<input id="troca_ano_fabricacao" placeholder="Ano Fabricação">
+<input id="troca_ano_modelo" placeholder="Ano Modelo">
+
+<input id="troca_cor" placeholder="Cor">
+<input id="troca_chassi" placeholder="Chassi">
+<input id="troca_renavam" placeholder="Renavam">
+
+<input id="troca_valor_avaliado" placeholder="Valor Avaliação (entra na negociação)">
+<input id="troca_valor_venda" placeholder="Valor Venda p/ Estoque (com margem)">
+  <hr>
+
+  <div class="badge">Proprietário no Documento (Troca)</div>
+
+  <div class="grid">
+    <input id="troca_p_nome" placeholder="Nome Proprietário">
+    <input id="troca_p_doc" placeholder="CPF/CNPJ">
+    <input id="troca_p_rg" placeholder="RG">
+    <input id="troca_p_telefone" placeholder="Telefone">
+    <input id="troca_p_email" placeholder="Email">
+    <input id="troca_p_endereco" placeholder="Endereço" style="grid-column:1/-1;">
+    <input id="troca_p_cidade" placeholder="Cidade">
+    <input id="troca_p_estado" placeholder="UF">
+  </div>
+
+</div>
+</div>
 
     <button onclick="registrarVenda()">Registrar Venda</button>
-<button id="btnRelatorioFinal" 
-onclick="imprimirRelatorioFinal()" 
-style="background:#0f172a;margin-top:10px;">
-🖨 Ficha Final do Veículo
+<button onclick="imprimirRelatorioFinal()" style="background:#1e3a8a;">
+🖨 Relatório Final do Veículo
 </button>
 
   </div>
 </div>
-<div id="abaProprietario" class="aba>
+<div id="abaProprietario" class="aba" style="display:none;">
   <div class="card">
     <h2>Painel do Proprietário</h2>
 <div id="upgradePlano" style="display:none;
@@ -985,46 +1187,8 @@ font-weight:600;">
 
   </div>
 </div>
-<!-- =======================
-  ABA USUÁRIOS
-======================= -->
-<div id="abaUsuarios" class="aba>
-  <div class="card">
 
-    <h2>Gerenciar Usuários</h2>
-    <hr>
-
-    <h3>Criar Novo Usuário</h3>
-
-    <div class="grid">
-      <input id="novo_usuario" placeholder="Usuário">
-      <input id="nova_senha_usuario" type="password" placeholder="Senha">
-
-      <select id="novo_perfil">
-        <option value="">Perfil</option>
-        <option value="VENDEDOR">VENDEDOR</option>
-        <option value="ESTOQUE">ESTOQUE</option>
-        <option value="ADMIN">ADMIN</option>
-      </select>
-    </div>
-
-    <button onclick="criarUsuario()">Criar Usuário</button>
-
-    <hr>
-
-    <h3>Alterar Senha de Usuário</h3>
-
-    <div class="grid">
-      <input id="usuario_alterar" placeholder="Usuário">
-      <input id="nova_senha_alterar" type="password" placeholder="Nova Senha">
-    </div>
-
-    <button onclick="alterarSenhaAdmin()">Alterar Senha</button>
-
-  </div>
-</div>
-
-<div id="abaEstoque" class="aba">
+<div id="abaRelatorio" class="aba" style="display:none;">
   <div class="card">
 
     <!-- ============================= -->
@@ -1038,21 +1202,21 @@ font-weight:600;">
 </button>
     <div class="grid" style="margin-bottom:15px;">
       <input id="filtro_modelo" placeholder="Filtrar por Modelo">
-      <button onclick="carregarEstoque()">Filtrar Estoque</button>
+      <button onclick="carregarRelatorios()">Filtrar Estoque</button>
     </div>
 
     <div class="table-wrapper">
       <div id="relatorioEstoque"></div>
     </div>
-</div>
-</div> 
-<!-- =======================
-  ABA RELATÓRIOS
-======================= -->
-<div id="abaRelatorios" class="aba" >
-  <div class="card">
+    <!-- ============================= -->
+    <!-- RELATÓRIO DE VENDAS -->
+    <!-- ============================= -->
+    <div id="blocoVendasRelatorio">
+  <h2 style="margin-top:40px;">Relatório de Vendas</h2>
+  <hr>
 
-    <h2>Relatório de Vendas</h2>
+  <!-- TODO o bloco de vendas fica aqui dentro -->
+
     <hr>
 
     <div class="grid" style="margin-bottom:15px;">
@@ -1083,17 +1247,18 @@ font-weight:600;">
     <div class="table-wrapper">
       <div id="relatorioVendasFiltrado"></div>
     </div>
+</div>
 
   </div>
 </div>
-    <!-- =======================
-         ABA MINHAS VENDAS
-     ======================= -->
-<div id="abaMinhasVendas" class="aba">
+<!-- =======================
+  ABA MINHAS VENDAS
+======================= -->
+<div id="abaMinhasVendas" class="aba" style="display:none;">
   <div class="card">
 
     <div class="section-title">💰 Minhas Vendas</div>
-
+<div class="section-subtitle">Vendas realizadas pelo usuário logado</div>
 <div class="section-divider"></div>
     <small>Vendas realizadas pelo usuário logado.</small>
 
@@ -1103,59 +1268,112 @@ font-weight:600;">
 
   </div>
 </div>
-<div id="abaMinhasCompras" class="aba" >
+<div id="abaMinhasCompras" class="aba" style="display:none;">
   <div class="card">
     <div class="section-title">📦 Minhas Compras</div>
 <div class="section-subtitle">Veículos adquiridos pelo usuário logado</div>
 <div class="section-divider"></div>
     <div class="table-wrapper">
-
-  <table class="tabela-padrao">
-    <thead>
-      <tr>
-        <th>Placa</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Ano Fab.</th>
-        <th>Ano Mod.</th>
-        <th>Cor</th>
-        <th>Valor</th>
-        <th>Dias em Estoque</th>
-      </tr>
-    </thead>
-
-    <tbody id="tabelaEstoque">
-    </tbody>
-  </table>
-
-</div>
+      <div id="relatorioMinhasCompras"></div>
+    </div>
   </div>
-</div>
-
 <!-- =======================
-  ABA CONFIG
+  ABA CONFIGURAÇÕES
 ======================= -->
-<div id="abaConfig" class="aba" >
+<div id="abaConfiguracoes" class="aba" style="display:none;">
   <div class="card">
-    <h2>⚙ Configurações</h2>
-    <hr>
 
-    <h3>Alterar minha senha</h3>
-    <input id="senhaAtual" type="password" placeholder="Senha Atual">
-    <input id="novaSenha" type="password" placeholder="Nova Senha">
-    <button onclick="trocarSenha()">Alterar Senha</button>
+    <div class="section-title">⚙️ Configurações do Sistema</div>
+    <div class="section-subtitle">
+      Gerenciamento de usuários e segurança
+    </div>
+    <div class="section-divider"></div>
 
-    <hr>
-    <h3>Atualização forçada</h3>
-    <button onclick="forcarAtualizacao()" style="background:#0f172a;">
-      🔄 Forçar atualização do sistema
+    <!-- ===================== -->
+    <!-- CRIAR USUÁRIO -->
+    <!-- ===================== -->
+
+    <div id="blocoCriarUsuario">
+<h3>Criar Novo Usuário</h3>
+
+    <div class="grid">
+      <input id="cfg_usuario_novo" placeholder="Usuário">
+
+      <input id="cfg_senha_nova" type="password" placeholder="Senha (mín. 6 caracteres)">
+
+      <select id="cfg_perfil_novo">
+        <option value="">Selecione Perfil</option>
+        <option value="ADMIN">ADMIN</option>
+        <option value="VENDEDOR">VENDEDOR</option>
+        <option value="ESTOQUE">ESTOQUE</option>
+        <option value="PROPRIETARIO">PROPRIETARIO</option>
+      </select>
+    </div>
+
+    <button onclick="criarUsuarioSistema()">
+      Criar Usuário
     </button>
-    <small style="display:block;margin-top:10px;color:#64748b;">
-      Isso limpa cache e recarrega (útil quando o celular fica preso numa versão antiga).
-    </small>
+</div>
+    <hr>
+<hr>
+
+<div id="blocoAtivarUsuario">
+
+<h3>Ativar / Desativar Usuário</h3>
+
+<div class="grid">
+  <input id="cfg_usuario_status" placeholder="Usuário">
+
+  <select id="cfg_status_usuario">
+    <option value="SIM">Ativar</option>
+    <option value="NAO">Desativar</option>
+  </select>
+</div>
+
+<button onclick="alterarStatusUsuario()">
+  Salvar Status
+</button>
+
+</div>
+    <!-- ===================== -->
+    <!-- ALTERAR MINHA SENHA -->
+    <!-- ===================== -->
+
+    <h3>Alterar Minha Senha</h3>
+
+    <div class="grid">
+      <input id="cfg_senha_atual" type="password" placeholder="Senha Atual">
+
+      <input id="cfg_nova_senha" type="password" placeholder="Nova Senha">
+    </div>
+
+    <button onclick="alterarMinhaSenha()">
+      Alterar Minha Senha
+    </button>
+
+    <hr>
+
+    <!-- ===================== -->
+    <!-- ALTERAR SENHA OUTRO -->
+    <!-- ===================== -->
+
+    <div id="blocoAlterarOutro">
+<h3>Alterar Senha de Outro Usuário</h3>
+
+    <div class="grid">
+      <input id="cfg_usuario_alvo" placeholder="Usuário a alterar">
+
+      <input id="cfg_nova_senha_outro" type="password" placeholder="Nova Senha">
+    </div>
+
+    <button onclick="alterarSenhaOutro()">
+      Alterar Senha
+    </button>
+</div>
   </div>
 </div>
 </div>
+
 <script>
 
 /* ========= CONFIG ========= */
@@ -1164,17 +1382,7 @@ let CLIENTE_ID = "";
 let PERFIL = "";
 let PLANO = "";
 /* ========= HELPERS ========= */
-function fmtDataBR(x){
-  if(!x) return "";
-  // se vier ISO (com T), converte
-  try{
-    const d = new Date(x);
-    if(!isNaN(d.getTime())){
-      return d.toLocaleString("pt-BR");
-    }
-  }catch(e){}
-  return String(x); // fallback
-}
+
 function v(id){
   const el=document.getElementById(id);
   return el ? (el.value||"").trim() : "";
@@ -1185,53 +1393,31 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  // 🔒 BLOQUEIO FRONTEND POR PERFIL
+  showLoading(); // 🔥 BLOQUEIA TELA
 
-showLoading();
-  // 🔥 PERMITE LOGIN SEM CLIENTE_ID
   if(params.action !== "loginUsuario"){
     if(!CLIENTE_ID || !PERFIL){
-  alert("Sessão expirada. Faça login novamente.");
-  logout();
-  return;
-}
+      hideLoading();
+      return;
+    }
 
     params.cliente_id = CLIENTE_ID;
     params.perfil = PERFIL;
   }
 
-  const nomeUsuario = localStorage.getItem("nome_usuario");
-  if(nomeUsuario){
-    params.nome_usuario = nomeUsuario;
-  }
-
-  const vendedorLogado = localStorage.getItem("vendedor_loja_id");
-  if(vendedorLogado){
-    params.vendedor_loja_id = vendedorLogado;
-  }
-
-  const cbName = "cb_" + Math.floor(Math.random() * 1000000000);
-
+  const cbName = "cb_" + Math.floor(Math.random()*1000000000);
   const script = document.createElement("script");
 
   window[cbName] = function(data){
+    hideLoading(); // 🔥 LIBERA TELA
     callback(data);
     delete window[cbName];
     script.remove();
   };
 
   params.callback = cbName;
-
   script.src = GAS_URL + "?" + new URLSearchParams(params).toString();
   document.body.appendChild(script);
-
-window[cbName] = function(data){
-  hideLoading();
-  callback(data);
-  delete window[cbName];
-  script.remove();
-};
-
 }
 
 function setSelect(el, items, placeholder){
@@ -1311,28 +1497,11 @@ setSelect(
 
 /* ========= AÇÕES ========= */
 function salvarEntrada(){
-const placa = normalizarPlaca_(v("v_placa"));
-if(!placaValida_(placa)){
-  return alert("Placa inválida. Ex: ABC1234 ou ABC1D23.");
-}
-const padraoProp = localStorage.getItem("proprietario_vendedor_id") || "";
-const indicou = v("comp_vendedor_loja") || padraoProp;
-
-if(!indicou){
-  return alert("Selecione quem indicou/fez a compra (ou configure o proprietário como padrão).");
-}
-
-if(!v("v_placa")) return alert("Informe a placa.");
-if(!v("v_marca")) return alert("Informe a marca.");
-if(!v("v_modelo")) return alert("Informe o modelo.");
-if(!v("v_cor")) return alert("Informe a cor.");
-if(!num(v("v_valor_compra"))) return alert("Informe o valor de compra.");
-if(!num(v("v_valor_venda"))) return alert("Informe o valor para venda.");
 
   const payload = {
     action:"cadastrarEntrada",
 
-    placa: placa,
+    placa: v("v_placa"),
     marca: v("v_marca"),
     modelo: v("v_modelo"),
     ano_fabricacao: v("v_ano_fabricacao"),
@@ -1382,23 +1551,9 @@ if(!navigator.onLine){
       alert("Entrada salva! ID veículo: " + r.id_veiculo);
       limparFormularioEntrada();
       carregarListas();
-    } else mostrarErro("Erro: " + (r.msg||""));
+    } else alert("Erro: " + (r.msg||""));
   });
 }
-
-function placaValida_(placa){
-  const p = String(placa||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
-  // Antiga: ABC1234
-  const antiga = /^[A-Z]{3}[0-9]{4}$/;
-  // Mercosul: ABC1D23
-  const mercosul = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/;
-  return antiga.test(p) || mercosul.test(p);
-}
-
-function normalizarPlaca_(placa){
-  return String(placa||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
-}
-
 function lancarDespesa(){
 
   const payload = {
@@ -1474,6 +1629,7 @@ function registrarVenda(){
   jsonp({action:"totalDespesasVeiculo", id_veiculo}, (r)=>{
     if(!r.ok) return alert("Erro ao checar despesas.");
     const total = Number(r.total||0);
+
     if(total === 0){
       if(!confirm("Veículo sem despesas. Deseja continuar?")) return;
     }
@@ -1503,16 +1659,7 @@ function enviarVenda(){
   } else {
     valorFixo = valorUnico;
   }
-const cond = v("vd_forma_pag");
 
-if(cond === "PARCELADO"){
-  if(!num(v("vd_entrada")) && num(v("vd_valor_venda")) > 0){
-    // entrada pode ser 0, então não obrigo, ok
-  }
-  const n = parseInt(v("vd_parcelas") || "0", 10);
-  if(n <= 0) return alert("Informe o número de parcelas.");
-  if(!num(v("vd_valor_parcela"))) return alert("Informe/gera o valor da parcela.");
-}
   const payload = {
     action:"registrarVenda",
 
@@ -1520,7 +1667,7 @@ if(cond === "PARCELADO"){
     data_venda:v("vd_data"),
     valor_venda:num(v("vd_valor_venda")),
     forma_pagamento:v("vd_forma_pag"),
-    condicao_pagamento:v("vd_forma_pag"),
+    condicao_pagamento:v("vd_condicao"),
 
     entrada:num(v("vd_entrada")),
     numero_parcelas:v("vd_parcelas"),
@@ -1529,7 +1676,7 @@ if(cond === "PARCELADO"){
     valor_financiado:num(v("vd_valor_financiado")),
 
     comprador_nome:v("c_nome"),
-   comprador_cpf_cnpj: v("c_doc"),
+    comprador_doc:v("c_doc"),
     comprador_telefone:v("c_telefone"),
     comprador_email:v("c_email"),
     comprador_endereco:v("c_endereco"),
@@ -1542,23 +1689,25 @@ if(cond === "PARCELADO"){
     percentual_comissao: percentual,
     valor_comissao_fixo: valorFixo,
 
-    observacoes:v("vd_obs"),
+    observacoes:v("vd_obs")
 
-tem_troca: document.getElementById("vd_tem_troca")?.checked ? "SIM" : "NAO",
-troca_placa: v("tr_placa"),
-troca_marca: v("tr_marca"),
-troca_modelo: v("tr_modelo"),
-troca_ano_fab: v("tr_ano_fab"),
-troca_ano_modelo: v("tr_ano_modelo"),
-troca_cor: v("tr_cor"),
-troca_chassi: v("tr_chassi"),
-troca_renavam: v("tr_renavam"),
-troca_proprietario: v("tr_proprietario"),
-troca_doc: v("tr_doc"),
-troca_tipo_veiculo: v("tr_tipo_veiculo"), // ← AQUI
-troca_valor_avaliado: num(v("tr_valor_avaliado")),
-troca_valor_venda: num(v("tr_valor_venda")),  
-};
+,
+tem_troca: document.getElementById("temTroca")?.checked ? "SIM" : "NAO",
+
+troca_placa: v("troca_placa"),
+troca_marca: v("troca_marca"),
+troca_modelo: v("troca_modelo"),
+troca_tipo_veiculo: v("troca_tipo_veiculo"),
+
+troca_ano_fabricacao: v("troca_ano_fabricacao"),
+troca_ano_modelo: v("troca_ano_modelo"),
+
+troca_cor: v("troca_cor"),
+troca_chassi: v("troca_chassi"),
+troca_renavam: v("troca_renavam"),
+
+troca_valor_avaliado: v("troca_valor_avaliado"),
+troca_valor_venda: v("troca_valor_venda"),  };
 
   jsonp(payload, (rr)=>{
     if(rr.ok){
@@ -1665,7 +1814,7 @@ function carregarPainelProprietario(){
           <td>${v.marca}</td>
           <td>${v.modelo}</td>
           <td>R$ ${v.valor_venda || 0}</td>
-          <td>${fmtDataBR(v.data_entrada || "")}</td>
+          <td>${v.data_entrada || ""}</td>
         </tr>`;
     });
 
@@ -1733,61 +1882,36 @@ function carregarPainelProprietario(){
 
 }
 
-window.abrirAba = function(nome){
+function abrirAba(id){
 
-  console.log("🔥 CLICOU:", nome);
-
-  // 🔴 ESCONDE TODAS
-  document.querySelectorAll(".aba").forEach(aba=>{
-    aba.style.display = "none";
+  document.querySelectorAll(".aba").forEach(el=>{
+    el.style.display = "none";
   });
 
-  const mapa = {
-    cadastrarEntrada: "abaVeiculo",
-    lancarDespesa: "abaDespesas",
-    registrarVenda: "abaVenda",
-    relatorioEstoque: "abaEstoque",
-    relatorioMinhasVendas: "abaMinhasVendas",
-    relatorioMinhasCompras: "abaMinhasCompras",
-    painelProprietario: "abaProprietario",
-    usuarios: "abaUsuarios"
-  };
-
-  const id = mapa[nome];
-  if(!id) return;
-
   const aba = document.getElementById(id);
-  if(!aba) return;
+  if(!aba){
+    console.warn("Aba não encontrada:", id);
+    return;
+  }
 
-  // 🟢 MOSTRA SOMENTE ELA
   aba.style.display = "block";
 
-  // 🔝 VOLTA PARA O TOPO
-  window.scrollTo({ top: 0, behavior: "smooth" });
-
-  // 🔐 REAPLICA PERMISSÕES
-  aplicarPermissoes(PERFIL);
-
-  // 🔄 CARREGA DADOS DA ABA
-  if(nome === "relatorioEstoque"){
-    carregarEstoque();
-  }
-
-  if(nome === "painelProprietario"){
-    carregarPainelProprietario();
-  }
-
-  if(nome === "relatorioMinhasVendas"){
+  if(id === "abaMinhasVendas"){
     carregarMinhasVendas();
   }
 
-  if(nome === "relatorioMinhasCompras"){
+  if(id === "abaMinhasCompras"){
     carregarMinhasCompras();
   }
 
-  // 🔄 ATUALIZA INFO SISTEMA
-  carregarInfoSistema();
-};
+  if(id === "abaRelatorio"){
+    carregarRelatorios();
+  }
+
+  if(id === "abaProprietario"){
+    carregarPainelProprietario();
+  }
+}
 
 function carregarRelatorios(){
 
@@ -1840,7 +1964,7 @@ function carregarRelatorios(){
 
             <div id="detalhe_${index}" style="display:none;margin-top:10px;font-size:13px;color:#334155;">
               <b>Tipo:</b> ${v.tipo_veiculo || ""}<br>
-              <b>Data Entrada:</b> ${fmtDataBR(v.data_entrada || "")}
+              <b>Data Entrada:</b> ${v.data_entrada || ""}
             </div>
 
           </div>
@@ -1879,7 +2003,7 @@ Dias em Estoque
           <td>${v.cor || ""}</td>
           <td>${v.tipo_veiculo || ""}</td>
           <td>R$ ${Number(v.valor_venda || 0).toLocaleString('pt-BR')}</td>
-         <td>${fmtDataBR(v.data_entrada || "")}</td>
+         <td>${v.data_entrada || ""}</td>
 <td ${ (PERFIL === "ADMIN" || PERFIL === "PROPRIETARIO") ? "" : "style='display:none'" }>
 ${v.dias_em_estoque || 0}
 </td>
@@ -1918,75 +2042,57 @@ console.clear();
 function fazerLogin(){
 
   const usuario = v("login_usuario");
-  const senha   = v("login_senha");
+  const senha = v("login_senha");
 
-  if(!usuario || !senha)
+  if(!usuario || !senha) 
     return alert("Informe usuário e senha.");
 
   jsonp({
-    action: "loginUsuario",
+    action:"loginUsuario",
     usuario,
     senha
   }, function(r){
 
     if(!r || !r.ok){
-      alert("Login inválido.");
-      return;
+      return alert("Login inválido.");
     }
 
-    // ===== SALVA DADOS GLOBAIS =====
+    // ===== SALVA VARIÁVEIS GLOBAIS =====
     CLIENTE_ID = r.cliente_id;
-    PERFIL     = String(r.perfil || "").toUpperCase();
-    PLANO      = String(r.plano || "BASICO").toUpperCase();
+    PERFIL = String(r.perfil || "").toUpperCase();
+    PLANO = String(r.plano || "BASICO").toUpperCase();
 
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
     localStorage.setItem("plano", PLANO);
     localStorage.setItem("nome_loja", r.nome_loja || "");
     localStorage.setItem("nome_usuario", r.nome_usuario || usuario);
-    localStorage.setItem("proprietario_vendedor_id", r.proprietario_vendedor_id || "");
 
-    // 🔥 SALVA USUÁRIO LOGADO (USADO NA chamarAPI)
-    window.usuarioLogado = {
-      cliente_id: CLIENTE_ID,
-      perfil: PERFIL,
-      nome_usuario: r.nome_usuario || usuario,
-      plano: PLANO
-    };
+    // ===== APLICA PERMISSÕES =====
+    aplicarPermissoes(PERFIL);
 
     // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
-    document.getElementById("telaLogin").style.display = "none";
-    document.getElementById("sistema").style.display   = "block";
+    const telaLogin = document.getElementById("telaLogin");
+    const sistema = document.getElementById("sistema");
 
-    // ===== CABEÇALHO =====
-    document.getElementById("nomeLoja").textContent     = r.nome_loja || "";
-    document.getElementById("usuarioLogado").textContent = r.nome_usuario || usuario;
-    document.getElementById("perfilLogado").textContent  = PERFIL;
+    if(telaLogin) telaLogin.style.display = "none";
+    if(sistema) sistema.style.display = "block";
 
-    aplicarPermissoes(PERFIL);
-    carregarListas();
-    carregarInfoSistema();
+    // ===== PREENCHE CABEÇALHO =====
+    const elLoja = document.getElementById("nomeLoja");
+    const elUser = document.getElementById("usuarioLogado");
+    const elPerf = document.getElementById("perfilLogado");
+    
+    if(elLoja) elLoja.textContent = r.nome_loja || "";
+    if(elUser) elUser.textContent = r.nome_usuario || usuario;
+    if(elPerf) elPerf.textContent = r.perfil || "";
 
-    // 🔥 ABRE ABA PADRÃO POR PERFIL
-
-if(PERFIL === "PROPRIETARIO"){
-  abrirAba("painelProprietario");
-}
-else if(PERFIL === "ADMIN"){
-  abrirAba("cadastrarEntrada");
-}
-else if(PERFIL === "VENDEDOR"){
-  abrirAba("relatorioEstoque");
-}
-else if(PERFIL === "ESTOQUE"){
-  abrirAba("relatorioEstoque");
-}
-
+    // ===== CARREGA DADOS DO SISTEMA =====
+carregarListas();
+carregarInfoSistema();
+verificarParcelasVencidas();
   });
-
 }
-
-
 function salvarOffline(payload){
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   fila.push(payload);
@@ -2009,6 +2115,25 @@ function sincronizarOffline(){
         localStorage.removeItem("fila_offline");
         console.log("Sincronização concluída.");
       }
+// ===== CONTROLE INTERNO DA ABA CONFIGURAÇÕES =====
+
+if(perfil === "VENDEDOR" || perfil === "ESTOQUE"){
+
+  const blocoCriar = document.getElementById("blocoCriarUsuario");
+  const blocoOutro = document.getElementById("blocoAlterarOutro");
+
+  if(blocoCriar) blocoCriar.style.display = "none";
+  if(blocoOutro) blocoOutro.style.display = "none";
+}
+
+if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
+
+  const blocoCriar = document.getElementById("blocoCriarUsuario");
+  const blocoOutro = document.getElementById("blocoAlterarOutro");
+
+  if(blocoCriar) blocoCriar.style.display = "block";
+  if(blocoOutro) blocoOutro.style.display = "block";
+}
     });
   });
 }
@@ -2018,6 +2143,9 @@ function atualizarIndicadorOffline(){
   console.log("Pendentes offline:", fila.length);
 }
 
+
+</script>
+<script>
 window.addEventListener("offline", function(){
   console.log("Modo offline ativado.");
 });
@@ -2047,58 +2175,109 @@ formatarMoedaInput("vd_valor_unico");
 formatarMoedaInput("vd_entrada");
 formatarMoedaInput("vd_valor_parcela");
 formatarMoedaInput("vd_valor_financiado");
-formatarMoedaInput("tr_valor_avaliado");
-formatarMoedaInput("tr_valor_venda");
 
-function validarPermissao_(perfil, acao){
+function aplicarPermissoes(perfil){
 
+  if(!perfil){
+    return; // 🔥 evita aviso antes do login
+  }
+
+  
   perfil = String(perfil || "").toUpperCase();
 
-  const permissoes = {
+  // Esconde tudo primeiro
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    btn.style.display = "none";
+  });
 
-    MASTER: ["*"],
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    btn.style.display = "none";
+  });
 
-    PROPRIETARIO: ["*"],
+  document.querySelectorAll(".aba").forEach(aba=>{
+    aba.style.display = "none";
+  });
 
-    ADMIN: [
-  "cadastrarEntrada",
-  "listarVeiculosEstoque",
-  "listarVendedoresLojaAtivos",
-  "cadastrarVendedorLoja",
-  "lancarDespesa",
-  "registrarVenda",
-  "relatorioEstoque",
-  "relatorioVendasPorVendedor",
-  "relatorioMinhasVendas",
-  "relatorioMinhasCompras",
-  "relatorioCompletoVeiculo",
-  "totalDespesasVeiculo",
-  "resumoPorPeriodo",
-  "listarParcelas",
-  "registrarPagamentoParcela",
-  "criarUsuario",
-  "alterarSenha"
-],
+  // =========================
+  // PROPRIETARIO
+  // =========================
+  if(perfil === "PROPRIETARIO"){
+document.getElementById("blocoCadastroVendedor").style.display = "block";
+    mostrarTodosMenus();
+    return;
+  }
 
-    ESTOQUE: [
-      "listarVeiculosEstoque",
-      "relatorioEstoque"
-    ],
+  // =========================
+  // ADMIN
+  // =========================
+esconderMenuPorAba("abaProprietario");
+  if(perfil === "ADMIN"){
+document.getElementById("blocoCadastroVendedor").style.display = "block";
+    mostrarMenu("abaVeiculo");
+    mostrarMenu("abaDespesas");
+    mostrarMenu("abaVenda");
+    mostrarMenu("abaRelatorio");
+    mostrarMenu("abaMinhasVendas");
+    mostrarMenu("abaConfiguracoes");
+    return;
+  }
 
-    VENDEDOR: [
-      "relatorioEstoque",
-      "relatorioMinhasVendas",
-      "relatorioMinhasCompras"
-    ]
+  // =========================
+  // VENDEDOR
+  // =========================
+  if(perfil === "VENDEDOR"){
 
-  };
+  mostrarMenu("abaVenda");
+  mostrarMenu("abaRelatorio");
+  mostrarMenu("abaMinhasVendas");
+  mostrarMenu("abaMinhasCompras");
+  mostrarMenu("abaConfiguracoes"); // 🔥 AGORA APARECE CONFIG
 
-  const regras = permissoes[perfil] || [];
+  document.getElementById("blocoCadastroVendedor").style.display = "none";
 
-  if(regras.includes("*")) return true;
+  esconderMenuPorAba("abaProprietario");
 
-  return regras.includes(acao);
-}function esconderMenuPorAba(idAba){
+  const blocoVendas = document.getElementById("blocoVendasRelatorio");
+  if(blocoVendas){
+    blocoVendas.style.display = "none";
+  }
+
+  return;
+}
+  // =========================
+  // ESTOQUE (SOMENTE ESTOQUE)
+  // =========================
+  if(perfil === "ESTOQUE"){
+
+  mostrarMenu("abaRelatorio");
+
+  // NÃO MOSTRA CONFIGURAÇÕES
+  esconderMenuPorAba("abaConfiguracoes");
+
+  abrirAba("abaRelatorio");
+  carregarRelatorios();
+
+  const blocoVendas = document.getElementById("blocoVendasRelatorio");
+  if(blocoVendas){
+    blocoVendas.style.display = "none";
+  }
+const blocoStatus = document.getElementById("blocoAtivarUsuario");
+
+if(perfil === "VENDEDOR" || perfil === "ESTOQUE"){
+  if(blocoStatus) blocoStatus.style.display = "none";
+}
+
+if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
+  if(blocoStatus) blocoStatus.style.display = "block";
+}
+
+  return;
+}
+
+}
+
+function esconderMenuPorAba(idAba){
+
   // Desktop
   document.querySelectorAll(".menu-btn").forEach(btn=>{
     if(btn.getAttribute("onclick")?.includes(idAba)){
@@ -2126,16 +2305,15 @@ function carregarMinhasVendas(){
     if(!r.ok) return;
 
     let html = "<table>";
-    html += "<tr><th>Data</th><th>Placa</th><th>Veículo</th><th>Valor</th><th>Comissão</th></tr>";
+    html += "<tr><th>Data</th><th>Veículo</th><th>Valor</th><th>Lucro</th></tr>";
 
     r.itens.forEach(v=>{
       html += `
         <tr>
-          <td>${fmtDataBR(v.data_venda)}</td>
-<td>${v.placa || ""}</td>
-<td>${v.veiculo || (v.marca ? (v.marca+" "+v.modelo) : "")}</td>
-<td>R$ ${v.valor_venda || ""}</td>
-<td>R$ ${v.comissao || v.valor_comissao || ""}</td>
+          <td>${v.data_venda}</td>
+          <td>${v.placa}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>R$ ${v.lucro}</td>
         </tr>
       `;
     });
@@ -2337,10 +2515,10 @@ function carregarVendasProprietarioFiltradas(){
   });
 }
 
+</script>
+<script>
 if ('serviceWorker' in navigator) {
-  if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js?v=2.5.0');
-}
+  navigator.serviceWorker.register('/sw.js');
 }
 function voltarHome(){
   document.querySelectorAll(".aba").forEach(el=>{
@@ -2369,13 +2547,6 @@ window.addEventListener("DOMContentLoaded", function(){
   PERFIL = String(perfilSalvo || "").toUpperCase();
   PLANO = planoSalvo || "BASICO";
 
-window.usuarioLogado = {
-  cliente_id: CLIENTE_ID,
-  perfil: PERFIL,
-  nome_usuario: nomeUsuario,
-  plano: PLANO
-};
-
   if(tela) tela.style.display = "none";
   if(sistema) sistema.style.display = "block";
 
@@ -2384,38 +2555,28 @@ window.usuarioLogado = {
   const elPerf = document.getElementById("perfilLogado");
 
   if(elLoja) elLoja.textContent = nomeLoja;
+
   if(elUser) elUser.textContent = nomeUsuario;
   if(elPerf) elPerf.textContent = PERFIL;
 
-aplicarPermissoes(PERFIL);
-carregarListas();
-carregarInfoSistema(); // ✅ faltava
+  aplicarPermissoes(PERFIL);
+  carregarListas();
 
-// 🔥 ABRE ABA PADRÃO AO RECARREGAR
-if(PERFIL === "PROPRIETARIO"){
-  abrirAba("painelProprietario");
-}
-else if(PERFIL === "ESTOQUE"){
-  abrirAba("relatorioEstoque");
-}
-else if(PERFIL === "ADMIN"){
-  abrirAba("cadastrarEntrada");
-}
-else if(PERFIL === "VENDEDOR"){
-  abrirAba("relatorioMinhasVendas");
+  // 🔥 ESTA LINHA ESTAVA FALTANDO
+  carregarInfoSistema();
+
+// ===== EVENTO TROCA =====
+const chkTroca = document.getElementById("temTroca");
+if(chkTroca){
+  chkTroca.addEventListener("change", function(){
+    document.getElementById("blocoTroca").style.display =
+      this.checked ? "block" : "none";
+  });
 }
 
-if(PERFIL === "ESTOQUE"){
-  abrirAba("relatorioEstoque");
 }
-  
-  } else {
-    if(tela) tela.style.display = "flex";
-    if(sistema) sistema.style.display = "none";
-  }
 
-});
-
+});  // <-- FECHA DOMContentLoaded
 function mostrarMenu(idAba){
 
   document.querySelectorAll(".menu-btn").forEach(btn=>{
@@ -2467,17 +2628,16 @@ function carregarMinhasCompras(){
     if(!r.ok) return;
 
     let html = "<table>";
-    html += "<tr><th>Data</th><th>Placa</th><th>Veículo</th><th>Valor Compra</th><th>Comissão</th></tr>";
+    html += "<tr><th>Data</th><th>Placa</th><th>Valor Compra</th></tr>";
 
     r.itens.forEach(v=>{
       html += `
-<tr>
-  <td>${fmtDataBR(v.data_entrada)}</td>
-<td>${v.placa || ""}</td>
-<td>${v.veiculo || (v.marca ? (v.marca+" "+v.modelo) : "")}</td>
-<td>R$ ${v.valor_compra || ""}</td>
-<td>R$ ${v.comissao || v.valor_comissao_compra || ""}</td></tr>
-`;
+        <tr>
+          <td>${v.data_entrada}</td>
+          <td>${v.placa}</td>
+          <td>R$ ${v.valor_compra}</td>
+        </tr>
+      `;
     });
 
     html += "</table>";
@@ -2507,6 +2667,69 @@ function alternarComissaoVenda(){
     campo.placeholder = "Informe valor fixo (R$)";
   }
 }
+
+
+document.getElementById("vd_condicao").addEventListener("change", function(){
+
+  const cond = this.value;
+  const bloco = document.getElementById("blocoParcelado");
+
+  if(cond === "PARCELADO"){
+    bloco.style.display = "block";
+  } else {
+    bloco.style.display = "none";
+  }
+
+});
+
+function recalcularParcelas(){
+
+  const total = num(v("vd_valor_venda"));
+  const entrada = num(v("vd_entrada"));
+  const parcelas = parseInt(v("vd_parcelas") || 0);
+
+  if(!total || !parcelas) return;
+
+  const saldo = total - entrada;
+  const valorParcela = saldo / parcelas;
+
+  document.getElementById("vd_valor_parcela").value =
+    valorParcela.toLocaleString("pt-BR",{minimumFractionDigits:2});
+
+  let html = "<b>Previsão Parcelas:</b><br><br>";
+
+  const hoje = new Date();
+
+  for(let i=1;i<=parcelas;i++){
+
+    let data = new Date(hoje);
+    data.setMonth(data.getMonth() + i);
+
+    html += `
+      Parcela ${i} — ${data.toLocaleDateString("pt-BR")}
+      — R$ ${valorParcela.toLocaleString("pt-BR",{minimumFractionDigits:2})}
+      <br>
+    `;
+  }
+
+  document.getElementById("previewParcelas").innerHTML = html;
+}
+
+document.getElementById("vd_valor_venda").addEventListener("input", recalcularParcelas);
+document.getElementById("vd_entrada").addEventListener("input", recalcularParcelas);
+document.getElementById("vd_parcelas").addEventListener("input", recalcularParcelas);
+
+function toggleTroca(){
+  const chk = document.getElementById("vd_tem_troca");
+  const bloco = document.getElementById("blocoTroca");
+
+  if(chk.checked){
+    bloco.style.display = "block";
+  } else {
+    bloco.style.display = "none";
+  }
+}
+
 function imprimirEstoque(){
 
   carregarRelatorios();
@@ -2613,322 +2836,367 @@ function atualizarStatusConexao(){
 }
 function carregarInfoSistema(){
 
-  jsonp({
-    action:"infoSistema"
-  }, function(r){
-
-    const elData = document.getElementById("dataAtualizacao");
-    if(!elData) return;
-
-    if(!r || !r.ok){
-      elData.textContent = "--";
-      return;
-    }
-
-    let texto = "";
-
-    if(r.versao){
-      texto += "Versão " + r.versao;
-    }
-
-    if(r.build){
-      texto += " • Build " + r.build;
-    }
-
-    if(r.ultima_atualizacao){
-      const d = new Date(r.ultima_atualizacao);
-      texto += " • " + d.toLocaleString("pt-BR");
-    }
-
-    elData.textContent = texto || "--";
-
-    const bolinha = document.getElementById("statusSistema");
-    if(bolinha){
-      bolinha.style.background =
-        (r.sistema_online === "ON") ? "#22c55e" : "#ef4444";
-    }
-
-  });
-}
-function trocarSenha(){
-  const usuario = localStorage.getItem("nome_usuario") || "";
-  const senhaAtual = document.getElementById("senhaAtual").value;
-  const novaSenha = document.getElementById("novaSenha").value;
-
-  jsonp({
-    action:"alterarSenha",
-    usuario,
-    senha_atual: senhaAtual,
-    nova_senha: novaSenha
-  }, function(resp){
-    alert(resp.msg || "Senha alterada.");
-  });
-}function recalcularParcelasVenda_(){
-  const cond = v("vd_condicao");
-  if(cond !== "PARCELADO") return;
-
-  const valor = num(v("vd_valor_venda"));
-  const entrada = num(v("vd_entrada"));
-  const n = parseInt(v("vd_parcelas") || "0", 10);
-
-  if(valor <= 0 || n <= 0) return;
-
-  const restante = Math.max(0, valor - entrada);
-  const parcela = restante / n;
-
-  const el = document.getElementById("vd_valor_parcela");
-  if(el){
-    el.value = parcela.toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
-  }
-}
-
-["vd_valor_venda","vd_entrada","vd_parcelas"].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el) el.addEventListener("input", recalcularParcelasVenda_);
-});
-document.getElementById("vd_condicao")?.addEventListener("change", recalcularParcelasVenda_);
-function toggleTroca(){
-  const tem = document.getElementById("vd_tem_troca")?.checked;
-  const bloco = document.getElementById("blocoTroca");
-  if(bloco) bloco.style.display = tem ? "block" : "none";
-}
-
-function toggleFormaPagamento(){
-
-  const forma = v("vd_forma_pag");
-
-  const blocoParcelado = document.getElementById("blocoParcelado");
-  const blocoFinanciado = document.getElementById("blocoFinanciado");
-
-  if(blocoParcelado) blocoParcelado.style.display = "none";
-  if(blocoFinanciado) blocoFinanciado.style.display = "none";
-
-  if(forma === "PARCELADO_LOJA"){
-    if(blocoParcelado) blocoParcelado.style.display = "block";
-  }
-
-  if(forma === "FINANCIAMENTO"){
-    if(blocoFinanciado) blocoFinanciado.style.display = "block";
-  }
-}
-
-function abrirFichaCompra(){
-  window.open("ficha_compra_branco.html","_blank");
-}
-
-function abrirFichaVenda(){
-  window.open("ficha_venda_branco.html","_blank");
-}
-
-function criarUsuario(){
-
-  const usuario = v("novo_usuario");
-  const senha = v("nova_senha_usuario");
-  const perfilNovo = v("novo_perfil");
-
-  if(!usuario || !senha || !perfilNovo)
-    return alert("Preencha todos os campos.");
-
-  console.log("Criando usuário:", usuario, perfilNovo);
-
-  jsonp({
-    action:"criarUsuario",
-    usuario_novo: usuario,
-    senha_nova: senha,
-    perfil_novo: perfilNovo
-  }, function(r){
-
-    console.log("Resposta criarUsuario:", r);
-
-    alert(r.msg || "Usuário criado.");
-
-  });
-
-}
-
-function alterarSenhaAdmin(){
-
-  const usuario = v("usuario_alterar");
-  const novaSenha = v("nova_senha_alterar");
-
-  if(!usuario || !novaSenha)
-    return alert("Preencha usuário e nova senha.");
-
-  console.log("Alterando senha de:", usuario);
-
-  jsonp({
-    action:"alterarSenha",
-    usuario: usuario,
-    nova_senha: novaSenha
-  }, function(r){
-
-    console.log("Resposta alterarSenha:", r);
-
-    alert(r.msg || "Senha alterada.");
-
-  });
-
-}
-async function forcarAtualizacao(){
-  try{
-    if('caches' in window){
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
-    if('serviceWorker' in navigator){
-      const regs = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r => r.unregister()));
-    }
-  }catch(e){}
-  location.reload(true);
-}
-function aplicarPermissoes(perfil){
-
-  perfil = String(perfil || "").toUpperCase();
-
-  document.querySelectorAll("[data-role]").forEach(btn=>{
-    const roles = btn.getAttribute("data-role")
-      .split(",")
-      .map(r => r.trim().toUpperCase());
-
-    btn.style.display = roles.includes(perfil) ? "" : "none";
-  });
-
-}
-function montarTabela(lista){
-
-  if(!lista.length) return "<div style='padding:30px'>Nenhum registro encontrado</div>";
-
-  let html = "<table style='width:100%;border-collapse:collapse'>";
-  
-  html += "<tr>";
-  Object.keys(lista[0]).forEach(k=>{
-    html += "<th style='border:1px solid #ddd;padding:8px;background:#111;color:white'>" + k + "</th>";
-  });
-  html += "</tr>";
-
-  lista.forEach(r=>{
-    html += "<tr>";
-    Object.values(r).forEach(v=>{
-      html += "<td style='border:1px solid #ddd;padding:8px'>" + (v ?? "") + "</td>";
-    });
-    html += "</tr>";
-  });
-
-  html += "</table>";
-
-  return html;
-}
-function showLoading(){
-  const el = document.getElementById("loadingOverlay");
-  if(el) el.style.display = "flex";
-}
-
-function hideLoading(){
-  const el = document.getElementById("loadingOverlay");
-  if(el) el.style.display = "none";
-}
-function mostrarErro(msg){
-  hideLoading();
-  alert(msg);
-}
-function carregarEstoque(){
-
-  jsonp({ action:"relatorioEstoque" }, function(r){
+  jsonp({ action:"infoSistema" }, function(r){
 
     if(!r.ok) return;
 
-    const tabela = document.getElementById("tabelaEstoque");
+    document.getElementById("dataAtualizacao").textContent =
+      r.ultima_atualizacao || "-";
 
-    tabela.innerHTML = "";
+    document.getElementById("versaoSistema").textContent =
+      r.versao || "3.0";
 
-    r.itens.forEach(v=>{
+    const bolinha = document.getElementById("statusSistema");
+    bolinha.style.background =
+      (r.sistema_online === "ON") ? "#22c55e" : "#ef4444";
 
-      const dias = v.dias_estoque || 0;
+  });
+}
 
-      tabela.innerHTML += `
-        <tr>
-          <td>${v.placa}</td>
-          <td>${v.marca}</td>
-          <td>${v.modelo}</td>
-          <td>${v.ano_fabricacao}</td>
-          <td>${v.ano_modelo}</td>
-          <td>${v.cor}</td>
-          <td>R$ ${v.valor_venda}</td>
-          <td>${dias}</td>
-        </tr>
-      `;
+function controlarFormaPagamento(){
 
-    });
+  const forma = v("vd_forma_pagamento");
+
+  const entrada = document.getElementById("vd_valor_entrada");
+  const troca = document.getElementById("vd_valor_troca");
+  const financiado = document.getElementById("vd_valor_financiado");
+  const blocoParcelas = document.getElementById("blocoParcelas");
+  const blocoBanco = document.getElementById("blocoFinanciamentoBanco");
+
+  entrada.style.display = "none";
+  troca.style.display = "none";
+  financiado.style.display = "none";
+  blocoParcelas.style.display = "none";
+  blocoBanco.style.display = "none";
+
+  if(forma.includes("ENTRADA")) entrada.style.display = "block";
+  if(forma.includes("TROCA")) troca.style.display = "block";
+
+  if(forma.includes("FINANCIADO")){
+    financiado.style.display = "block";
+    blocoBanco.style.display = "block";
+  }
+
+  if(forma.includes("PARCELADO")){
+    blocoParcelas.style.display = "block";
+  }
+}
+function gerarParcelas(){
+
+  const qtd = parseInt(v("vd_qtd_parcelas"));
+
+  if(!qtd || qtd <= 0){
+    alert("Informe quantidade válida.");
+    return;
+  }
+
+  let html = `
+  <table style="width:100%;font-size:13px">
+    <tr>
+      <th>#</th>
+      <th>Vencimento</th>
+      <th>Valor (R$)</th>
+      <th>Obs</th>
+    </tr>
+  `;
+
+  const hoje = new Date();
+
+  for(let i=1;i<=qtd;i++){
+
+    const data = new Date(hoje);
+    data.setMonth(data.getMonth()+i);
+
+    html += `
+      <tr>
+        <td>${i}</td>
+        <td>
+          <input type="date"
+                 id="parc_data_${i}"
+                 value="${data.toISOString().split('T')[0]}">
+        </td>
+        <td>
+          <input type="number"
+                 step="0.01"
+                 id="parc_valor_${i}"
+                 placeholder="Valor">
+        </td>
+        <td>
+          <input id="parc_obs_${i}" placeholder="Cheque / detalhe">
+        </td>
+      </tr>
+    `;
+  }
+
+  html += "</table>";
+
+  document.getElementById("listaParcelas").innerHTML = html;
+}
+
+function receber(vendaId, numero){
+
+  jsonp({
+    action:"receberParcela",
+    venda_id:vendaId,
+    parcela:numero
+  }, function(r){
+
+    if(r.ok){
+      alert("Parcela recebida com sucesso.");
+      verificarParcelasVencidas();
+    } else {
+      alert("Erro ao receber.");
+    }
 
   });
 
 }
 
-// ===============================
-// 🔥 FUNÇÃO PADRÃO DE CHAMADA API
-// ===============================
-function chamarAPI(params, callbackSucesso, callbackErro){
+function verificarParcelasVencidas(){
 
-  if(!window.usuarioLogado || !usuarioLogado.cliente_id){
-    console.error("Usuário não logado ou cliente_id ausente");
-    return;
+  jsonp({ action:"verificarParcelasVencidas" }, function(r){
+
+    if(!r.ok) return;
+
+    const div = document.getElementById("alertaParcelas");
+
+    if(r.vencidas > 0 || r.vencendo_hoje > 0){
+
+      div.style.display = "block";
+
+      div.innerHTML = `
+        ⚠ Parcelas vencidas: ${r.vencidas}
+        <br>
+        ⏳ Vencendo hoje: ${r.vencendo_hoje}
+      `;
+
+    } else {
+      div.style.display = "none";
+    }
+
+  });
+
+}
+
+function showLoading(){
+  document.getElementById("loadingOverlay").style.display = "flex";
+}
+
+function hideLoading(){
+  document.getElementById("loadingOverlay").style.display = "none";
+}
+function criarUsuarioSistema(){
+
+  jsonp({
+    action:"criarUsuario",
+    usuario_novo: v("cfg_usuario_novo"),
+    senha_nova: v("cfg_senha_nova"),
+    perfil_novo: v("cfg_perfil_novo"),
+    nome_usuario: localStorage.getItem("nome_usuario")
+  }, function(r){
+
+    if(r.ok){
+      alert("Usuário criado com sucesso!");
+      document.getElementById("cfg_usuario_novo").value="";
+      document.getElementById("cfg_senha_nova").value="";
+      document.getElementById("cfg_perfil_novo").selectedIndex=0;
+    }else{
+      alert(r.msg || "Erro.");
+    }
+
+  });
+
+}
+
+function alterarMinhaSenha(){
+
+  jsonp({
+    action:"alterarSenha",
+    usuario: localStorage.getItem("nome_usuario"),
+    usuario_logado: localStorage.getItem("nome_usuario"),
+    senha_atual: v("cfg_senha_atual"),
+    nova_senha: v("cfg_nova_senha"),
+    nome_usuario: localStorage.getItem("nome_usuario")
+  }, function(r){
+
+    if(r.ok){
+      alert("Senha alterada com sucesso!");
+      document.getElementById("cfg_senha_atual").value="";
+      document.getElementById("cfg_nova_senha").value="";
+    }else{
+      alert(r.msg || "Erro.");
+    }
+
+  });
+
+}
+
+function alterarSenhaOutro(){
+
+  jsonp({
+    action:"alterarSenha",
+    usuario: v("cfg_usuario_alvo"),
+    usuario_logado: localStorage.getItem("nome_usuario"),
+    nova_senha: v("cfg_nova_senha_outro"),
+    nome_usuario: localStorage.getItem("nome_usuario")
+  }, function(r){
+
+    if(r.ok){
+      alert("Senha alterada com sucesso!");
+      document.getElementById("cfg_usuario_alvo").value="";
+      document.getElementById("cfg_nova_senha_outro").value="";
+    }else{
+      alert(r.msg || "Erro.");
+    }
+
+  });
+
+}
+function alterarStatusUsuario(){
+
+  jsonp({
+    action:"alterarStatusUsuario",
+    usuario_alvo: v("cfg_usuario_status"),
+    novo_status: v("cfg_status_usuario"),
+    nome_usuario: localStorage.getItem("nome_usuario")
+  }, function(r){
+
+    if(r.ok){
+      alert("Status atualizado com sucesso!");
+      document.getElementById("cfg_usuario_status").value="";
+      document.getElementById("cfg_status_usuario").selectedIndex=0;
+    }else{
+      alert(r.msg || "Erro.");
+    }
+
+  });
+
+}
+function alterarStatusUsuario_(e){
+
+  const p = e.parameter;
+
+  const usuarioAlvo = String(p.usuario_alvo || "").trim();
+  const novoStatus  = String(p.novo_status || "").toUpperCase();
+  const perfilLogado = String(p.perfil || "").toUpperCase();
+  const clienteId = String(p.cliente_id || "");
+
+  if(!usuarioAlvo || !["SIM","NAO"].includes(novoStatus)){
+    return { ok:false, msg:"Dados inválidos." };
   }
 
-  const callbackName = "cb_" + Date.now();
+  const sh = SpreadsheetApp
+    .openById("15NqtFk8oTUjmyiaRYvXWLwkaG-cs_KeZHbjwza-CGmQ")
+    .getSheetByName("usuarios_AutoControle");
 
-  // cria função global temporária
-  window[callbackName] = function(res){
+  const dados = sh.getDataRange().getValues();
+  const headers = dados[0];
+  const map = {};
+  headers.forEach((h,i)=> map[h]=i);
 
-    delete window[callbackName];
-    script.remove();
+  let linha = 0;
+  let perfilAlvo = "";
+  let clienteAlvo = "";
 
-    if(res.ok){
-      if(callbackSucesso) callbackSucesso(res);
-    }else{
-      console.error("Erro API:", res.msg);
-      if(callbackErro){
-        callbackErro(res);
-      }else{
-        alert(res.msg || "Erro na requisição");
-      }
+  for(let i=1;i<dados.length;i++){
+    if(String(dados[i][map["usuario"]]||"").toLowerCase() === usuarioAlvo.toLowerCase()){
+      linha = i+1;
+      perfilAlvo = String(dados[i][map["perfil"]]||"").toUpperCase();
+      clienteAlvo = String(dados[i][map["cliente_id"]]||"");
+      break;
     }
-  };
+  }
 
-  const script = document.createElement("script");
+  if(!linha) return { ok:false, msg:"Usuário não encontrado." };
 
-  const dados = {
-    ...params,
-    cliente_id: usuarioLogado.cliente_id,
-    perfil: usuarioLogado.perfil,
-    nome_usuario: usuarioLogado.nome_usuario,
-    callback: callbackName
-  };
+  // ==============================
+  // 🔐 REGRAS DE PERMISSÃO
+  // ==============================
 
-  script.src = GAS_URL + "?" + new URLSearchParams(dados).toString();
+  // MASTER pode tudo
+  if(perfilLogado === "MASTER"){
+    // ok
+  }
 
-  script.onerror = function(){
-    delete window[callbackName];
-    script.remove();
-    alert("Erro de conexão com servidor.");
-  };
+  // PROPRIETARIO → só da empresa dele
+  else if(perfilLogado === "PROPRIETARIO"){
 
-  document.body.appendChild(script);
+    if(clienteAlvo !== clienteId){
+      return { ok:false, msg:"Não pertence à sua empresa." };
+    }
+
+  }
+
+  // ADMIN → apenas VENDEDOR
+  else if(perfilLogado === "ADMIN"){
+
+    if(perfilAlvo !== "VENDEDOR"){
+      return { ok:false, msg:"ADMIN só pode alterar VENDEDOR." };
+    }
+
+  }
+
+  else{
+    return { ok:false, msg:"Sem permissão." };
+  }
+
+  // ==============================
+
+  sh.getRange(linha, map["ativo"]+1).setValue(novoStatus);
+
+  return { ok:true };
 }
 
 </script>
 <nav class="bottom-nav">
 
-  <div onclick="abrirAba('usuarios')">👥<span>Usuários</span></div>
-  <div onclick="abrirAba('cadastrarEntrada')">🚗<span>Veículo</span></div>
-  <div onclick="abrirAba('lancarDespesa')">💰<span>Despesas</span></div>
-  <div onclick="abrirAba('registrarVenda')">📝<span>Venda</span></div>
-  <div onclick="abrirAba('relatorioEstoque')">📦<span>Estoque</span></div>
-  <div onclick="abrirAba('painelProprietario')">📊<span>Financeiro</span></div>
-  <div onclick="abrirAba('relatorioMinhasVendas')">📌<span>Vendas</span></div>
-  <div onclick="abrirAba('relatorioMinhasCompras')">📦<span>Compras</span></div>
+  <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
+  <div onclick="abrirAba('abaDespesas')">💰<span>Despesas</span></div>
+  <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
+  <div onclick="abrirAba('abaRelatorio')">📑<span>Estoque</span></div>
+  <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
+  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Vendas</span></div>
+  <div onclick="abrirAba('abaMinhasCompras')">📦<span>Compras</span></div>
+  <div onclick="abrirAba('abaConfiguracoes')">
+⚙️<span>Config</span>
+</div>
 
 </nav>
 <div id="statusIndicator"></div>
+</div>
+
+<div id="loadingOverlay" style="
+position:fixed;
+inset:0;
+background:rgba(15,23,42,.85);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:99999;
+flex-direction:column;
+color:#fff;
+font-weight:600;
+font-size:18px;">
+  
+  <div style="
+  width:60px;
+  height:60px;
+  border:6px solid #334155;
+  border-top:6px solid #22c55e;
+  border-radius:50%;
+  animation:gira 1s linear infinite;
+  margin-bottom:15px;">
+  </div>
+
+  Carregando, aguarde...
+</div>
+
+<style>
+@keyframes gira{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+</style>
+
 </body>
 </html>
