@@ -3145,6 +3145,16 @@ function alterarStatusUsuario(){
   });
 
 }
+function carregarEstoque(){
+  fetch(API_URL + "?action=listarVeiculosEstoque&cliente_id=" + clienteId)
+    .then(r => r.json())
+    .then(data => {
+      if(data.ok){
+        renderTabelaEstoque(data.itens);
+      }
+    });
+}
+
 </script>
 <nav class="bottom-nav">
 
