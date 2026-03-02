@@ -671,6 +671,37 @@ tr:nth-child(even){
   gap:8px;
   margin:10px 0;
 }
+/* v2.6.1 — HOTFIX MOBILE (cabeçalho alinhado + toque) */
+.header-sistema{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:15px;
+}
+
+.header-left{
+  display:flex;
+  flex-direction:column;
+}
+
+.header-left h2{
+  margin:0;
+  font-size:18px;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.menu-btn, .bottom-nav div{
+  min-height:44px; /* toque iPhone */
+}
+
+
 </style>
 
 </head>
@@ -744,8 +775,7 @@ Versão: <span id="versaoSistema"></span>
   <div class="menu-btn" onclick="abrirAba('abaVeiculo')">🚗 Veículo</div>
   <div class="menu-btn" onclick="abrirAba('abaDespesas')">💰 Despesas</div>
   <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
-  <div class="menu-btn" onclick="abrirAba('abaProprietario')">📊 Proprietário</div>
-  <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
+    <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📑 Relatórios</div>
   <div class="menu-btn" onclick="abrirAba('abaMinhasVendas')">
   📌 Minhas Vendas</div>
 <div class="menu-btn" onclick="abrirAba('abaMinhasCompras')">
@@ -754,7 +784,9 @@ Versão: <span id="versaoSistema"></span>
 <div class="menu-btn" onclick="abrirAba('abaConfiguracoes')">
 ⚙️ Configurações
 </div>
-
+<div class="menu-btn" id="btnProprietario" onclick="abrirAba('abaProprietario')" style="display:none;">
+  👑 Proprietário
+</div>
 </div>
 
 <!-- =======================
@@ -1277,6 +1309,8 @@ font-weight:600;">
       <div id="relatorioMinhasCompras"></div>
     </div>
   </div>
+</div> <!-- ✅ FECHAMENTO QUE ESTAVA FALTANDO -->
+
 <!-- =======================
   ABA CONFIGURAÇÕES
 ======================= -->
@@ -1660,21 +1694,45 @@ function enviarVenda(){
     valorFixo = valorUnico;
   }
 
+// =============================
+// v2.6.1 - CAPTURA REAL DAS PARCELAS
+// =============================
+
+const parcelas = [];
+const inputsParcelas = document.querySelectorAll("#listaParcelas input");
+
+inputsParcelas.forEach((input, i) => {
+  parcelas.push({
+    numero: i + 1,
+    valor: parseFloat(input.value || 0)
+  });
+});
+
+// Se não houver parcelas geradas (ex: à vista)
+if(parcelas.length === 0){
+  const valorTotal = parseFloat(v("vd_valor_total") || 0);
+  parcelas.push({
+    numero: 1,
+    valor: valorTotal
+  });
+}
+
+
   const payload = {
     action:"registrarVenda",
 
     id_veiculo:v("vd_id_veiculo"),
     data_venda:v("vd_data"),
     valor_venda:num(v("vd_valor_venda")),
-    forma_pagamento:v("vd_forma_pag"),
-    condicao_pagamento:v("vd_condicao"),
+    forma_pagamento: v("vd_forma_pagamento"),
 
-    entrada:num(v("vd_entrada")),
-    numero_parcelas:v("vd_parcelas"),
-    valor_parcela:num(v("vd_valor_parcela")),
-    banco_financiamento:v("vd_banco"),
-    valor_financiado:num(v("vd_valor_financiado")),
+valor_total: num(v("vd_valor_total")),
+valor_entrada: num(v("vd_valor_entrada")),
+valor_financiado: num(v("vd_valor_financiado")),
 
+numero_parcelas: parcelas.length,
+valor_parcela: parcelas[0].valor,
+parcelas_json: JSON.stringify(parcelas),
     comprador_nome:v("c_nome"),
     comprador_doc:v("c_doc"),
     comprador_telefone:v("c_telefone"),
@@ -1884,6 +1942,12 @@ function carregarPainelProprietario(){
 
 function abrirAba(id){
 
+if(id === "abaProprietario" && 
+   !["PROPRIETARIO","MASTER"].includes(PERFIL)){
+   alert("Acesso restrito ao proprietário.");
+   return;
+}
+
   document.querySelectorAll(".aba").forEach(el=>{
     el.style.display = "none";
   });
@@ -1910,6 +1974,9 @@ function abrirAba(id){
 
   if(id === "abaProprietario"){
     carregarPainelProprietario();
+  }
+  if(id === "abaConfiguracoes"){
+    prepararConfiguracoes_();
   }
 }
 
@@ -1964,7 +2031,8 @@ function carregarRelatorios(){
 
             <div id="detalhe_${index}" style="display:none;margin-top:10px;font-size:13px;color:#334155;">
               <b>Tipo:</b> ${v.tipo_veiculo || ""}<br>
-              <b>Data Entrada:</b> ${v.data_entrada || ""}
+              <b>Data Entrada:</b> ${v.data_entrada || ""}<br>
+<b>Dias em Estoque:</b> ${v.dias_em_estoque || 0}
             </div>
 
           </div>
@@ -2115,28 +2183,6 @@ function sincronizarOffline(){
         localStorage.removeItem("fila_offline");
         console.log("Sincronização concluída.");
       }
-// ===== CONTROLE INTERNO DA ABA CONFIGURAÇÕES =====
-
-if(perfil === "VENDEDOR" || perfil === "ESTOQUE"){
-
-  const blocoCriar = document.getElementById("blocoCriarUsuario");
-  const blocoOutro = document.getElementById("blocoAlterarOutro");
-
-  if(blocoCriar) blocoCriar.style.display = "none";
-  if(blocoOutro) blocoOutro.style.display = "none";
-}
-
-if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
-
-  const blocoCriar = document.getElementById("blocoCriarUsuario");
-  const blocoOutro = document.getElementById("blocoAlterarOutro");
-
-  if(blocoCriar) blocoCriar.style.display = "block";
-  if(blocoOutro) blocoOutro.style.display = "block";
-}
-    });
-  });
-}
 
 function atualizarIndicadorOffline(){
   const fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
@@ -2176,6 +2222,40 @@ formatarMoedaInput("vd_entrada");
 formatarMoedaInput("vd_valor_parcela");
 formatarMoedaInput("vd_valor_financiado");
 
+function prepararConfiguracoes_(){
+  const perfil = String(PERFIL || "").toUpperCase();
+
+  const blocoCriar  = document.getElementById("blocoCriarUsuario");
+  const blocoOutro  = document.getElementById("blocoAlterarOutro");
+  const blocoStatus = document.getElementById("blocoAtivarUsuario");
+
+  // padrão: tudo escondido
+  if(blocoCriar)  blocoCriar.style.display  = "none";
+  if(blocoOutro)  blocoOutro.style.display  = "none";
+  if(blocoStatus) blocoStatus.style.display = "none";
+
+  // VENDEDOR/ESTOQUE: só altera a própria senha
+  if(perfil === "VENDEDOR" || perfil === "ESTOQUE"){
+    return;
+  }
+
+  // ADMIN: cria usuário + ativa/desativa
+  if(perfil === "ADMIN"){
+    if(blocoCriar)  blocoCriar.style.display  = "block";
+    if(blocoStatus) blocoStatus.style.display = "block";
+    return;
+  }
+
+  // PROPRIETARIO/MASTER: tudo
+  if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
+    if(blocoCriar)  blocoCriar.style.display  = "block";
+    if(blocoOutro)  blocoOutro.style.display  = "block";
+    if(blocoStatus) blocoStatus.style.display = "block";
+    return;
+  }
+}
+
+
 function aplicarPermissoes(perfil){
 
   if(!perfil){
@@ -2197,6 +2277,18 @@ function aplicarPermissoes(perfil){
   document.querySelectorAll(".aba").forEach(aba=>{
     aba.style.display = "none";
   });
+
+// ============================
+// CONTROLE ABA PROPRIETARIO
+// ============================
+
+const btnProprietario = document.querySelector('[onclick="abrirAba(\'abaProprietario\')"]');
+
+if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
+  if(btnProprietario) btnProprietario.style.display = "block";
+}else{
+  if(btnProprietario) btnProprietario.style.display = "none";
+}
 
   // =========================
   // PROPRIETARIO
@@ -2270,10 +2362,16 @@ if(perfil === "VENDEDOR" || perfil === "ESTOQUE"){
 if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
   if(blocoStatus) blocoStatus.style.display = "block";
 }
+const btnProp = document.getElementById("btnProprietario");
 
+if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
+  if(btnProp) btnProp.style.display = "block";
+}else{
+  if(btnProp) btnProp.style.display = "none";
+}
   return;
 }
-
+prepararConfiguracoes_();
 }
 
 function esconderMenuPorAba(idAba){
@@ -2669,55 +2767,22 @@ function alternarComissaoVenda(){
 }
 
 
-document.getElementById("vd_condicao").addEventListener("change", function(){
-
-  const cond = this.value;
-  const bloco = document.getElementById("blocoParcelado");
-
-  if(cond === "PARCELADO"){
-    bloco.style.display = "block";
-  } else {
-    bloco.style.display = "none";
+// v2.6.1 — evita travar o JS por IDs antigos (parcelado/condição).
+// A venda agora usa vd_forma_pagamento + blocoParcelas + blocoFinanciamentoBanco.
+(function initVendaUI_(){
+  const selForma = document.getElementById("vd_forma_pagamento");
+  if(selForma){
+    selForma.addEventListener("change", controlarFormaPagamento);
   }
 
-});
-
-function recalcularParcelas(){
-
-  const total = num(v("vd_valor_venda"));
-  const entrada = num(v("vd_entrada"));
-  const parcelas = parseInt(v("vd_parcelas") || 0);
-
-  if(!total || !parcelas) return;
-
-  const saldo = total - entrada;
-  const valorParcela = saldo / parcelas;
-
-  document.getElementById("vd_valor_parcela").value =
-    valorParcela.toLocaleString("pt-BR",{minimumFractionDigits:2});
-
-  let html = "<b>Previsão Parcelas:</b><br><br>";
-
-  const hoje = new Date();
-
-  for(let i=1;i<=parcelas;i++){
-
-    let data = new Date(hoje);
-    data.setMonth(data.getMonth() + i);
-
-    html += `
-      Parcela ${i} — ${data.toLocaleDateString("pt-BR")}
-      — R$ ${valorParcela.toLocaleString("pt-BR",{minimumFractionDigits:2})}
-      <br>
-    `;
+  const chkTroca = document.getElementById("temTroca");
+  const blocoTroca = document.getElementById("blocoTroca");
+  if(chkTroca && blocoTroca){
+    chkTroca.addEventListener("change", function(){
+      blocoTroca.style.display = this.checked ? "block" : "none";
+    });
   }
-
-  document.getElementById("previewParcelas").innerHTML = html;
-}
-
-document.getElementById("vd_valor_venda").addEventListener("input", recalcularParcelas);
-document.getElementById("vd_entrada").addEventListener("input", recalcularParcelas);
-document.getElementById("vd_parcelas").addEventListener("input", recalcularParcelas);
+})();
 
 function toggleTroca(){
   const chk = document.getElementById("vd_tem_troca");
