@@ -2361,14 +2361,11 @@ function prepararConfiguracoes_(){
 
 function aplicarPermissoes(perfil){
 
-  if(!perfil){
-    return; // 🔥 evita aviso antes do login
-  }
+  if(!perfil) return;
 
-  
-  perfil = String(perfil || "").toUpperCase();
+  perfil = String(perfil).toUpperCase();
 
-  // Esconde tudo primeiro
+  // 🔒 Esconde tudo primeiro
   document.querySelectorAll(".menu-btn").forEach(btn=>{
     btn.style.display = "none";
   });
@@ -2381,100 +2378,59 @@ function aplicarPermissoes(perfil){
     aba.style.display = "none";
   });
 
-// ============================
-// CONTROLE ABA PROPRIETARIO
-// ============================
+  // 🔓 Libera conforme perfil
 
-const btnProprietario = document.querySelector('[onclick="abrirAba(\'abaProprietario\')"]');
+  if(perfil === "MASTER" || perfil === "PROPRIETARIO"){
 
-if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
-  if(btnProprietario) btnProprietario.style.display = "block";
-}else{
-  if(btnProprietario) btnProprietario.style.display = "none";
-}
-
-  // =========================
-  // PROPRIETARIO
-  // =========================
-  if(perfil === "PROPRIETARIO"){
-document.getElementById("blocoCadastroVendedor").style.display = "block";
     mostrarTodosMenus();
-    return;
-  }
+    mostrarTodasAbas();
 
-  // =========================
-  // ADMIN
-  // =========================
-esconderMenuPorAba("abaProprietario");
-  if(perfil === "ADMIN"){
-document.getElementById("blocoCadastroVendedor").style.display = "block";
+  } else if(perfil === "ADMIN"){
+
     mostrarMenu("abaVeiculo");
     mostrarMenu("abaDespesas");
     mostrarMenu("abaVenda");
     mostrarMenu("abaRelatorio");
+    mostrarMenu("abaParcelas");
+
+  } else if(perfil === "VENDEDOR"){
+
+    mostrarMenu("abaVenda");
     mostrarMenu("abaMinhasVendas");
-    mostrarMenu("abaConfiguracoes");
-    return;
+
+  } else if(perfil === "ESTOQUE"){
+
+    mostrarMenu("abaVeiculo");
+    mostrarMenu("abaDespesas");
+    mostrarMenu("abaRelatorio");
+
   }
 
-  // =========================
-  // VENDEDOR
-  // =========================
-  if(perfil === "VENDEDOR"){
-
-  mostrarMenu("abaVenda");
-  mostrarMenu("abaRelatorio");
-  mostrarMenu("abaMinhasVendas");
-  mostrarMenu("abaMinhasCompras");
-  mostrarMenu("abaConfiguracoes"); // 🔥 AGORA APARECE CONFIG
-
-  document.getElementById("blocoCadastroVendedor").style.display = "none";
-
-  esconderMenuPorAba("abaProprietario");
-
-  const blocoVendas = document.getElementById("blocoVendasRelatorio");
-  if(blocoVendas){
-    blocoVendas.style.display = "none";
-  }
-
-  return;
 }
-  // =========================
-  // ESTOQUE (SOMENTE ESTOQUE)
-  // =========================
-  if(perfil === "ESTOQUE"){
+function mostrarMenu(id){
 
-  mostrarMenu("abaRelatorio");
+  const aba = document.getElementById(id);
+  if(aba) aba.style.display = "block";
 
-  // NÃO MOSTRA CONFIGURAÇÕES
-  esconderMenuPorAba("abaConfiguracoes");
+  const btn = document.querySelector(`[onclick="abrirAba('${id}')"]`);
+  if(btn) btn.style.display = "flex";
 
-  abrirAba("abaRelatorio");
-  carregarRelatorios();
-
-  const blocoVendas = document.getElementById("blocoVendasRelatorio");
-  if(blocoVendas){
-    blocoVendas.style.display = "none";
-  }
-const blocoStatus = document.getElementById("blocoAtivarUsuario");
-
-if(perfil === "VENDEDOR" || perfil === "ESTOQUE"){
-  if(blocoStatus) blocoStatus.style.display = "none";
 }
 
-if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
-  if(blocoStatus) blocoStatus.style.display = "block";
-}
-const btnProp = document.getElementById("btnProprietario");
+function mostrarTodosMenus(){
+  document.querySelectorAll(".menu-btn").forEach(btn=>{
+    btn.style.display = "block";
+  });
 
-if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
-  if(btnProp) btnProp.style.display = "block";
-}else{
-  if(btnProp) btnProp.style.display = "none";
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    btn.style.display = "flex";
+  });
 }
-  return;
-}
-prepararConfiguracoes_();
+
+function mostrarTodasAbas(){
+  document.querySelectorAll(".aba").forEach(aba=>{
+    aba.style.display = "block";
+  });
 }
 
 function esconderMenuPorAba(idAba){
@@ -2789,33 +2745,6 @@ if(chkTroca){
 }
 
 });  // <-- FECHA DOMContentLoaded
-function mostrarMenu(idAba){
-
-  document.querySelectorAll(".menu-btn").forEach(btn=>{
-    if(btn.getAttribute("onclick")?.includes(idAba)){
-      btn.style.display = "block";
-    }
-  });
-
-  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    if(btn.getAttribute("onclick")?.includes(idAba)){
-      btn.style.display = "block";
-    }
-  });
-
-}
-
-function mostrarTodosMenus(){
-
-  document.querySelectorAll(".menu-btn").forEach(btn=>{
-    btn.style.display = "block";
-  });
-
-  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    btn.style.display = "block";
-  });
-
-}
 
 function logout(){
   localStorage.clear();
@@ -3141,12 +3070,15 @@ function verificarParcelasVencidas(){
 }
 
 function showLoading(){
-  document.getElementById("loadingOverlay").style.display = "flex";
+  const el = document.getElementById("loadingOverlay");
+  if(el) el.style.display = "flex";
 }
 
 function hideLoading(){
-  document.getElementById("loadingOverlay").style.display = "none";
+  const el = document.getElementById("loadingOverlay");
+  if(el) el.style.display = "none";
 }
+
 function criarUsuarioSistema(){
 
   jsonp({
@@ -3395,36 +3327,6 @@ function validarTotalParcelas(){
   }else{
     document.getElementById("alertaParcelas").innerHTML = "";
   }
-
-}
-function verificarParcelasPendentes(){
-
-  jsonp({
-    action:"listarParcelasPendentes",
-    cliente_id: CLIENTE_ID,
-    perfil: PERFIL
-  }, (r)=>{
-
-    if(!r.ok) return;
-
-    const vencidas = r.itens.filter(p=>p.situacao==="ATRASADA");
-    const hoje = r.itens.filter(p=>p.situacao==="VENCE_HOJE");
-
-    if(vencidas.length > 0 || hoje.length > 0){
-
-      let msg = "⚠ ATENÇÃO FINANCEIRA\n\n";
-
-      if(vencidas.length > 0){
-        msg += "Parcelas ATRASADAS: " + vencidas.length + "\n";
-      }
-
-      if(hoje.length > 0){
-        msg += "Parcelas vencem HOJE: " + hoje.length + "\n";
-      }
-      alert(msg);
-    }
-
-  });
 
 }
 </script>
