@@ -2693,9 +2693,17 @@ function carregarVendasProprietarioFiltradas(){
     if(!r.ok) return alert("Erro ao buscar vendas.");
 
     let html = "<div class='table-wrapper'><table>";
-    html += "<tr><th>Vendedor</th><th>Placa</th><th>CPF</th><th>Data</th><th>Valor</th>
-<th>Comissão</th>
-<th>Lucro</th></tr>";
+    html += `
+<tr>
+  <th>Vendedor</th>
+  <th>Placa</th>
+  <th>CPF</th>
+  <th>Data</th>
+  <th>Valor</th>
+  <th>Comissão</th>
+  <th>Lucro</th>
+</tr>
+`;
 
     (r.itens||[]).forEach(v=>{
       html += `
