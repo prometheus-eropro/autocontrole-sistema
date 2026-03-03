@@ -787,6 +787,7 @@ Versão: <span id="versaoSistema"></span>
 <div class="menu-btn" id="btnProprietario" onclick="abrirAba('abaProprietario')" style="display:none;">
   👑 Proprietário
 </div>
+<div class="menu-btn" onclick="abrirAba('abaParcelas')">📆 Parcelas</div>
 </div>
 
 <!-- =======================
@@ -882,6 +883,30 @@ style="background:#0f172a;">
   </div>
 </div>
 
+<div id="abaParcelas" class="aba" style="display:none;">
+  <div class="card">
+    <h2>📆 Parcelas Pendentes</h2>
+    <small>Lista parcelas abertas (pendentes) e permite receber com 1 clique.</small>
+    <hr>
+
+    <div class="grid" style="margin-bottom:12px;">
+      <div>
+        <label>Data início</label>
+        <input id="parc_filtro_inicio" type="date">
+      </div>
+      <div>
+        <label>Data fim</label>
+        <input id="parc_filtro_fim" type="date">
+      </div>
+      <input id="parc_filtro_placa" placeholder="Filtrar por Placa">
+      <input id="parc_filtro_doc" placeholder="Filtrar por CPF/CNPJ">
+      <button onclick="carregarParcelasPendentes()">Atualizar Lista</button>
+    </div>
+
+    <div id="listaParcelasPendentes"></div>
+  </div>
+</div>
+
 <!-- =======================
   ABA DESPESA
 ======================= -->
@@ -964,7 +989,7 @@ style="background:#0f172a;">
     <hr>
 
     <!-- Dados da Venda -->
-    <div class="badge">Dados da venda</div>
+    
     <div class="grid">
       <div>
         <label>Data da Venda</label>
@@ -1478,7 +1503,11 @@ function carregarListas(){
 
     const items = (r.itens||[]).map(x=>({
       value:x.id,
-      label:`${x.placa} — ${x.marca} ${x.modelo} (${x.status})`
+      label:
+  (x.placa || "") + " — " +
+  (x.marca || "") + " " +
+  (x.modelo || "") +
+  (x.ano_modelo ? " (" + x.ano_modelo + ")" : "")
     }));
 
     setSelect(document.getElementById("d_id_veiculo"), items, "Selecionar veículo (estoque)");
@@ -1577,6 +1606,10 @@ if(!navigator.onLine){
   salvarOffline(payload);
   console.log("Salvo offline.");
 
+if(v("v_placa") && !validarPlaca(v("v_placa"))){
+  return alert("Placa inválida.");
+}
+
   return;
 }
 
@@ -1664,6 +1697,10 @@ function registrarVenda(){
     if(!r.ok) return alert("Erro ao checar despesas.");
     const total = Number(r.total||0);
 
+if(!validarCPF(v("c_doc"))){
+  return alert("CPF inválido.");
+}
+
     if(total === 0){
       if(!confirm("Veículo sem despesas. Deseja continuar?")) return;
     }
@@ -1695,28 +1732,38 @@ function enviarVenda(){
   }
 
 // =============================
-// v2.6.1 - CAPTURA REAL DAS PARCELAS
+// v2.6.2 - CAPTURA CERTA DAS PARCELAS (data/valor/obs)
 // =============================
-
 const parcelas = [];
-const inputsParcelas = document.querySelectorAll("#listaParcelas input");
+const qtd = parseInt(v("vd_qtd_parcelas") || "0", 10);
 
-inputsParcelas.forEach((input, i) => {
-  parcelas.push({
-    numero: i + 1,
-    valor: parseFloat(input.value || 0)
-  });
-});
+if(qtd > 0){
+  for(let i=1;i<=qtd;i++){
+    const dt = (document.getElementById(`parc_data_${i}`)?.value || "");
+    const vl = parseFloat(document.getElementById(`parc_valor_${i}`)?.value || "0");
+    const obs = (document.getElementById(`parc_obs_${i}`)?.value || "");
 
-// Se não houver parcelas geradas (ex: à vista)
-if(parcelas.length === 0){
-  const valorTotal = parseFloat(v("vd_valor_total") || 0);
-  parcelas.push({
-    numero: 1,
-    valor: valorTotal
-  });
+    if(vl > 0){
+      parcelas.push({
+        numero: i,
+        vencimento: dt,
+        valor: vl,
+        obs: obs
+      });
+    }
+  }
 }
 
+// Se não houver parcelas (ex: à vista), cria 1 parcela única
+if(parcelas.length === 0){
+  const valorTotal = num(v("vd_valor_total")) || num(v("vd_valor_venda")) || 0;
+  parcelas.push({
+    numero: 1,
+    vencimento: v("vd_data") || "",
+    valor: valorTotal,
+    obs: "À vista"
+  });
+}
 
   const payload = {
     action:"registrarVenda",
@@ -1733,6 +1780,7 @@ valor_financiado: num(v("vd_valor_financiado")),
 numero_parcelas: parcelas.length,
 valor_parcela: parcelas[0].valor,
 parcelas_json: JSON.stringify(parcelas),
+
     comprador_nome:v("c_nome"),
     comprador_doc:v("c_doc"),
     comprador_telefone:v("c_telefone"),
@@ -1980,6 +2028,10 @@ if(id === "abaProprietario" &&
   if(id === "abaConfiguracoes"){
     prepararConfiguracoes_();
   }
+if(id === "abaParcelas"){
+  carregarParcelasPendentes();
+}
+
 }
 
 function carregarRelatorios(){
@@ -2210,18 +2262,26 @@ window.addEventListener("online", function(){
 });
 
 function formatarMoedaInput(id){
+
   const el = document.getElementById(id);
   if(!el) return;
 
   el.addEventListener("input", function(){
+
     let v = el.value.replace(/\D/g,'');
-    v = (Number(v)/100).toFixed(2) + '';
+
+    if(!v) {
+      el.value = "";
+      return;
+    }
+
+    v = (Number(v)/100).toFixed(2);
     v = v.replace(".", ",");
     v = v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
     el.value = v;
   });
 }
-
 formatarMoedaInput("v_valor_compra");
 formatarMoedaInput("v_valor_venda");
 formatarMoedaInput("comp_valor_unico");
@@ -3145,15 +3205,139 @@ function alterarStatusUsuario(){
   });
 
 }
-function carregarEstoque(){
-  fetch(API_URL + "?action=listarVeiculosEstoque&cliente_id=" + clienteId)
-    .then(r => r.json())
-    .then(data => {
-      if(data.ok){
-        renderTabelaEstoque(data.itens);
-      }
+function carregarParcelasPendentes(){
+
+  const params = {
+    action: "listarParcelasPendentes",
+    data_inicio: v("parc_filtro_inicio"),
+    data_fim: v("parc_filtro_fim"),
+    filtro_placa: v("parc_filtro_placa"),
+    filtro_doc: v("parc_filtro_doc")
+  };
+
+  jsonp(params, function(r){
+
+    if(!r.ok){
+      document.getElementById("listaParcelasPendentes").innerHTML =
+        "<div style='padding:12px;color:#991b1b;font-weight:700;'>Erro ao carregar parcelas.</div>";
+      return;
+    }
+
+    const itens = (r.itens || []);
+    if(itens.length === 0){
+      document.getElementById("listaParcelasPendentes").innerHTML =
+        "<div style='padding:12px;color:#64748b;font-weight:600;'>Nenhuma parcela pendente.</div>";
+      return;
+    }
+
+    let html = "<div class='table-wrapper'><table>";
+    html += `
+      <tr>
+        <th>Vencimento</th>
+        <th>Placa</th>
+        <th>Comprador</th>
+        <th>Parcela</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Ação</th>
+      </tr>
+    `;
+
+    itens.forEach(p => {
+
+      const status = String(p.status || "PENDENTE").toUpperCase();
+      const vencida = (status === "VENCIDA") || (Number(p.dias_atraso || 0) > 0);
+
+      html += `
+        <tr style="${vencida ? "background:#fee2e2;" : ""}">
+          <td>${p.vencimento || ""}${vencida ? `<br><small style="color:#991b1b;font-weight:800;">${p.dias_atraso || 0} dia(s) atraso</small>` : ""}</td>
+          <td>${p.placa || ""}</td>
+          <td>${p.comprador_nome || ""}<br><small>${p.comprador_doc || ""}</small></td>
+          <td>${p.numero || ""}</td>
+          <td>R$ ${Number(p.valor || 0).toLocaleString("pt-BR")}</td>
+          <td><b>${status}</b></td>
+          <td>
+            <button onclick="receberParcelaUI('${p.venda_id}', ${Number(p.numero || 0)})"
+              style="padding:8px 10px;border-radius:10px;">
+              Receber
+            </button>
+          </td>
+        </tr>
+      `;
     });
+
+    html += "</table></div>";
+    document.getElementById("listaParcelasPendentes").innerHTML = html;
+
+  });
 }
+
+function receberParcelaUI(vendaId, numero){
+
+  if(!vendaId || !numero) return alert("Dados inválidos.");
+
+  if(!confirm(`Confirmar recebimento da parcela ${numero}?`)) return;
+
+  jsonp({
+    action:"receberParcela",
+    venda_id: vendaId,
+    parcela: numero
+  }, function(r){
+
+    if(r.ok){
+      alert("Parcela recebida!");
+      // atualiza alerta + lista
+      verificarParcelasVencidas();
+      carregarParcelasPendentes();
+    }else{
+      alert(r.msg || "Erro ao receber.");
+    }
+
+  });
+}
+function validarPlaca(valor){
+
+  const v = (valor || "").toUpperCase().replace(/[^A-Z0-9]/g,'');
+
+  const padraoAntigo = /^[A-Z]{3}[0-9]{4}$/;
+  const padraoMercosul = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
+
+  return padraoAntigo.test(v) || padraoMercosul.test(v);
+}
+function validarRenavam(valor){
+  const v = (valor || "").replace(/\D/g,'');
+  return v.length === 11;
+}
+function validarChassi(valor){
+  const v = (valor || "").toUpperCase().replace(/[^A-Z0-9]/g,'');
+  return v.length === 17;
+}
+function validarCPF(cpf){
+
+  cpf = cpf.replace(/\D/g,'');
+
+  if(cpf.length !== 11) return false;
+  if(/^(\d)\1+$/.test(cpf)) return false;
+
+  let soma = 0;
+  for(let i=0;i<9;i++)
+    soma += parseInt(cpf.charAt(i)) * (10 - i);
+
+  let resto = 11 - (soma % 11);
+  let dig1 = resto > 9 ? 0 : resto;
+
+  if(dig1 != cpf.charAt(9)) return false;
+
+  soma = 0;
+  for(let i=0;i<10;i++)
+    soma += parseInt(cpf.charAt(i)) * (11 - i);
+
+  resto = 11 - (soma % 11);
+  let dig2 = resto > 9 ? 0 : resto;
+
+  return dig2 == cpf.charAt(10);
+}
+
 
 </script>
 <nav class="bottom-nav">
@@ -3162,10 +3346,12 @@ function carregarEstoque(){
   <div onclick="abrirAba('abaDespesas')">💰<span>Despesas</span></div>
   <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
   <div onclick="abrirAba('abaRelatorio')">📑<span>Estoque</span></div>
+  <div onclick="abrirAba('abaParcelas')">📆<span>Parcelas</span></div>
   <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
-  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Vendas</span></div>
-  <div onclick="abrirAba('abaMinhasCompras')">📦<span>Compras</span></div>
+  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Minhas Vendas</span></div>
+  <div onclick="abrirAba('abaMinhasCompras')">📦<span>Minhas Compras</span></div>
   <div onclick="abrirAba('abaConfiguracoes')">
+
 ⚙️<span>Config</span>
 </div>
 
