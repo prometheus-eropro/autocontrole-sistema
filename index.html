@@ -1438,11 +1438,19 @@ function jsonp(params, callback){
   const script = document.createElement("script");
 
   window[cbName] = function(data){
-    hideLoading(); // 🔥 LIBERA TELA
-    callback(data);
-    delete window[cbName];
-    script.remove();
-  };
+
+  hideLoading();
+
+  if(!data || data.ok === false){
+    console.error("ERRO DO SERVIDOR:", data);
+    alert(data?.msg || data?.erro || "Erro inesperado no servidor.");
+  }
+
+  callback(data);
+
+  delete window[cbName];
+  script.remove();
+};
 
   params.callback = cbName;
   script.src = GAS_URL + "?" + new URLSearchParams(params).toString();
@@ -1848,16 +1856,16 @@ if(!r.ok){
       document.getElementById("pr_qtd_vendidos").value = r.quantidade_vendidos || 0;
       document.getElementById("pr_total_despesas_estoque").value = r.despesas_estoque || 0;
 
-    } else {
+    else {
 
-      document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
-      document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
-      document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
-      document.getElementById("pr_lucro_total").value = r.lucro_realizado || 0;
-      document.getElementById("pr_qtd_vendidos").value = "";
-      document.getElementById("pr_total_despesas_estoque").value = "";
-    }
+  document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
+  document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
+  document.getElementById("pr_total_despesas_estoque").value = r.despesas_operacionais_estoque || 0;
+  document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
+  document.getElementById("pr_lucro_total").value = r.lucro_final || 0;
+  document.getElementById("pr_qtd_vendidos").value = "";
 
+}
   });
 
   // ==============================
@@ -2862,13 +2870,12 @@ function carregarPainelProprietarioFiltrado(){
       return;
     }
 
-    document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
-    document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
-    document.getElementById("pr_total_despesas_estoque").value = r.despesas_estoque || 0;
-    document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
-    document.getElementById("pr_lucro_total").value = r.lucro_realizado || 0;
-    document.getElementById("pr_qtd_vendidos").value = r.quantidade_vendidos || 0;
-
+document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
+document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
+document.getElementById("pr_total_despesas_estoque").value = r.despesas_operacionais_estoque || 0;
+document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
+document.getElementById("pr_lucro_total").value = r.lucro_final || 0;
+document.getElementById("pr_qtd_vendidos").value = "";
   });
 
 }
@@ -3374,6 +3381,11 @@ function imprimirFichaVendaSelecionada(){
     alert("OK: dados recebidos. Agora é só montar a ficha.");
   });
 }
+function setValue(id, valor){
+  const el = document.getElementById(id);
+  if(el) el.value = valor;
+}
+
 
 </script>
 <nav class="bottom-nav">
