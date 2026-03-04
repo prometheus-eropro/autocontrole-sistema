@@ -1895,7 +1895,8 @@ if(!r.ok){
     });
 
     html += "</table></div>";
-    document.getElementById("relatorioEstoqueProprietario").innerHTML = html;
+    const el = document.getElementById("relatorioEstoqueProprietario");
+if(el) el.innerHTML = html;
   });
 
   // ==============================
@@ -2119,9 +2120,7 @@ function toggleDetalheEstoque(index){
   } else {
     el.style.display = "none";
   }
-if(PERFIL === "ADMIN" || PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
-  html += `<button onclick="verDespesasVeiculo('${v.id}')">Ver Despesas</button>`;
-}
+
 }
 
 
@@ -3297,48 +3296,6 @@ function validarTotalParcelas(){
     document.getElementById("alertaParcelas").innerHTML = "";
   }
 
-}
-function carregarUltimasVendas(){
-  jsonp({ action:"listarUltimasVendas", limite:10 }, (r)=>{
-    if(!r.ok) return console.warn(r.msg||"Erro listarUltimasVendas");
-
-    const items = (r.itens||[]).map(x=>({
-      value: x.venda_id,
-      label: `${x.placa} — ${x.modelo || ""} (${x.data_venda || ""})`
-    }));
-
-    setSelect(document.getElementById("doc_id_venda"), items, "Últimas 10 vendas");
-  });
-}
-
-function buscarVendasPorPlaca(){
-  const placa = v("doc_busca_placa");
-  if(!placa) return alert("Informe a placa.");
-
-  jsonp({ action:"buscarVendasPorPlaca", placa }, (r)=>{
-    if(!r.ok) return alert(r.msg || "Nenhuma venda encontrada.");
-
-    const items = (r.itens||[]).map(x=>({
-      value: x.venda_id,
-      label: `${x.placa} — ${x.modelo || ""} (${x.data_venda || ""})`
-    }));
-
-    setSelect(document.getElementById("doc_id_venda"), items, "Vendas encontradas");
-  });
-}
-
-function imprimirFichaVendaSelecionada(){
-  const vendaId = document.getElementById("doc_id_venda").value;
-  if(!vendaId) return alert("Selecione a venda.");
-
-  // sua impressão atual usa id_veiculo; aqui vamos usar venda_id (mais correto)
-  jsonp({ action:"relatorioCompletoVenda", venda_id:vendaId }, (r)=>{
-    if(!r.ok) return alert(r.msg || "Erro ao gerar ficha.");
-
-    // aqui você monta o HTML de impressão com base em r (melhor que depender do veiculo)
-    // se quiser, eu te deixo o template pronto quando você mandar o retorno r.
-    alert("OK: dados recebidos. Agora é só montar a ficha.");
-  });
 }
 function carregarUltimasVendas(){
   jsonp({ action:"listarUltimasVendas", limite:10 }, (r)=>{
