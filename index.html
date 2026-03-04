@@ -1430,7 +1430,7 @@ function jsonp(params, callback){
 
   const query = new URLSearchParams(params).toString();
 
-  fetch(URL_GAS + "?" + query)
+  fetch(GAS_URL + "?" + query)
     .then(r => r.json())
     .then(data => {
       if(data && data.ok === false){
