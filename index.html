@@ -1137,130 +1137,74 @@ style="background:#0f172a;">
 </div>
 <div id="abaProprietario" class="aba" style="display:none;">
   <div class="card">
-    <h2>Painel do Proprietário</h2>
-<div id="upgradePlano" style="display:none;
-background:#fee2e2;
-padding:15px;
-border-radius:12px;
-margin-bottom:15px;
-font-weight:600;">
-🔒 Recursos completos disponíveis apenas no Plano Completo.
-</div>
-    <small>Visão exclusiva de resultados financeiros.</small>
+    <h2>Painel Financeiro</h2>
+    <small>Visão estratégica da loja</small>
 
-<hr>
+    <hr>
 
-<div class="grid" style="margin-bottom:15px;">
-
-  <div>
-    <label>Data início</label>
-    <input id="pr_data_inicio_financeiro" type="date">
-  </div>
-
-  <div>
-    <label>Data fim</label>
-    <input id="pr_data_fim_financeiro" type="date">
-  </div>
-
-  <button onclick="carregarPainelProprietarioFiltrado()">
-    Filtrar Financeiro
-  </button>
-
-  <button onclick="carregarPainelProprietario()">
-    Ver Geral
-  </button>
-
-</div>
-    <div class="grid">
+    <div class="grid" style="margin-bottom:15px;">
       <div>
-        <label>Total Investido em Estoque</label>
+        <label>Data início</label>
+        <input id="pr_data_inicio_financeiro" type="date">
+      </div>
+
+      <div>
+        <label>Data fim</label>
+        <input id="pr_data_fim_financeiro" type="date">
+      </div>
+
+      <button onclick="carregarPainelProprietarioFiltrado()">
+        Filtrar
+      </button>
+
+      <button onclick="carregarPainelProprietario()">
+        Ver Geral
+      </button>
+    </div>
+
+    <div class="grid">
+
+      <div>
+        <label>Total Investido</label>
         <input id="pr_total_investido" readonly>
       </div>
 
       <div>
-  <label>Despesas Veículos Vendidos</label>
-  <input id="pr_total_despesas" readonly>
-</div>
+        <label>Despesas Estoque</label>
+        <input id="pr_total_despesas_estoque" readonly>
+      </div>
 
-<div>
-  <label>Despesas Veículos em Estoque</label>
-  <input id="pr_total_despesas_estoque" readonly>
-</div>
+      <div>
+        <label>Despesas Vendidos</label>
+        <input id="pr_total_despesas" readonly>
+      </div>
+
       <div>
         <label>Total Vendas</label>
         <input id="pr_total_vendas" readonly>
       </div>
 
       <div>
-        <label>Lucro Líquido Geral</label>
+        <label>Lucro Líquido</label>
         <input id="pr_lucro_total" readonly>
       </div>
+
+      <div>
+        <label>Veículos Vendidos</label>
+        <input id="pr_qtd_vendidos" readonly>
+      </div>
+
     </div>
-<div>
-  <label>Veículos Vendidos no Período</label>
-  <input id="pr_qtd_vendidos" readonly>
-</div>
+
     <button onclick="carregarPainelProprietario()">Atualizar Dados</button>
 
-<hr>
-
-<h3 style="margin-top:10px;">Relatório de Estoque</h3>
-<div class="table-wrapper">
-  <div id="relatorioEstoqueProprietario"></div>
-</div>
-
-<hr>
-
-<h3 style="margin-top:10px;">Relatório de Despesas</h3>
-<div class="table-wrapper">
-  <div id="relatorioDespesasProprietario"></div>
-</div>
-
-<hr>
-
-<h3 style="margin-top:10px;">Relatório de Vendas</h3>
-
-<div class="grid" style="margin-bottom:15px;">
-
-  <select id="pr_filtro_vendedor_venda">
-    <option value="">Todos os vendedores</option>
-  </select>
-
-  <div>
-    <label>Data início</label>
-    <input id="pr_data_inicio_venda" type="date">
-  </div>
-
-  <div>
-    <label>Data fim</label>
-    <input id="pr_data_fim_venda" type="date">
-  </div>
-
-  <input id="pr_filtro_placa_venda" placeholder="Filtrar por Placa">
-  <input id="pr_filtro_cpf_venda" placeholder="Filtrar por CPF">
-
-  <button onclick="carregarVendasProprietarioFiltradas()">
-    Filtrar Vendas
-  </button>
-
-</div>
-
-<div class="table-wrapper">
-  <div id="relatorioVendasProprietario"></div>
-</div>
-    <h3>Relatório de Vendas por Vendedor</h3>
-<div id="relatorioVendasPorVendedorProprietario"></div>
-
   </div>
 </div>
-
-<div id="abaRelatorio" class="aba" style="display:none;">
-  <div class="card">
 
     <!-- ============================= -->
     <!-- RELATÓRIO DE ESTOQUE -->
     <!-- ============================= -->
-   <h2>Relatório de Estoque</h2>
+   <h2>Estoque</h2>
 <hr>
 
 <button onclick="imprimirEstoque()" style="background:#0f172a;margin-bottom:15px;">
@@ -1274,49 +1218,9 @@ font-weight:600;">
     <div class="table-wrapper">
       <div id="relatorioEstoque"></div>
     </div>
-    <!-- ============================= -->
-    <!-- RELATÓRIO DE VENDAS -->
-    <!-- ============================= -->
-    <div id="blocoVendasRelatorio">
-  <h2 style="margin-top:40px;">Relatório de Vendas</h2>
-  <hr>
-
-  <!-- TODO o bloco de vendas fica aqui dentro -->
-
-    <hr>
-
-    <div class="grid" style="margin-bottom:15px;">
-
-      <select id="filtro_vendedor_venda">
-        <option value="">Todos os vendedores</option>
-      </select>
-
-      <div>
-        <label>Data início</label>
-        <input id="filtro_data_inicio_venda" type="date">
-      </div>
-
-      <div>
-        <label>Data fim</label>
-        <input id="filtro_data_fim_venda" type="date">
-      </div>
-
-      <input id="filtro_placa_venda" placeholder="Filtrar por Placa">
-      <input id="filtro_cpf_venda" placeholder="Filtrar por CPF">
-
-      <button onclick="carregarVendasFiltradas()">
-        Filtrar Vendas
-      </button>
-
-    </div>
-
-    <div class="table-wrapper">
-      <div id="relatorioVendasFiltrado"></div>
-    </div>
 </div>
 
-  </div>
-</div>
+
 <!-- =======================
   ABA MINHAS VENDAS
 ======================= -->
@@ -1365,6 +1269,12 @@ font-weight:600;">
       Relatório Estoque
     </button>
 <hr>
+<input id="doc_busca_placa" placeholder="Buscar por placa (ex: ABC1A23)">
+<button onclick="buscarVendasPorPlaca()">Buscar</button>
+
+<hr>
+<select id="doc_id_venda"></select>
+<button onclick="imprimirFichaVendaSelecionada()">Gerar Ficha Final</button>
 
 <select id="doc_id_veiculo"></select>
 
@@ -1921,11 +1831,11 @@ function carregarPainelProprietario(){
 
   jsonp({action:actionFinanceiro}, (r)=>{
 
-    if(!r.ok){
-      console.warn("Resumo não disponível.");
-      return;
-    }
-
+if(!r.ok){
+  console.warn("Resumo não disponível:", r.msg || r);
+  alert("Financeiro não disponível: " + (r.msg || "ver console"));
+  return;
+}
     if(PLANO === "COMPLETO"){
 
       document.getElementById("pr_total_investido").value = r.custo_compra || 0;
@@ -2199,7 +2109,9 @@ function toggleDetalheEstoque(index){
   } else {
     el.style.display = "none";
   }
-
+if(PERFIL === "ADMIN" || PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+  html += `<button onclick="verDespesasVeiculo('${v.id}')">Ver Despesas</button>`;
+}
 }
 
 
@@ -2241,6 +2153,20 @@ function fazerLogin(){
     // ===== APLICA PERMISSÕES =====
     aplicarPermissoes(PERFIL);
 
+// ABRE ABA PADRÃO POR PERFIL
+if(PERFIL === "ESTOQUE"){
+  abrirAba("abaRelatorio");
+}
+else if(PERFIL === "VENDEDOR"){
+  abrirAba("abaRelatorio");
+}
+else if(PERFIL === "ADMIN"){
+  abrirAba("abaVeiculo");
+}
+else if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+  abrirAba("abaProprietario");
+}
+
     // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
     const telaLogin = document.getElementById("telaLogin");
     const sistema = document.getElementById("sistema");
@@ -2261,6 +2187,7 @@ function fazerLogin(){
 carregarListas();
 carregarInfoSistema();
 verificarParcelasVencidas();
+carregarUltimasVendas();
   });
 }
 function salvarOffline(payload){
@@ -2374,59 +2301,51 @@ function prepararConfiguracoes_(){
 
 function aplicarPermissoes(perfil){
 
-  if(!perfil) return;
+  perfil = String(perfil || "").toUpperCase();
 
-  perfil = String(perfil).toUpperCase();
+  mostrarTodosMenus();
 
-  // 🔒 Esconde tudo primeiro
-  document.querySelectorAll(".menu-btn").forEach(btn=>{
-    btn.style.display = "none";
-  });
-
-  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
-    btn.style.display = "none";
-  });
-
-  document.querySelectorAll(".aba").forEach(aba=>{
-    aba.style.display = "none";
-  });
-
-  // 🔓 Libera conforme perfil
-
-  if(perfil === "MASTER" || perfil === "PROPRIETARIO"){
-
-    mostrarTodosMenus();
-    mostrarTodasAbas();
-
-  } else if(perfil === "ADMIN"){
-
-    mostrarMenu("abaVeiculo");
-    mostrarMenu("abaDespesas");
-    mostrarMenu("abaVenda");
-    mostrarMenu("abaRelatorio");
-    mostrarMenu("abaParcelas");
-
-  } else if(perfil === "VENDEDOR"){
-
-    mostrarMenu("abaVenda");
-    mostrarMenu("abaMinhasVendas");
-
-  } else if(perfil === "ESTOQUE"){
-
-    mostrarMenu("abaVeiculo");
-    mostrarMenu("abaDespesas");
-    mostrarMenu("abaRelatorio");
-
+  if(perfil === "ESTOQUE"){
+    esconderMenuPorAba("abaVenda");
+    esconderMenuPorAba("abaMinhasVendas");
+    esconderMenuPorAba("abaMinhasCompras");
+    esconderMenuPorAba("abaUsuarios");
+    esconderMenuPorAba("abaProprietario");
+    esconderMenuPorAba("abaDocumentos");
   }
 
+  if(perfil === "VENDEDOR"){
+    esconderMenuPorAba("abaUsuarios");
+    esconderMenuPorAba("abaProprietario");
+  }
+
+  if(perfil === "ADMIN"){
+    esconderMenuPorAba("abaProprietario");
+  }
+
+  if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
+    // vê tudo
+  }
+// ================= RELATÓRIOS =================
+
+document.getElementById("blocoMinhasVendas").style.display = "none";
+document.getElementById("blocoMinhasCompras").style.display = "none";
+document.getElementById("blocoRelatorioGeral").style.display = "none";
+
+if(perfil === "VENDEDOR"){
+  document.getElementById("blocoMinhasVendas").style.display = "block";
+  document.getElementById("blocoMinhasCompras").style.display = "block";
 }
+
+if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
+  document.getElementById("blocoRelatorioGeral").style.display = "block";
+}
+}
+
 function mostrarMenu(id){
 
-  const aba = document.getElementById(id);
-  if(aba) aba.style.display = "block";
-
   const btn = document.querySelector(`[onclick="abrirAba('${id}')"]`);
-  if(btn) btn.style.display = "flex";
+  if(btn) btn.style.display = "block";
 
 }
 
@@ -2437,12 +2356,6 @@ function mostrarTodosMenus(){
 
   document.querySelectorAll(".bottom-nav div").forEach(btn=>{
     btn.style.display = "flex";
-  });
-}
-
-function mostrarTodasAbas(){
-  document.querySelectorAll(".aba").forEach(aba=>{
-    aba.style.display = "block";
   });
 }
 
@@ -2897,7 +2810,13 @@ function imprimirEstoque(){
         ${tabela}
 
       </body>
+<div style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:11px;color:#64748b;">
+AutoControle — Licenciado para: ${loja}
+<br>
+Emitido em: ${data}
+</div>
       </html>
+
     `;
 
     const w = window.open("");
@@ -3352,7 +3271,90 @@ function validarTotalParcelas(){
   }
 
 }
+function carregarUltimasVendas(){
+  jsonp({ action:"listarUltimasVendas", limite:10 }, (r)=>{
+    if(!r.ok) return console.warn(r.msg||"Erro listarUltimasVendas");
 
+    const items = (r.itens||[]).map(x=>({
+      value: x.venda_id,
+      label: `${x.placa} — ${x.modelo || ""} (${x.data_venda || ""})`
+    }));
+
+    setSelect(document.getElementById("doc_id_venda"), items, "Últimas 10 vendas");
+  });
+}
+
+function buscarVendasPorPlaca(){
+  const placa = v("doc_busca_placa");
+  if(!placa) return alert("Informe a placa.");
+
+  jsonp({ action:"buscarVendasPorPlaca", placa }, (r)=>{
+    if(!r.ok) return alert(r.msg || "Nenhuma venda encontrada.");
+
+    const items = (r.itens||[]).map(x=>({
+      value: x.venda_id,
+      label: `${x.placa} — ${x.modelo || ""} (${x.data_venda || ""})`
+    }));
+
+    setSelect(document.getElementById("doc_id_venda"), items, "Vendas encontradas");
+  });
+}
+
+function imprimirFichaVendaSelecionada(){
+  const vendaId = document.getElementById("doc_id_venda").value;
+  if(!vendaId) return alert("Selecione a venda.");
+
+  // sua impressão atual usa id_veiculo; aqui vamos usar venda_id (mais correto)
+  jsonp({ action:"relatorioCompletoVenda", venda_id:vendaId }, (r)=>{
+    if(!r.ok) return alert(r.msg || "Erro ao gerar ficha.");
+
+    // aqui você monta o HTML de impressão com base em r (melhor que depender do veiculo)
+    // se quiser, eu te deixo o template pronto quando você mandar o retorno r.
+    alert("OK: dados recebidos. Agora é só montar a ficha.");
+  });
+}
+function carregarUltimasVendas(){
+  jsonp({ action:"listarUltimasVendas", limite:10 }, (r)=>{
+    if(!r.ok) return console.warn(r.msg||"Erro listarUltimasVendas");
+
+    const items = (r.itens||[]).map(x=>({
+      value: x.venda_id,
+      label: `${x.placa} — ${x.modelo || ""} (${x.data_venda || ""})`
+    }));
+
+    setSelect(document.getElementById("doc_id_venda"), items, "Últimas 10 vendas");
+  });
+}
+
+function buscarVendasPorPlaca(){
+  const placa = v("doc_busca_placa");
+  if(!placa) return alert("Informe a placa.");
+
+  jsonp({ action:"buscarVendasPorPlaca", placa }, (r)=>{
+    if(!r.ok) return alert(r.msg || "Nenhuma venda encontrada.");
+
+    const items = (r.itens||[]).map(x=>({
+      value: x.venda_id,
+      label: `${x.placa} — ${x.modelo || ""} (${x.data_venda || ""})`
+    }));
+
+    setSelect(document.getElementById("doc_id_venda"), items, "Vendas encontradas");
+  });
+}
+
+function imprimirFichaVendaSelecionada(){
+  const vendaId = document.getElementById("doc_id_venda").value;
+  if(!vendaId) return alert("Selecione a venda.");
+
+  // sua impressão atual usa id_veiculo; aqui vamos usar venda_id (mais correto)
+  jsonp({ action:"relatorioCompletoVenda", venda_id:vendaId }, (r)=>{
+    if(!r.ok) return alert(r.msg || "Erro ao gerar ficha.");
+
+    // aqui você monta o HTML de impressão com base em r (melhor que depender do veiculo)
+    // se quiser, eu te deixo o template pronto quando você mandar o retorno r.
+    alert("OK: dados recebidos. Agora é só montar a ficha.");
+  });
+}
 
 </script>
 <nav class="bottom-nav">
