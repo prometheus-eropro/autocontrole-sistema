@@ -1422,46 +1422,23 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  showLoading();
+  params.cliente_id = CLIENTE_ID;
+  params.perfil = PERFIL;
+  params.nome_usuario = NOME_USUARIO;
 
-  if(params.action !== "loginUsuario"){
-    if(!CLIENTE_ID || !PERFIL){
-      hideLoading();
-      return;
-    }
+  const query = new URLSearchParams(params).toString();
 
-    params.cliente_id = CLIENTE_ID;
-    params.perfil = PERFIL;
-  }
+  fetch(URL_GAS + "?" + query)
+    .then(r => r.json())
+    .then(data => {
+      callback(data);
+    })
+    .catch(err => {
+      console.error("ERRO DO SERVIDOR:", err);
+    });
 
-  const cbName = "cb_" + Math.floor(Math.random()*1000000000);
-  const script = document.createElement("script");
-
-  window[cbName] = function(data){
-
-    try{
-
-      if(!data || data.ok === false){
-        console.error("ERRO DO SERVIDOR:", data);
-        alert(data?.erro || data?.msg || "Erro inesperado.");
-      } else {
-        callback(data);
-      }
-
-    } catch(err){
-      console.error("ERRO CALLBACK:", err);
-      alert("Erro interno no sistema.");
-    }
-
-    hideLoading(); // 🔥 AGORA SEMPRE FECHA
-    delete window[cbName];
-    script.remove();
-  };
-
-  params.callback = cbName;
-  script.src = GAS_URL + "?" + new URLSearchParams(params).toString();
-  document.body.appendChild(script);
 }
+
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
@@ -2668,7 +2645,9 @@ window.addEventListener("DOMContentLoaded", function(){
   if(clienteSalvo && perfilSalvo){
 
   CLIENTE_ID = clienteSalvo;
-  PERFIL = String(perfilSalvo || "").toUpperCase();
+  PERFIL = String(perfilSalvo || "")
+  .toUpperCase()
+  .trim();
   PLANO = planoSalvo || "BASICO";
 
   if(tela) tela.style.display = "none";
