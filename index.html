@@ -3354,6 +3354,25 @@ document.addEventListener("DOMContentLoaded", function(){
   NOME_USUARIO = localStorage.getItem("nome_usuario") || "";
 
 });
+function executarJSONP(params, callback){
+
+  const callbackName = "cb_" + Date.now();
+
+  window[callbackName] = function(data){
+    callback(data);
+    delete window[callbackName];
+    script.remove();
+  };
+
+  params.callback = callbackName;
+
+  const query = new URLSearchParams(params).toString();
+
+  const script = document.createElement("script");
+  script.src = GAS_URL + "?" + query;
+
+  document.body.appendChild(script);
+}
 </script>
 <nav class="bottom-nav">
 
