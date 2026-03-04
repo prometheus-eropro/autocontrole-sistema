@@ -1422,7 +1422,7 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  showLoading(); // 🔥 BLOQUEIA TELA
+  showLoading();
 
   if(params.action !== "loginUsuario"){
     if(!CLIENTE_ID || !PERFIL){
@@ -1439,24 +1439,29 @@ function jsonp(params, callback){
 
   window[cbName] = function(data){
 
-  hideLoading();
+    try{
 
-  if(!data || data.ok === false){
-    console.error("ERRO DO SERVIDOR:", data);
-    alert(data?.msg || data?.erro || "Erro inesperado no servidor.");
-  }
+      if(!data || data.ok === false){
+        console.error("ERRO DO SERVIDOR:", data);
+        alert(data?.erro || data?.msg || "Erro inesperado.");
+      } else {
+        callback(data);
+      }
 
-  callback(data);
+    } catch(err){
+      console.error("ERRO CALLBACK:", err);
+      alert("Erro interno no sistema.");
+    }
 
-  delete window[cbName];
-  script.remove();
-};
+    hideLoading(); // 🔥 AGORA SEMPRE FECHA
+    delete window[cbName];
+    script.remove();
+  };
 
   params.callback = cbName;
   script.src = GAS_URL + "?" + new URLSearchParams(params).toString();
   document.body.appendChild(script);
 }
-
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
@@ -3385,7 +3390,10 @@ function setValue(id, valor){
   const el = document.getElementById(id);
   if(el) el.value = valor;
 }
-
+window.onerror = function(msg, url, line, col, error){
+  console.error("ERRO GLOBAL:", msg);
+  hideLoading();
+};
 
 </script>
 <nav class="bottom-nav">
