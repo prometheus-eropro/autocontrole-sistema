@@ -1204,6 +1204,7 @@ style="background:#0f172a;">
     <!-- ============================= -->
     <!-- RELATÓRIO DE ESTOQUE -->
     <!-- ============================= -->
+<div id="abaRelatorio" class="aba" style="display:none">
    <h2>Estoque</h2>
 <hr>
 
@@ -1219,7 +1220,7 @@ style="background:#0f172a;">
       <div id="relatorioEstoque"></div>
     </div>
 </div>
-
+</div>
 
 <!-- =======================
   ABA MINHAS VENDAS
@@ -1818,19 +1819,21 @@ function carregarPainelProprietario(){
   }
 
   // ===== MOSTRAR OU ESCONDER AVISO DE UPGRADE =====
+  const up = document.getElementById("upgradePlano");
+if(up){
   if(PLANO !== "COMPLETO"){
-    document.getElementById("upgradePlano").style.display = "block";
+    up.style.display = "block";
   } else {
-    document.getElementById("upgradePlano").style.display = "none";
+    up.style.display = "none";
   }
-
+}
   // ===== DEFINIR QUAL AÇÃO USAR =====
   const actionFinanceiro = (PLANO === "COMPLETO") 
     ? "dreCompleta" 
     : "resumoFinanceiro";
 
-  jsonp({action:actionFinanceiro}, (r)=>{
-
+ jsonp({action:actionFinanceiro}, (r)=>{
+   console.log("RETORNO:", r);
 if(!r.ok){
   console.warn("Resumo não disponível:", r.msg || r);
   alert("Financeiro não disponível: " + (r.msg || "ver console"));
