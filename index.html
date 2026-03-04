@@ -1143,6 +1143,8 @@ style="background:#0f172a;">
     <hr>
 
     <div class="grid" style="margin-bottom:15px;">
+<div id="msgFinanceiro" style="display:none;margin:12px 0;padding:10px;border-radius:10px;background:#fff3cd;color:#664d03;border:1px solid #ffecb5;">
+</div>
       <div>
         <label>Data início</label>
         <input id="pr_data_inicio_financeiro" type="date">
@@ -1831,8 +1833,17 @@ if(up){
  jsonp({action:actionFinanceiro}, (r)=>{
    console.log("RETORNO:", r);
 if(!r.ok){
-  console.warn("Resumo não disponível:", r.msg || r);
-  alert("Financeiro não disponível: " + (r.msg || "ver console"));
+
+  console.log("RETORNO:", r);
+
+  // ✅ não fica alertando toda hora
+  const box = document.getElementById("msgFinanceiro"); // vamos criar/usar uma área fixa
+  if(box){
+    box.style.display = "block";
+    box.innerText = (r.msg || r.erro || "Financeiro indisponível.");
+  }
+
+  // ✅ se for plano restrito, só mostra mensagem e para
   return;
 }
     if(PLANO === "COMPLETO"){
