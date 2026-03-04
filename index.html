@@ -1411,6 +1411,9 @@ let CLIENTE_ID = localStorage.getItem("cliente_id") || "";
 let PERFIL = localStorage.getItem("perfil") || "";
 let PLANO = localStorage.getItem("plano") || "BASICO";
 /* ========= HELPERS ========= */
+let CLIENTE_ID = "";
+let PERFIL = "";
+let NOME_USUARIO = "";
 
 function v(id){
   const el=document.getElementById(id);
@@ -1422,23 +1425,25 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  params.cliente_id = CLIENTE_ID;
-  params.perfil = PERFIL;
-  params.nome_usuario = NOME_USUARIO;
+  params.cliente_id = CLIENTE_ID || "";
+  params.perfil = PERFIL || "";
+  params.nome_usuario = NOME_USUARIO || "";
 
   const query = new URLSearchParams(params).toString();
 
   fetch(URL_GAS + "?" + query)
     .then(r => r.json())
     .then(data => {
+      if(data && data.ok === false){
+        console.error("ERRO DO SERVIDOR:", data);
+      }
       callback(data);
     })
     .catch(err => {
-      console.error("ERRO DO SERVIDOR:", err);
+      console.error("ERRO GLOBAL:", err);
     });
 
 }
-
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
@@ -3373,7 +3378,13 @@ window.onerror = function(msg, url, line, col, error){
   console.error("ERRO GLOBAL:", msg);
   hideLoading();
 };
+document.addEventListener("DOMContentLoaded", function(){
 
+  CLIENTE_ID = localStorage.getItem("cliente_id") || "";
+  PERFIL = String(localStorage.getItem("perfil") || "").toUpperCase().trim();
+  NOME_USUARIO = localStorage.getItem("nome_usuario") || "";
+
+});
 </script>
 <nav class="bottom-nav">
 
