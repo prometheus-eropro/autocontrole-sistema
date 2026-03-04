@@ -2154,10 +2154,14 @@ function fazerLogin(){
     aplicarPermissoes(PERFIL);
 
 // ABRE ABA PADRÃO POR PERFIL
-if(PERFIL === "ESTOQUE"){
-  abrirAba("abaRelatorio");
+// ===== ABRIR ABA PADRÃO POR PERFIL =====
+if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+  abrirAba("abaProprietario");
 }
-else if(PERFIL === "VENDEDOR"){
+else if(PERFIL === "ADMIN"){
+  abrirAba("abaVeiculo");
+}
+else if(PERFIL === "VENDEDOR" || PERFIL === "ESTOQUE"){
   abrirAba("abaRelatorio");
 }
 else if(PERFIL === "ADMIN"){
@@ -2343,21 +2347,6 @@ function aplicarPermissoes(perfil){
   }
 }
 
-// ================= RELATÓRIOS =================
-
-document.getElementById("blocoMinhasVendas").style.display = "none";
-document.getElementById("blocoMinhasCompras").style.display = "none";
-document.getElementById("blocoRelatorioGeral").style.display = "none";
-
-if(perfil === "VENDEDOR"){
-  document.getElementById("blocoMinhasVendas").style.display = "block";
-  document.getElementById("blocoMinhasCompras").style.display = "block";
-}
-
-if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
-  document.getElementById("blocoRelatorioGeral").style.display = "block";
-}
-}
 
 function mostrarMenu(id){
 
@@ -2679,6 +2668,16 @@ window.addEventListener("DOMContentLoaded", function(){
   if(elPerf) elPerf.textContent = PERFIL;
 
   aplicarPermissoes(PERFIL);
+// ===== ABA PADRÃO AO RECARREGAR =====
+if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+  abrirAba("abaProprietario");
+}
+else if(PERFIL === "ADMIN"){
+  abrirAba("abaVeiculo");
+}
+else if(PERFIL === "VENDEDOR" || PERFIL === "ESTOQUE"){
+  abrirAba("abaRelatorio");
+}
   carregarListas();
   carregarInfoSistema();
   if(PERFIL === "ADMIN" || PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
