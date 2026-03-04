@@ -1428,21 +1428,23 @@ function jsonp(params, callback){
   params.perfil = PERFIL || "";
   params.nome_usuario = NOME_USUARIO || "";
 
+  const callbackName = "cb_" + Date.now();
+
+  window[callbackName] = function(data){
+    callback(data);
+    delete window[callbackName];
+    document.body.removeChild(script);
+  };
+
+  params.callback = callbackName;
+
   const query = new URLSearchParams(params).toString();
 
-  fetch(GAS_URL + "?" + query)
-    .then(r => r.json())
-    .then(data => {
-      if(data && data.ok === false){
-        console.error("ERRO DO SERVIDOR:", data);
-      }
-      callback(data);
-    })
-    .catch(err => {
-      console.error("ERRO GLOBAL:", err);
-    });
-
+  const script = document.createElement("script");
+  script.src = GAS_URL + "?" + query;
+  document.body.appendChild(script);
 }
+
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
