@@ -2323,9 +2323,26 @@ function aplicarPermissoes(perfil){
     esconderMenuPorAba("abaProprietario");
   }
 
-  if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
-    // vê tudo
+  // ================= RELATÓRIOS =================
+
+  const blocoMinhasVendas = document.getElementById("blocoMinhasVendas");
+  const blocoMinhasCompras = document.getElementById("blocoMinhasCompras");
+  const blocoRelatorioGeral = document.getElementById("blocoRelatorioGeral");
+
+  if(blocoMinhasVendas) blocoMinhasVendas.style.display = "none";
+  if(blocoMinhasCompras) blocoMinhasCompras.style.display = "none";
+  if(blocoRelatorioGeral) blocoRelatorioGeral.style.display = "none";
+
+  if(perfil === "VENDEDOR"){
+    if(blocoMinhasVendas) blocoMinhasVendas.style.display = "block";
+    if(blocoMinhasCompras) blocoMinhasCompras.style.display = "block";
   }
+
+  if(perfil === "ADMIN" || perfil === "PROPRIETARIO" || perfil === "MASTER"){
+    if(blocoRelatorioGeral) blocoRelatorioGeral.style.display = "block";
+  }
+}
+
 // ================= RELATÓRIOS =================
 
 document.getElementById("blocoMinhasVendas").style.display = "none";
