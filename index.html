@@ -1805,10 +1805,7 @@ function limparFormularioVenda(){
 }
 function carregarPainelProprietario(){
 
-if(!CLIENTE_ID){
-  console.warn("cliente_id ausente");
-  return;
-}
+if(!CLIENTE_ID) return;
 
   if(PERFIL !== "PROPRIETARIO"){
     return;
