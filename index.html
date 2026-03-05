@@ -1502,24 +1502,20 @@ setSelect(
     "Selecionar vendedor da loja"
   );
 // ===== SELECT DE FILTRO (RELATÓRIO DE VENDAS) =====
-setSelect(
-  document.getElementById("filtro_vendedor_venda"),
-  items,
-  "Todos os vendedores"
-);
-
+const elFiltro = document.getElementById("filtro_vendedor_venda");
+if(elFiltro){
+  setSelect(elFiltro, items, "Todos os vendedores");
+}
   setSelect(
     document.getElementById("comp_vendedor_loja"),
     items,
     "Selecionar funcionário da compra"
   );
 
-setSelect(
-  document.getElementById("pr_filtro_vendedor_venda"),
-  items,
-  "Todos os vendedores"
-);
-
+const elFiltroPr = document.getElementById("pr_filtro_vendedor_venda");
+if(elFiltroPr){
+  setSelect(elFiltroPr, items, "Todos os vendedores");
+}
 });
 } // <-- FECHA carregarListas()
   
@@ -1575,18 +1571,16 @@ if(!navigator.onLine){
   salvarOffline(payload);
   console.log("Salvo offline.");
 
+  return;
+}
 if(v("v_placa") && !validarPlaca(v("v_placa"))){
   return alert("Placa inválida.");
 }
-
-  return;
-}
-
   jsonp(payload, (r)=>{
     if(r.ok){
       alert("Entrada salva! ID veículo: " + r.id_veiculo);
       limparFormularioEntrada();
-      carregarListas();
+     carregarListas();
     } else alert("Erro: " + (r.msg||""));
   });
 }
@@ -1925,7 +1919,8 @@ if(el) el.innerHTML = html;
     });
 
     html += "</table></div>";
-    document.getElementById("relatorioDespesasProprietario").innerHTML = html;
+    const el = document.getElementById("relatorioDespesasProprietario");
+if(el) el.innerHTML = html;
   });
 
   // ==============================
@@ -2152,6 +2147,7 @@ function fazerLogin(){
     CLIENTE_ID = r.cliente_id;
     PERFIL = String(r.perfil || "").toUpperCase();
     PLANO = String(r.plano || "BASICO").toUpperCase();
+    NOME_USUARIO = r.nome_usuario || usuario; // 👈 ADICIONE ESTA LINHA
 
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
@@ -2172,9 +2168,6 @@ else if(PERFIL === "ADMIN"){
 }
 else if(PERFIL === "VENDEDOR" || PERFIL === "ESTOQUE"){
   abrirAba("abaRelatorio");
-}
-else if(PERFIL === "ADMIN"){
-  abrirAba("abaVeiculo");
 }
 else if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
   abrirAba("abaProprietario");
