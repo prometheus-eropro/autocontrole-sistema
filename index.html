@@ -1426,6 +1426,11 @@ function num(x){
 }
 function jsonp(params, callback){
 
+  if(!CLIENTE_ID){
+    console.warn("Sem cliente_id ainda");
+    return;
+  }
+
   const callbackName = "cb_" + Date.now();
 
   params.callback = callbackName;
@@ -1810,7 +1815,7 @@ function limparFormularioVenda(){
 }
 function carregarPainelProprietario(){
 
-if(!CLIENTE_ID) return;
+  if(!CLIENTE_ID) return;
 
   if(PERFIL !== "PROPRIETARIO"){
     return;
@@ -1818,34 +1823,40 @@ if(!CLIENTE_ID) return;
 
   // ===== MOSTRAR OU ESCONDER AVISO DE UPGRADE =====
   const up = document.getElementById("upgradePlano");
-if(up){
-  if(PLANO !== "COMPLETO"){
-    up.style.display = "block";
-  } else {
-    up.style.display = "none";
+
+  if(up){
+    if(PLANO !== "COMPLETO"){
+      up.style.display = "block";
+    }else{
+      up.style.display = "none";
+    }
   }
-}
+
   // ===== DEFINIR QUAL AÇÃO USAR =====
-  const actionFinanceiro = (PLANO === "COMPLETO") 
-    ? "dreCompleta" 
+  const actionFinanceiro = (PLANO === "COMPLETO")
+    ? "dreCompleta"
     : "resumoFinanceiro";
 
- jsonp({action:actionFinanceiro}, (r)=>{
-   console.log("RETORNO:", r);
-if(!r.ok){
+  jsonp({
+    action: actionFinanceiro,
+    cliente_id: CLIENTE_ID,
+    perfil: PERFIL
+  }, (r)=>{
 
-  console.log("RETORNO:", r);
+    console.log("RETORNO:", r);
 
-  // ✅ não fica alertando toda hora
-  const box = document.getElementById("msgFinanceiro"); // vamos criar/usar uma área fixa
-  if(box){
-    box.style.display = "block";
-    box.innerText = (r.msg || r.erro || "Financeiro indisponível.");
-  }
+    if(!r || !r.ok){
 
-  // ✅ se for plano restrito, só mostra mensagem e para
-  return;
-}
+      const box = document.getElementById("msgFinanceiro");
+
+      if(box){
+        box.style.display = "block";
+        box.innerText = (r?.msg || r?.erro || "Financeiro indisponível.");
+      }
+
+      return;
+    }
+
     if(PLANO === "COMPLETO"){
 
       document.getElementById("pr_total_investido").value = r.custo_compra || 0;
@@ -1855,17 +1866,20 @@ if(!r.ok){
       document.getElementById("pr_qtd_vendidos").value = r.quantidade_vendidos || 0;
       document.getElementById("pr_total_despesas_estoque").value = r.despesas_estoque || 0;
 
-    } else {
+    }else{
 
-  document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
-  document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
-  document.getElementById("pr_total_despesas_estoque").value = r.despesas_operacionais_estoque || 0;
-  document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
-  document.getElementById("pr_lucro_total").value = r.lucro_final || 0;
-  document.getElementById("pr_qtd_vendidos").value = "";
+      document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
+      document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
+      document.getElementById("pr_total_despesas_estoque").value = r.despesas_operacionais_estoque || 0;
+      document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
+      document.getElementById("pr_lucro_total").value = r.lucro_final || 0;
+      document.getElementById("pr_qtd_vendidos").value = "";
+
+    }
+
+  });
 
 }
-  });
 
   // ==============================
   // RELATÓRIO ESTOQUE
