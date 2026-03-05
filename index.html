@@ -2219,13 +2219,12 @@ setTimeout(function(){
 
 }, 200);
 
-    // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
-    const telaLogin = document.getElementById("telaLogin");
-    const sistema = document.getElementById("sistema");
+   // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
+let telaLogin = document.getElementById("telaLogin");
+let sistema = document.getElementById("sistema");
 
-    if(telaLogin) telaLogin.style.display = "none";
-    if(sistema) sistema.style.display = "block";
-
+if(telaLogin) telaLogin.style.display = "none";
+if(sistema) sistema.style.display = "block";
     // ===== PREENCHE CABEÇALHO =====
     const elLoja = document.getElementById("nomeLoja");
     const elUser = document.getElementById("usuarioLogado");
