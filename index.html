@@ -2317,12 +2317,11 @@ function prepararConfiguracoes_(){
 
   // PROPRIETARIO/MASTER: tudo
   if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
-    if(blocoCriar)  blocoCriar.style.display  = "block";
-    if(blocoOutro)  blocoOutro.style.display  = "block";
-    if(blocoStatus) blocoStatus.style.display = "block";
-    return;
-  }
+  if(blocoCriar)  blocoCriar.style.display  = "block";
+  if(blocoOutro)  blocoOutro.style.display  = "block";
+  if(blocoStatus) blocoStatus.style.display = "block";
 }
+
 
 
 function aplicarPermissoes(perfil){
