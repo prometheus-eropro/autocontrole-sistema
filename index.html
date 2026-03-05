@@ -1433,10 +1433,19 @@ function jsonp(params, callback){
   const callbackName = "cb_" + Date.now();
 
   window[callbackName] = function(data){
+  try{
     callback(data);
+  }catch(e){
+    console.error("Erro callback:", e);
+  }
+
+  setTimeout(()=>{
     delete window[callbackName];
-    document.body.removeChild(script);
-  };
+    if(script && script.parentNode){
+      script.parentNode.removeChild(script);
+    }
+  },100);
+};
 
   params.callback = callbackName;
 
