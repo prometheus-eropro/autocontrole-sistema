@@ -2322,7 +2322,7 @@ function prepararConfiguracoes_(){
   if(blocoStatus) blocoStatus.style.display = "block";
 }
 
-
+}
 
 function aplicarPermissoes(perfil){
 
@@ -2911,7 +2911,7 @@ jsonp({
   action:"infoSistema",
   cliente_id: CLIENTE_ID,
   perfil: PERFIL
-}, callback);
+}, function(r){
 
     if(!r.ok) return;
 
