@@ -1426,36 +1426,22 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  if(!CLIENTE_ID){
-    console.warn("Sem cliente_id ainda");
-    return;
-  }
+  const cb = "cb_" + Date.now();
 
-  const callbackName = "cb_" + Date.now();
-
-  params.callback = callbackName;
-
-  const query = new URLSearchParams(params).toString();
-
-  const script = document.createElement("script");
-
-  window[callbackName] = function(data){
-
-    try{
-      callback(data);
-    }catch(e){
-      console.error("Erro callback:", e);
-    }
-
-    delete window[callbackName];
+  window[cb] = function(resp){
+    callback(resp);
+    delete window[cb];
     script.remove();
   };
 
-  script.src = GAS_URL + "?" + query;
+  const query = new URLSearchParams(params).toString();
+  const url = GAS_URL + "?" + query + "&callback=" + cb;
+
+  const script = document.createElement("script");
+  script.src = url;
 
   document.body.appendChild(script);
 }
-
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
