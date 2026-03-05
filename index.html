@@ -3361,7 +3361,10 @@ function executarJSONP(params, callback){
     delete window[callbackName];
     script.remove();
   };
-
+if(!CLIENTE_ID){
+  console.warn("Aguardando login...");
+  return;
+}
   params.callback = callbackName;
 
   const query = new URLSearchParams(params).toString();
