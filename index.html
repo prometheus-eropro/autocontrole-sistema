@@ -3398,6 +3398,22 @@ if(!CLIENTE_ID){
 
   document.body.appendChild(script);
 }
+function listarMinhasVendas(){
+
+  jsonp({
+    action:"listarVendas",
+    cliente_id:CLIENTE_ID,
+    perfil:PERFIL
+  }, function(r){
+
+    if(!r || !r.ok) return;
+
+    console.log("Vendas:", r);
+
+  });
+
+}
+
 </script>
 <nav class="bottom-nav">
 
