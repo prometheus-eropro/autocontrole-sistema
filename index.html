@@ -1435,7 +1435,12 @@ function jsonp(params, callback){
   const script = document.createElement("script");
 
   window[callbackName] = function(data){
-    callback(data);
+
+    try{
+      callback(data);
+    }catch(e){
+      console.error("Erro callback:", e);
+    }
 
     delete window[callbackName];
     script.remove();
