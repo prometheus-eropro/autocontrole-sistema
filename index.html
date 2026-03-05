@@ -2907,7 +2907,11 @@ function atualizarStatusConexao(){
 }
 function carregarInfoSistema(){
 
-  jsonp({ action:"infoSistema" }, function(r){
+jsonp({
+  action:"infoSistema",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL
+}, callback);
 
     if(!r.ok) return;
 
@@ -3411,6 +3415,15 @@ function listarMinhasVendas(){
     console.log("Vendas:", r);
 
   });
+
+}
+function api(action, callback){
+
+  jsonp({
+    action: action,
+    cliente_id: CLIENTE_ID,
+    perfil: PERFIL
+  }, callback);
 
 }
 
