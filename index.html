@@ -1412,7 +1412,7 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbyDSdfY9ILeSHuqg08mo1ru
 let CLIENTE_ID = localStorage.getItem("cliente_id") || "";
 let PERFIL = localStorage.getItem("perfil") || "";
 let PLANO = localStorage.getItem("plano") || "BASICO";
-let NOME_USUARIO = "";
+let NOME_USUARIO = localStorage.getItem("nome_usuario") || "";
 
 /* ========= HELPERS ========= */
 
@@ -1804,6 +1804,11 @@ function limparFormularioVenda(){
     });
 }
 function carregarPainelProprietario(){
+
+if(!CLIENTE_ID){
+  console.warn("cliente_id ausente");
+  return;
+}
 
   if(PERFIL !== "PROPRIETARIO"){
     return;
