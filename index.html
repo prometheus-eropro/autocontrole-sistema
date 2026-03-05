@@ -794,26 +794,6 @@ Versão: <span id="versaoSistema"></span>
      font-weight:600;">
 </div>
 
-<div class="menu-grid">
-  <div class="menu-btn" onclick="abrirAba('abaVeiculo')">🚗 Veículo</div>
-  <div class="menu-btn" onclick="abrirAba('abaDespesas')">💰 Despesas</div>
-  <div class="menu-btn" onclick="abrirAba('abaVenda')">📝 Venda</div>
-    <div class="menu-btn" onclick="abrirAba('abaRelatorio')">📦 Estoque</div>
-  <div class="menu-btn" onclick="abrirAba('abaMinhasVendas')">
-  📌 Minhas Vendas</div>
-<div class="menu-btn" onclick="abrirAba('abaMinhasCompras')">
-📦 Minhas Compras
-</div>
-<div class="menu-btn" onclick="abrirAba('abaConfiguracoes')">
-⚙️ Configurações
-</div>
-<div class="menu-btn" id="btnProprietario" onclick="abrirAba('abaProprietario')" style="display:none;">
-  👑 Proprietário
-</div>
-<div class="menu-btn" onclick="abrirAba('abaParcelas')">📆 Parcelas</div>
-<div class="menu-btn" onclick="abrirAba('abaDocumentos')">
-🖨 Documentos
-</div>
 </div>
 
 <!-- =======================
@@ -927,20 +907,9 @@ style="background:#0f172a;">
       <input id="parc_filtro_doc" placeholder="Filtrar por CPF/CNPJ">
       <button onclick="carregarParcelasPendentes()">Atualizar Lista</button>
     </div>
-<div style="margin-bottom:15px">
 
-<button onclick="carregarParcelasPendentes()">
-Pendentes
-</button>
-
-<button onclick="carregarParcelasRecebidas()">
-Recebidas
-</button>
-
-</div>
-
-<div id="listaParcelasPendentes"></div>
-<div id="listaParcelasRecebidas" style="display:none;"></div>  </div>
+    <div id="listaParcelasPendentes"></div>
+  </div>
 </div>
 
 <!-- =======================
@@ -1275,8 +1244,6 @@ Recebidas
       Ficha Venda em Branco
     </button>
 
-    
-
     <button onclick="imprimirRelatorioFinal()">
       Ficha Final da Venda
     </button>
@@ -1289,6 +1256,9 @@ Recebidas
 <button onclick="buscarVendasPorPlaca()">Buscar</button>
 
 <hr>
+<select id="doc_id_venda"></select>
+<button onclick="imprimirFichaVendaSelecionada()">Gerar Ficha Final</button>
+
 <select id="doc_id_veiculo"></select>
 
 <button onclick="imprimirRelatorioFinalDoc()">
@@ -1436,27 +1406,22 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  const cb = "cb_" + Date.now() + "_" + Math.floor(Math.random()*10000);
+  const cb = "cb_" + Date.now();
 
-  params.callback = cb;
-
-  const query = Object.keys(params)
-    .map(k => k + "=" + encodeURIComponent(params[k]))
-    .join("&");
-
-  const script = document.createElement("script");
-
-  window[cb] = function(data){
-    callback(data);
+  window[cb] = function(resp){
+    callback(resp);
     delete window[cb];
     script.remove();
   };
 
-  script.src = GAS_URL + "?" + query;
+  const query = new URLSearchParams(params).toString();
+  const url = GAS_URL + "?" + query + "&callback=" + cb;
+
+  const script = document.createElement("script");
+  script.src = url;
 
   document.body.appendChild(script);
 }
-
 function setSelect(el, items, placeholder){
   el.innerHTML = "";
   const op0 = document.createElement("option");
@@ -1868,27 +1833,56 @@ function carregarPainelProprietario(){
 
     if(PLANO === "COMPLETO"){
 
-      document.getElementById("pr_total_investido").value = r.custo_compra || 0;
-      document.getElementById("pr_total_despesas").value = r.despesas_veiculos || 0;
-      document.getElementById("pr_total_vendas").value = r.receita_bruta || 0;
-      document.getElementById("pr_lucro_total").value = r.lucro_liquido || 0;
-      document.getElementById("pr_qtd_vendidos").value = r.quantidade_vendidos || 0;
-      document.getElementById("pr_total_despesas_estoque").value = r.despesas_estoque || 0;
+      const pr_total_investido = document.getElementById("pr_total_investido");
+if(pr_total_investido) pr_total_investido.value = (r.custo_compra ?? 0);
+      const pr_total_despesas = document.getElementById("pr_total_despesas");
+if(pr_total_despesas) pr_total_despesas.value = r.despesas_veiculos || 0;
+      const pr_total_vendas = document.getElementById("pr_total_vendas");
+if(pr_total_vendas) pr_total_vendas.value = r.receita_bruta || 0;
+      const pr_lucro_total = document.getElementById("pr_lucro_total");
+if(pr_lucro_total) pr_lucro_total.value = r.lucro_liquido || 0;
+      const pr_qtd_vendidos = document.getElementById("pr_qtd_vendidos");
+if(pr_qtd_vendidos) pr_qtd_vendidos.value = r.quantidade_vendidos || 0;
+      const pr_total_despesas_estoque = document.getElementById("pr_total_despesas_estoque");
+if(pr_total_despesas_estoque) pr_total_despesas_estoque.value = r.despesas_estoque || 0;
 
     }else{
 
-      document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
-      document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
-      document.getElementById("pr_total_despesas_estoque").value = r.despesas_operacionais_estoque || 0;
-      document.getElementById("pr_total_vendas").value = r.total_vendido || 0;
-      document.getElementById("pr_lucro_total").value = r.lucro_final || 0;
-      document.getElementById("pr_qtd_vendidos").value = "";
+  const pr_total_investido = document.getElementById("pr_total_investido");
+  if(pr_total_investido){
+    pr_total_investido.value = Number(r.capital_em_estoque || r.custo_compra || 0).toFixed(2);
+  }
 
-    }
+  const pr_total_despesas = document.getElementById("pr_total_despesas");
+  if(pr_total_despesas){
+    pr_total_despesas.value = Number(r.total_despesas_vendidos || r.despesas_veiculos || 0).toFixed(2);
+  }
 
-  });
+  const pr_total_despesas_estoque = document.getElementById("pr_total_despesas_estoque");
+  if(pr_total_despesas_estoque){
+    pr_total_despesas_estoque.value = Number(r.despesas_operacionais_estoque || 0).toFixed(2);
+  }
+
+  const pr_total_vendas = document.getElementById("pr_total_vendas");
+  if(pr_total_vendas){
+    pr_total_vendas.value = Number(r.total_vendido || r.receita_bruta || 0).toFixed(2);
+  }
+
+  const pr_lucro_total = document.getElementById("pr_lucro_total");
+  if(pr_lucro_total){
+    pr_lucro_total.value = Number(r.lucro_final || 0).toFixed(2);
+  }
+
+  const pr_qtd_vendidos = document.getElementById("pr_qtd_vendidos");
+  if(pr_qtd_vendidos){
+    pr_qtd_vendidos.value = r.quantidade_vendidos || "";
+  }
 
 }
+);
+
+}
+
 function carregarRelatoriosProprietario(){
 
   // ==============================
@@ -1914,7 +1908,7 @@ function carregarRelatoriosProprietario(){
           <td>${v.marca}</td>
           <td>${v.modelo}</td>
           <td>R$ ${v.valor_venda || 0}</td>
-          <td>${v.data_entrada || ""}</td>
+          <td>${${dataBR(v.data_entrada)} || ""}</td>
         </tr>`;
     });
 
@@ -1985,18 +1979,25 @@ if(el) el.innerHTML = html;
 }
 function abrirAba(id){
 
-if(id === "abaProprietario" && 
-   !["PROPRIETARIO","MASTER"].includes(PERFIL)){
-   alert("Acesso restrito ao proprietário.");
-   return;
-}
+  if(!id) return;
+
+  // aceita "despesas" ou "abaDespesas"
+  if(!id.startsWith("aba")){
+    id = "aba" + id.charAt(0).toUpperCase() + id.slice(1);
+  }
+
+  if(id === "abaProprietario" && 
+     !["PROPRIETARIO","MASTER"].includes(PERFIL)){
+     alert("Acesso restrito ao proprietário.");
+     return;
+  }
 
   document.querySelectorAll(".aba").forEach(el=>{
-
     el.style.display = "none";
   });
 
   const aba = document.getElementById(id);
+
   if(!aba){
     console.warn("Aba não encontrada:", id);
     return;
@@ -2019,12 +2020,14 @@ if(id === "abaProprietario" &&
   if(id === "abaProprietario"){
     carregarPainelProprietario();
   }
+
   if(id === "abaConfiguracoes"){
     prepararConfiguracoes_();
   }
-if(id === "abaParcelas"){
-  carregarParcelasPendentes();
-}
+
+  if(id === "abaParcelas"){
+    carregarParcelasPendentes();
+  }
 
 }
 
@@ -2049,31 +2052,7 @@ function carregarRelatorios(){
       return String(a.modelo).localeCompare(String(b.modelo));
     });
 
-jsonp({
-  action:"resumoFinanceiro",
-  cliente_id: CLIENTE_ID,
-  perfil: PERFIL
-}, function(r){
-
-  if(!r.ok) return;
-
-  document.getElementById("dre_capital").innerText =
-    "R$ " + Number(r.capital_em_estoque).toLocaleString('pt-BR');
-
-  document.getElementById("dre_vendas").innerText =
-    "R$ " + Number(r.total_vendido).toLocaleString('pt-BR');
-
-  document.getElementById("dre_despesas").innerText =
-    "R$ " + Number(r.total_despesas_vendidos).toLocaleString('pt-BR');
-
-  document.getElementById("dre_comissoes").innerText =
-    "R$ " + Number(r.total_comissoes).toLocaleString('pt-BR');
-
-  document.getElementById("dre_lucro").innerText =
-    "R$ " + Number(r.lucro_final).toLocaleString('pt-BR');
-
-});
-    const isMobile = window.innerWidth < 600;
+    const isMobile = window.innerWidth < 768;
 
     let html = "";
 
@@ -2200,7 +2179,11 @@ function fazerLogin(){
     if(!r || !r.ok){
       return alert("Login inválido.");
     }
-
+if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+  abrirAba("abaProprietario");
+}else{
+  abrirAba("abaEstoque");
+}
     // ===== SALVA VARIÁVEIS GLOBAIS =====
     CLIENTE_ID = r.cliente_id;
     PERFIL = String(r.perfil || "").toUpperCase();
@@ -2216,20 +2199,27 @@ function fazerLogin(){
     // ===== APLICA PERMISSÕES =====
     aplicarPermissoes(PERFIL);
 
-// ABRE ABA PADRÃO POR PERFIL
+// ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
+const telaLogin = document.getElementById("telaLogin");
+const sistema = document.getElementById("sistema");
+
+if(telaLogin) telaLogin.style.display = "none";
+if(sistema) sistema.style.display = "block";
+
 // ===== ABRIR ABA PADRÃO POR PERFIL =====
-if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
-  abrirAba("abaProprietario");
-}
-else if(PERFIL === "ADMIN"){
-  abrirAba("abaVeiculo");
-}
-else if(PERFIL === "VENDEDOR" || PERFIL === "ESTOQUE"){
-  abrirAba("abaRelatorio");
-}
-else if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
-  abrirAba("abaProprietario");
-}
+setTimeout(function(){
+
+  if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+    abrirAba("abaProprietario");
+  }
+  else if(PERFIL === "ADMIN"){
+    abrirAba("abaVeiculo");
+  }
+  else if(PERFIL === "VENDEDOR" || PERFIL === "ESTOQUE"){
+    abrirAba("abaRelatorio");
+  }
+
+}, 200);
 
     // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
     const telaLogin = document.getElementById("telaLogin");
@@ -2456,15 +2446,15 @@ function carregarMinhasVendas(){
     if(!r.ok) return;
 
     let html = "<table>";
-html += "<tr><th>Data</th><th>Placa</th><th>Veículo</th><th>Comissão</th></tr>";
+html += "<tr><th>Data</th><th>Veículo</th><th>Valor</th><th>Comissão</th></tr>";
 
     r.itens.forEach(v=>{
       html += `
         <tr>
-         <td>${v.data}</td>
-<td>${v.placa}</td>
-<td>${v.veiculo}</td>
-<td>${v.comissao}</td>
+          <td>${v.data_venda}</td>
+          <td>${v.placa}</td>
+          <td>R$ ${v.valor_venda}</td>
+          <td>R$ ${v.lucro}</td>
         </tr>
       `;
     });
@@ -2787,15 +2777,14 @@ function carregarMinhasCompras(){
     if(!r.ok) return;
 
     let html = "<table>";
-    html += "<tr><th>Data</th><th>Placa</th><th>Veículo</th><th>Comissão</th></tr>";
+    html += "<tr><th>Data</th><th>Placa</th><th>Valor Compra</th></tr>";
 
     r.itens.forEach(v=>{
       html += `
         <tr>
           <td>${new Date(v.data_entrada).toLocaleDateString('pt-BR')}</td>
           <td>${v.placa}</td>
-          <td>${v.veiculo}</td>
-         <td>R$ ${v.comissao_compra || 0}</td>
+          <td>R$ ${v.valor_compra}</td>
         </tr>
       `;
     });
@@ -3079,35 +3068,22 @@ function verificarParcelasVencidas(){
     perfil: PERFIL
   }, function(r){
 
-    if(!r || !r.ok) return;
+    if(!r.ok) return;
 
     const div = document.getElementById("alertaParcelas");
-    if(!div) return;
 
-    const vencidas = Number(r.vencidas || 0);
-    const hoje = Number(r.vencendo_hoje || 0);
+    if(r.vencidas > 0 || r.vencendo_hoje > 0){
 
-    if(vencidas <= 0 && hoje <= 0){
-      div.style.display = "none";
-      div.innerHTML = "";
-      return;
+      div.style.display = "block";
+
+      div.innerHTML =
+      `⚠ Parcelas vencidas: ${r.vencidas}`;
+
     }
 
-    div.style.display = "block";
-    div.innerHTML = `
-      <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
-        <div>
-          <b>⚠ Atenção: Parcelas em atraso</b><br>
-          <small>Vencidas: <b>${vencidas}</b> • Vencendo hoje: <b>${hoje}</b></small>
-        </div>
-        <button onclick="abrirAba('abaParcelas'); carregarParcelasPendentes();" style="background:#b91c1c;">
-          Ver Pendentes
-        </button>
-      </div>
-    `;
   });
-}
 
+}
 function showLoading(){
   const el = document.getElementById("loadingOverlay");
   if(el) el.style.display = "flex";
@@ -3270,61 +3246,31 @@ function carregarParcelasPendentes(){
     document.getElementById("listaParcelasPendentes").innerHTML = html;
 
   });
-mostrarParcelasPendentesUI()
 }
 
 function receberParcelaUI(vendaId, numero){
 
-  const hojeISO = new Date().toISOString().slice(0,10);
+  if(!confirm(`Confirmar recebimento da parcela ${numero}?`)) return;
 
-  // 1) Confirmação profissional
-  const ok = confirm(
-    `Confirmar recebimento da parcela ${numero}?\n\n` +
-    `Você vai informar forma de pagamento e data do pagamento.`
-  );
-  if(!ok) return;
+  // opcional: perguntar valor recebido
+  const valor = prompt("Valor recebido (deixe vazio para usar o valor da parcela):", "");
 
-  // 2) Valor recebido (opcional)
-  const valor = prompt("Valor recebido (vazio = valor da parcela):", "") || "";
+ jsonp({
+  action:"receberParcela",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL,
+  venda_id: vendaId,
+  parcela: numero,
+  valor_recebido: valor || ""
 
-  // 3) Forma de pagamento (obrigatório)
-  const forma = (prompt(
-    "Forma de pagamento:\nDINHEIRO | PIX | CARTAO | TRANSFERENCIA | BOLETO",
-    "PIX"
-  ) || "").toUpperCase().trim();
-
-  const formasValidas = ["DINHEIRO","PIX","CARTAO","TRANSFERENCIA","BOLETO"];
-  if(!formasValidas.includes(forma)){
-    return alert("Forma inválida. Use: DINHEIRO, PIX, CARTAO, TRANSFERENCIA ou BOLETO.");
-  }
-
-  // 4) Data do pagamento (obrigatório)
-  const dataPag = prompt("Data do pagamento (AAAA-MM-DD):", hojeISO) || "";
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(dataPag)){
-    return alert("Data inválida. Use o formato AAAA-MM-DD.");
-  }
-
-  jsonp({
-    action:"receberParcela",
-    cliente_id: CLIENTE_ID,
-    perfil: PERFIL,
-    venda_id: vendaId,
-    parcela: numero,
-    valor_recebido: valor,
-    forma_pagamento: forma,
-    data_pagamento: dataPag
   }, function(r){
-
-    if(r && r.ok){
-      alert("✅ Parcela recebida e registrada!");
+    if(r.ok){
+      alert("Parcela recebida!");
       verificarParcelasVencidas();
       carregarParcelasPendentes();
-      // se quiser: atualizar recebidas imediatamente
-      // carregarParcelasRecebidas();
     }else{
-      alert(r?.msg || "Erro ao receber.");
+      alert(r.msg || "Erro ao receber.");
     }
-
   });
 }
 
@@ -3370,7 +3316,6 @@ function validarCPF(cpf){
 
   return dig2 == cpf.charAt(10);
 }
-
 function adicionarParcela(){
 
   const tabela = document.getElementById("tabelaParcelas");
@@ -3383,7 +3328,6 @@ function adicionarParcela(){
   `;
 
 }
-
 function validarTotalParcelas(){
 
   const totalVenda = parseFloat(document.getElementById("valor_venda").value) || 0;
@@ -3403,7 +3347,6 @@ function validarTotalParcelas(){
   }
 
 }
-
 function carregarUltimasVendas(){
   jsonp({ action:"listarUltimasVendas", limite:10 }, (r)=>{
     if(!r.ok) return console.warn(r.msg||"Erro listarUltimasVendas");
@@ -3446,7 +3389,6 @@ function imprimirFichaVendaSelecionada(){
     alert("OK: dados recebidos. Agora é só montar a ficha.");
   });
 }
-
 function setValue(id, valor){
   const el = document.getElementById(id);
   if(el) el.value = valor;
@@ -3530,118 +3472,8 @@ function api(action, callback){
     perfil: PERFIL
   }, callback);
 }
-
-function carregarParcelasRecebidas(){
-
-  if(!["ADMIN","PROPRIETARIO"].includes(PERFIL)) return;
-
-  const params = {
-    action:"listarParcelasRecebidas",
-    cliente_id: CLIENTE_ID,
-    perfil: PERFIL,
-
-    // usa os mesmos filtros da tela
-    data_inicio: v("parc_filtro_inicio"),
-    data_fim: v("parc_filtro_fim"),
-    filtro_placa: v("parc_filtro_placa"),
-    filtro_doc: v("parc_filtro_doc")
-  };
-
-  jsonp(params, function(r){
-
-    if(!r || !r.ok){
-      document.getElementById("listaParcelasRecebidas").innerHTML =
-        "<div style='padding:12px;color:#991b1b;font-weight:700;'>Erro ao carregar parcelas recebidas.</div>";
-      return;
-    }
-
-    const itens = (r.itens || []);
-    if(itens.length === 0){
-      document.getElementById("listaParcelasRecebidas").innerHTML =
-        "<div style='padding:12px;color:#64748b;font-weight:600;'>Nenhuma parcela recebida no filtro.</div>";
-      mostrarParcelasRecebidasUI();
-      return;
-    }
-
-    let html = "<div class='table-wrapper'><table>";
-    html += `
-      <tr>
-        <th>Pagamento</th>
-        <th>Forma</th>
-        <th>Placa</th>
-        <th>Cliente</th>
-        <th>Parcela</th>
-        <th>Vencimento</th>
-        <th>Valor</th>
-      </tr>
-    `;
-
-    itens.forEach(p=>{
-      html += `
-        <tr>
-          <td>${p.data_pagamento || ""}</td>
-          <td><b>${p.forma_pagamento || ""}</b></td>
-          <td>${p.placa || ""}</td>
-          <td>${p.cliente || ""}</td>
-          <td>${p.parcela || ""}</td>
-          <td>${p.vencimento || ""}</td>
-          <td>R$ ${Number(p.valor || 0).toLocaleString("pt-BR")}</td>
-        </tr>
-      `;
-    });
-
-    html += "</table></div>";
-
-    document.getElementById("listaParcelasRecebidas").innerHTML = html;
-    mostrarParcelasRecebidasUI();
-
-  });
-}
-
-function carregarDRE(){
-
-  if(!["PROPRIETARIO","ADMIN"].includes(PERFIL)) return;
-
-  jsonp({
-    action:"dreCompleta",
-    cliente_id: CLIENTE_ID,
-    perfil: PERFIL
-  }, function(r){
-
-    if(!r || !r.ok) return;
-
-    document.getElementById("dre_receita").innerText =
-      "R$ "+Number(r.receita_bruta||0).toLocaleString("pt-BR");
-
-    document.getElementById("dre_custo").innerText =
-      "R$ "+Number(r.custo_compra||0).toLocaleString("pt-BR");
-
-    // cuidado: seu GAS retorna despesas_veiculos (no exemplo que você mandou)
-    document.getElementById("dre_despesas").innerText =
-      "R$ "+Number(r.despesas_veiculos||0).toLocaleString("pt-BR");
-
-    document.getElementById("dre_comissoes").innerText =
-      "R$ "+Number(r.comissoes||0).toLocaleString("pt-BR");
-
-    document.getElementById("dre_liquido").innerText =
-      "R$ "+Number(r.lucro_liquido||0).toLocaleString("pt-BR");
-
-  });
-}
-
-
-function mostrarParcelasPendentesUI(){
-  const a = document.getElementById("listaParcelasPendentes");
-  const b = document.getElementById("listaParcelasRecebidas");
-  if(a) a.style.display = "block";
-  if(b) b.style.display = "none";
-}
-
-function mostrarParcelasRecebidasUI(){
-  const a = document.getElementById("listaParcelasPendentes");
-  const b = document.getElementById("listaParcelasRecebidas");
-  if(a) a.style.display = "none";
-  if(b) b.style.display = "block";
+function moeda(v){
+ return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
 </script>
