@@ -2315,13 +2315,12 @@ function prepararConfiguracoes_(){
     return;
   }
 
-  // PROPRIETARIO/MASTER: tudo
-  if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
+ // PROPRIETARIO/MASTER: tudo
+if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
   if(blocoCriar)  blocoCriar.style.display  = "block";
   if(blocoOutro)  blocoOutro.style.display  = "block";
   if(blocoStatus) blocoStatus.style.display = "block";
 }
-
 }
 
 function aplicarPermissoes(perfil){
@@ -3423,6 +3422,7 @@ function api(action, callback){
     perfil: PERFIL
   }, callback);
 }
+
 }
 </script>
 <nav class="bottom-nav">
