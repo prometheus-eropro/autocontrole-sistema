@@ -1426,33 +1426,23 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  params.cliente_id = CLIENTE_ID || "";
-  params.perfil = PERFIL || "";
-  params.nome_usuario = NOME_USUARIO || "";
-
   const callbackName = "cb_" + Date.now();
-
-  window[callbackName] = function(data){
-  try{
-    callback(data);
-  }catch(e){
-    console.error("Erro callback:", e);
-  }
-
-  setTimeout(()=>{
-    delete window[callbackName];
-    if(script && script.parentNode){
-      script.parentNode.removeChild(script);
-    }
-  },100);
-};
 
   params.callback = callbackName;
 
   const query = new URLSearchParams(params).toString();
 
   const script = document.createElement("script");
+
+  window[callbackName] = function(data){
+    callback(data);
+
+    delete window[callbackName];
+    script.remove();
+  };
+
   script.src = GAS_URL + "?" + query;
+
   document.body.appendChild(script);
 }
 
@@ -1958,7 +1948,8 @@ if(el) el.innerHTML = html;
     });
 
     html += "</table></div>";
-    document.getElementById("relatorioVendasPorVendedorProprietario").innerHTML = html;
+    const el = document.getElementById("relatorioVendasPorVendedorProprietario");
+if(el) el.innerHTML = html;
   });
 
 }
