@@ -3034,11 +3034,10 @@ function receber(vendaId, numero){
 function verificarParcelasVencidas(){
 
   jsonp({
-  action:"verificarParcelasVencidas",
-  cliente_id: CLIENTE_ID,const params = {
-  action: "listarParcelasPendentes",
-  perfil: PERFIL
-}, function(r){
+    action:"verificarParcelasVencidas",
+    cliente_id: CLIENTE_ID,
+    perfil: PERFIL
+  }, function(r){
 
     if(!r.ok) return;
 
@@ -3048,20 +3047,14 @@ function verificarParcelasVencidas(){
 
       div.style.display = "block";
 
-      div.innerHTML = `
-        ⚠ Parcelas vencidas: ${r.vencidas}
-        <br>
-        ⏳ Vencendo hoje: ${r.vencendo_hoje}
-      `;
+      div.innerHTML =
+      `⚠ Parcelas vencidas: ${r.vencidas}`;
 
-    } else {
-      div.style.display = "none";
     }
 
   });
 
 }
-
 function showLoading(){
   const el = document.getElementById("loadingOverlay");
   if(el) el.style.display = "flex";
@@ -3424,6 +3417,7 @@ function api(action, params, callback){
   params.perfil = PERFIL;
 
   jsonp(params, callback);
+
 }
 
 function listarMinhasVendas(){
