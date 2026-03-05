@@ -1461,7 +1461,11 @@ function setSelect(el, items, placeholder){
 function carregarListas(){
 
   // ===== VEÍCULOS =====
-  jsonp({action:"listarVeiculosEstoque"}, (r)=>{
+  jsonp({
+  action:"listarVeiculosEstoque",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL
+}, (r)=>{
     if(!r.ok) return console.warn(r.msg||"Erro listarVeiculos");
 
     const items = (r.itens||[]).map(x=>({
@@ -1483,7 +1487,11 @@ setSelect(
   });
 
   // ===== VENDEDORES =====
-  jsonp({action:"listarVendedoresLojaAtivos"}, (r)=>{
+  jsonp({
+  action:"listarVendedoresLojaAtivos",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL
+}, (r)=>{
   if(!r.ok) return console.warn(r.msg||"Erro listarVendedores");
 
   const items = (r.itens||[]).map(x=>({
@@ -2007,7 +2015,11 @@ if(id === "abaParcelas"){
 
 function carregarRelatorios(){
 
-  jsonp({action:"relatorioEstoque"}, function(r){
+  jsonp({
+  action:"relatorioEstoque",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL
+}, function(r){
 
     if(!r.ok) return;
 
@@ -2396,7 +2408,11 @@ function mostrar(id){
 }
 function carregarMinhasVendas(){
 
-  jsonp({action:"relatorioMinhasVendas"}, function(r){
+  jsonp({
+  action:"relatorioMinhasVendas",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL
+}, function(r){
 
     if(!r.ok) return;
 
@@ -2723,7 +2739,11 @@ function logout(){
 
 function carregarMinhasCompras(){
 
-  jsonp({action:"relatorioMinhasCompras"}, function(r){
+  jsonp({
+  action:"relatorioMinhasCompras",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL
+}, function(r){
 
     if(!r.ok) return;
 
@@ -3013,7 +3033,12 @@ function receber(vendaId, numero){
 
 function verificarParcelasVencidas(){
 
-  jsonp({ action:"verificarParcelasVencidas" }, function(r){
+  jsonp({
+  action:"verificarParcelasVencidas",
+  cliente_id: CLIENTE_ID,const params = {
+  action: "listarParcelasPendentes",
+  perfil: PERFIL
+}, function(r){
 
     if(!r.ok) return;
 
@@ -3208,11 +3233,14 @@ function receberParcelaUI(vendaId, numero){
   // opcional: perguntar valor recebido
   const valor = prompt("Valor recebido (deixe vazio para usar o valor da parcela):", "");
 
-  jsonp({
-    action:"receberParcela",
-    venda_id: vendaId,
-    parcela: numero,
-    valor_recebido: valor || ""
+ jsonp({
+  action:"receberParcela",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL,
+  venda_id: vendaId,
+  parcela: numero,
+  valor_recebido: valor || ""
+
   }, function(r){
     if(r.ok){
       alert("Parcela recebida!");
@@ -3386,6 +3414,18 @@ if(!CLIENTE_ID){
 
   document.body.appendChild(script);
 }
+
+function api(action, params, callback){
+
+  params = params || {};
+
+  params.action = action;
+  params.cliente_id = CLIENTE_ID;
+  params.perfil = PERFIL;
+
+  jsonp(params, callback);
+}
+
 function listarMinhasVendas(){
 
   jsonp({
