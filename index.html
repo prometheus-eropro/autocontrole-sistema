@@ -1418,7 +1418,7 @@ function jsonp(params, callback){
   const query = new URLSearchParams(params).toString();
 
   const script = document.createElement("script");
-  script.src = API_URL + "?" + query;
+  script.src = GAS_URL + "?" + query;
 
   document.body.appendChild(script);
 
@@ -1866,7 +1866,7 @@ if(pr_total_despesas_estoque) pr_total_despesas_estoque.value = r.despesas_estoq
 
 }
 });
-
+}
 function carregarRelatoriosProprietario(){
 
   // ==============================
