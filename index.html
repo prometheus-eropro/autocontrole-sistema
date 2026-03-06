@@ -2078,8 +2078,9 @@ function carregarPainelProprietario(){
       Number(r.total_vendido || r.receita_bruta || 0);
 
     const lucro =
-      totalVendas - totalInvestido - despesasVendidos - despesasEstoque;
-
+Number(r.receita_bruta || 0)
+- Number(r.custo_vendidos || 0)
+- Number(r.despesas_veiculos || 0);
     const qtdVendidos =
       Number(r.quantidade_vendidos || 0);
 
@@ -2260,7 +2261,7 @@ if(id === "abaProprietario"){
 carregarPainelProprietario();
 }
 
-if(id === "abaVendas"){
+if(id === "abaVenda"){
 console.log("Carregando vendas...");
 carregarVendas();
 }
@@ -3434,12 +3435,14 @@ function alterarStatusUsuario(){
 function carregarParcelasPendentes(){
 
   const params = {
-    action: "listarParcelasPendentes",
-    data_inicio: v("parc_filtro_inicio"),
-    data_fim: v("parc_filtro_fim"),
-    filtro_placa: v("parc_filtro_placa"),
-    filtro_doc: v("parc_filtro_doc")
-  };
+  action: "listarParcelasPendentes",
+  cliente_id: CLIENTE_ID,
+  perfil: PERFIL,
+  data_inicio: v("parc_filtro_inicio"),
+  data_fim: v("parc_filtro_fim"),
+  filtro_placa: v("parc_filtro_placa"),
+  filtro_doc: v("parc_filtro_doc")
+};
 
   jsonp(params, function(r){
 
@@ -3493,7 +3496,8 @@ function carregarParcelasPendentes(){
     });
 
     html += "</table></div>";
-    document.getElementById("listaParcelasPendentes").innerHTML = html;
+    const box = document.getElementById("listaParcelasPendentes");
+if(box) box.innerHTML = html;
 
   });
 }
