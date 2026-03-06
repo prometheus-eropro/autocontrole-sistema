@@ -3476,6 +3476,8 @@ function validarChassi(valor){
 }
 function validarCPF(cpf){
 
+if(!CLIENTE_ID) return;
+
   cpf = cpf.replace(/\D/g,'');
 
   if(cpf.length !== 11) return false;
@@ -3501,6 +3503,8 @@ function validarCPF(cpf){
 }
 function adicionarParcela(){
 
+if(!CLIENTE_ID) return;
+
   const tabela = document.getElementById("tabelaParcelas");
   const row = tabela.insertRow();
 
@@ -3512,6 +3516,9 @@ function adicionarParcela(){
 
 }
 function validarTotalParcelas(){
+
+
+if(!CLIENTE_ID) return;
 
   const totalVenda = parseFloat(document.getElementById("valor_venda").value) || 0;
 
@@ -3601,6 +3608,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function executarJSONP(params, callback){
 
+if(!CLIENTE_ID) return;
+
   const callbackName = "cb_" + Date.now();
 
   window[callbackName] = function(data){
@@ -3624,6 +3633,8 @@ if(!CLIENTE_ID){
 
 function api(action, params, callback){
 
+if(!CLIENTE_ID) return;
+
   params = params || {};
 
   params.action = action;
@@ -3635,6 +3646,8 @@ function api(action, params, callback){
 }
 
 function listarMinhasVendas(){
+
+if(!CLIENTE_ID) return;
 
   jsonp({
     action:"listarVendas",
@@ -3676,6 +3689,9 @@ function setSelect(id, lista, valueKey="id", textKey="nome"){
 }
 function carregarListaDespesas(){
 
+if(!CLIENTE_ID) return;
+
+
   jsonp({
     action:"listarDespesas",
     cliente_id: CLIENTE_ID
@@ -3705,6 +3721,8 @@ function carregarListaDespesas(){
 
 }
 function carregarVeiculos(){
+
+if(!CLIENTE_ID) return;
 
   jsonp({
     action:"relatorioEstoque",
@@ -3750,6 +3768,8 @@ function carregarVeiculos(){
 
 function carregarFinanceiro(){
 
+if(!CLIENTE_ID) return;
+
   jsonp({
     action:"dreCompleta",
     cliente_id: CLIENTE_ID,
@@ -3764,17 +3784,19 @@ function carregarFinanceiro(){
     }
 
     const set = (id,val)=>{
-      const el = document.getElementById(id);
-      if(!el) return;
 
-      el.value = Number(val || 0).toLocaleString("pt-BR");
-    };
+  const el = document.getElementById(id);
+  if(!el) return;
 
-    set("totalInvestido", r.capital_estoque);
-    set("despesasEstoque", r.despesas_estoque);
-    set("totalVendas", r.total_vendido);
-    set("lucroLiquido", r.lucro_liquido);
+  el.value = Number(val || 0).toLocaleString("pt-BR");
+};
 
+set("pr_total_investido", r.capital_em_estoque ?? r.custo_compra);
+set("pr_total_despesas", r.total_despesas_vendidos ?? r.despesas_veiculos);
+set("pr_total_despesas_estoque", r.despesas_operacionais_estoque ?? r.despesas_estoque);
+set("pr_total_vendas", r.total_vendido ?? r.receita_bruta);
+set("pr_lucro_total", r.lucro_final ?? r.lucro_liquido);
+set("pr_qtd_vendidos", r.quantidade_vendidos);
   });
 
 }
@@ -3794,6 +3816,8 @@ function setVal(id,valor){
 
 
 function montarTabelaEstoque(lista){
+
+if(!CLIENTE_ID) return;
 
   const tabela = document.getElementById("tabelaEstoque");
 
@@ -3820,6 +3844,8 @@ function montarTabelaEstoque(lista){
 }
 function abrirSistema(){
 
+if(!CLIENTE_ID) return;
+
   const telaLogin = document.getElementById("telaLogin");
   const sistema = document.getElementById("sistema");
 
@@ -3830,6 +3856,8 @@ function abrirSistema(){
 
 function mostrarLoader(status){
 
+if(!CLIENTE_ID) return;
+
   const l = document.getElementById("loaderSistema");
   if(!l) return;
 
@@ -3839,6 +3867,8 @@ function mostrarLoader(status){
     l.style.display = "none";
 }
 function abrirAbaInicial(){
+
+if(!CLIENTE_ID) return;
 
   if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
     abrirAba("financeiro");
