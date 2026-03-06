@@ -236,7 +236,7 @@ tr:nth-child(even){
 }
 /* ESCONDE POR PADRÃO */
 .bottom-nav{
-  display:none;
+display:flex;
 }
 
 /* MOSTRA APENAS MOBILE */
@@ -724,6 +724,95 @@ tr:nth-child(even){
   width:100%;
   font-size:16px;
 }
+.menu-topo{
+
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+justify-content:center;
+
+}
+
+.menu-topo button{
+
+background:#1e293b;
+color:#fff;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+font-size:13px;
+cursor:pointer;
+
+}
+
+.menu-topo button:hover{
+
+background:#16a34a;
+
+}
+.layout{
+display:flex;
+height:calc(100vh - 70px);
+}
+
+/* MENU LATERAL */
+
+.menu-lateral{
+
+width:220px;
+background:#0f172a;
+color:white;
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+
+}
+
+.menu-lateral h2{
+font-size:18px;
+margin-bottom:20px;
+text-align:center;
+}
+
+.menu-lateral button{
+
+background:transparent;
+border:none;
+color:white;
+padding:12px;
+text-align:left;
+cursor:pointer;
+border-radius:8px;
+font-size:14px;
+
+}
+
+.menu-lateral button:hover{
+
+background:#16a34a;
+
+}
+
+/* AREA SISTEMA */
+
+.area-sistema{
+flex:1;
+padding:20px;
+overflow:auto;
+}
+@media (max-width:900px){
+
+.menu-lateral{
+display:none;
+}
+
+.layout{
+flex-direction:column;
+}
+
+}
+
 
 </style>
 
@@ -754,47 +843,73 @@ tr:nth-child(even){
 <!-- ===== SISTEMA ===== -->
 <div id="sistema" style="display:none;">
 
-<!-- ===== SISTEMA (fica escondido até logar) ===== -->
+<!-- HEADER -->
 <header class="header-sistema">
-  <div class="header-left">
-    <img src="logo.png" class="logo-sistema">
-    <div>
-      <h2 id="nomeLoja">Nome da Loja</h2>
+
+<div class="header-left">
+
+<img src="logo.png" class="logo-sistema">
+
+<div>
+<h2 id="nomeLoja">Nome da Loja</h2>
 <small>
 Última atualização: <span id="dataAtualizacao"></span>
 &nbsp; | &nbsp;
 Versão: <span id="versaoSistema"></span>
 </small>
-    </div>
-  </div>
-<div class="status-box">
-  <span id="statusSistema" class="bolinha"></span>
-  Sistema
 </div>
-  <div class="header-right">
-    <div class="usuario-info">
-      <strong id="usuarioLogado"></strong><br>
-      <small id="perfilLogado"></small>
-    </div>
 
-    <button onclick="logout()" class="btn-sair">
-      Sair
-    </button>
-  </div>
+</div>
+
+<div class="header-right">
+
+<div class="usuario-info">
+<strong id="usuarioLogado"></strong><br>
+<small id="perfilLogado"></small>
+</div>
+
+<button onclick="logout()" class="btn-sair">
+Sair
+</button>
+
+</div>
+
 </header>
 
-<div id="alertaParcelas"
-     style="
-     display:none;
-     background:#fee2e2;
-     color:#991b1b;
-     padding:15px;
-     border-radius:12px;
-     margin:15px;
-     font-weight:600;">
-</div>
+
+<!-- ===== LAYOUT PRINCIPAL ===== -->
+<div class="layout">
+
+<!-- MENU LATERAL -->
+<div class="menu-lateral">
+
+<h2>AutoControle</h2>
+
+<button onclick="abrirAba('abaVeiculo')">🚗 Veículos</button>
+
+<button onclick="abrirAba('abaDespesas')">💰 Despesas</button>
+
+<button onclick="abrirAba('abaVenda')">📝 Vendas</button>
+
+<button onclick="abrirAba('abaRelatorio')">📦 Estoque</button>
+
+<button onclick="abrirAba('abaParcelas')">📆 Parcelas</button>
+
+<button onclick="abrirAba('abaProprietario')">📊 Financeiro</button>
+
+<button onclick="abrirAba('abaMinhasVendas')">📌 Minhas vendas</button>
+
+<button onclick="abrirAba('abaMinhasCompras')">📦 Minhas compras</button>
+
+<button onclick="abrirAba('abaDocumentos')">🖨 Documentos</button>
+
+<button onclick="abrirAba('abaConfiguracoes')">⚙ Config</button>
 
 </div>
+
+
+<!-- AREA DO SISTEMA -->
+<div class="area-sistema">
 
 <!-- =======================
   ABA VEÍCULO (ENTRADA)
@@ -2332,6 +2447,10 @@ function aplicarPermissoes(perfil){
 
   perfil = String(perfil || "").toUpperCase();
 
+// PROPRIETARIO vê tudo
+if(perfil === "PROPRIETARIO" || perfil === "MASTER"){
+return
+}
   mostrarTodosMenus();
 
   if(perfil === "ESTOQUE"){
@@ -3470,21 +3589,6 @@ function setSelect(id, lista, valueKey="id", textKey="nome"){
 }
 
 </script>
-<nav class="bottom-nav">
-
-  <div onclick="abrirAba('abaVeiculo')">🚗<span>Veículo</span></div>
-  <div onclick="abrirAba('abaDespesas')">💰<span>Despesas</span></div>
-  <div onclick="abrirAba('abaVenda')">📝<span>Venda</span></div>
-  <div onclick="abrirAba('abaRelatorio')">📑<span>Estoque</span></div>
-  <div onclick="abrirAba('abaParcelas')">📆<span>Parcelas</span></div>
-  <div onclick="abrirAba('abaProprietario')">📊<span>Financeiro</span></div>
-  <div onclick="abrirAba('abaMinhasVendas')">📌<span>Vendas</span></div>
-  <div onclick="abrirAba('abaMinhasCompras')">📦<span>Compras</span></div>
-  <div onclick="abrirAba('abaDocumentos')">🖨<span>Docs</span></div>
-  <div onclick="abrirAba('abaConfiguracoes')">⚙️<span>Config</span></div>
-
-</nav>
-
 <div id="statusIndicator"></div>
 
 
@@ -3521,5 +3625,8 @@ font-size:18px;">
 }
 </style>
 
+</div>
+</div>
+</div>
 </body>
 </html>
