@@ -2079,7 +2079,6 @@ function abrirAba(id){
 
   if(!id) return;
 
-  // aceita "despesas" ou "abaDespesas"
   if(!id.startsWith("aba")){
     id = "aba" + id.charAt(0).toUpperCase() + id.slice(1);
   }
@@ -2103,6 +2102,26 @@ function abrirAba(id){
 
   aba.style.display = "block";
 
+  if(id === "abaVeiculo"){
+    carregarVeiculos();
+  }
+
+  if(id === "abaVenda"){
+    carregarVendas();
+  }
+
+  if(id === "abaDespesas"){
+    carregarListaDespesas();
+  }
+
+  if(id === "abaRelatorio"){
+    carregarRelatorios();
+  }
+
+  if(id === "abaParcelas"){
+    carregarParcelasPendentes();
+  }
+
   if(id === "abaMinhasVendas"){
     carregarMinhasVendas();
   }
@@ -2111,20 +2130,16 @@ function abrirAba(id){
     carregarMinhasCompras();
   }
 
-  if(id === "abaRelatorio"){
-    carregarRelatorios();
-  }
-
   if(id === "abaProprietario"){
     carregarPainelProprietario();
   }
 
-  if(id === "abaConfiguracoes"){
-    prepararConfiguracoes_();
+  if(id === "abaDocumentos"){
+    carregarDocumentos();
   }
 
-  if(id === "abaParcelas"){
-    carregarParcelasPendentes();
+  if(id === "abaConfiguracoes"){
+    prepararConfiguracoes_();
   }
 
 }
@@ -2277,16 +2292,12 @@ function fazerLogin(){
     if(!r || !r.ok){
       return alert("Login inválido.");
     }
-if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
-  abrirAba("abaProprietario");
-}else{
- abrirAba("abaRelatorio");
-}
+
     // ===== SALVA VARIÁVEIS GLOBAIS =====
     CLIENTE_ID = r.cliente_id;
     PERFIL = String(r.perfil || "").toUpperCase();
     PLANO = String(r.plano || "BASICO").toUpperCase();
-    NOME_USUARIO = r.nome_usuario || usuario; // 👈 ADICIONE ESTA LINHA
+    NOME_USUARIO = r.nome_usuario || usuario;
 
     localStorage.setItem("cliente_id", CLIENTE_ID);
     localStorage.setItem("perfil", PERFIL);
@@ -2297,30 +2308,14 @@ if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
     // ===== APLICA PERMISSÕES =====
     aplicarPermissoes(PERFIL);
 
-// ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
-const telaLogin = document.getElementById("telaLogin");
-const sistema = document.getElementById("sistema");
+    // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
+    const telaLogin = document.getElementById("telaLogin");
+    const sistema = document.getElementById("sistema");
 
-if(telaLogin) telaLogin.style.display = "none";
-if(sistema) sistema.style.display = "block";
+    if(telaLogin) telaLogin.style.display = "none";
+    if(sistema) sistema.style.display = "block";
 
-// ===== ABRIR ABA PADRÃO POR PERFIL =====
-setTimeout(function(){
-
-  if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
-    abrirAba("abaProprietario");
-  }
-  else if(PERFIL === "ADMIN"){
-    abrirAba("abaVeiculo");
-  }
-  else if(PERFIL === "VENDEDOR" || PERFIL === "ESTOQUE"){
-    abrirAba("abaRelatorio");
-  }
-
-}, 200);
-
-
-    // ===== PREENCHE CABEÇALHO =====
+    // ===== CABEÇALHO =====
     const elLoja = document.getElementById("nomeLoja");
     const elUser = document.getElementById("usuarioLogado");
     const elPerf = document.getElementById("perfilLogado");
@@ -2329,13 +2324,30 @@ setTimeout(function(){
     if(elUser) elUser.textContent = r.nome_usuario || usuario;
     if(elPerf) elPerf.textContent = r.perfil || "";
 
-    // ===== CARREGA DADOS DO SISTEMA =====
-carregarListas();
-carregarInfoSistema();
-verificarParcelasVencidas();
-carregarUltimasVendas();
+    // ===== CARREGA DADOS =====
+    carregarListas();
+    carregarInfoSistema();
+    verificarParcelasVencidas();
+    carregarUltimasVendas();
+
+    // ===== ABRE ABA INICIAL =====
+    setTimeout(function(){
+
+      if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+        abrirAba("abaProprietario");
+      }
+      else if(PERFIL === "ADMIN"){
+        abrirAba("abaVeiculo");
+      }
+      else{
+        abrirAba("abaRelatorio");
+      }
+
+    },200);
+
   });
 }
+
 function salvarOffline(payload){
   let fila = JSON.parse(localStorage.getItem("fila_offline") || "[]");
   fila.push(payload);
@@ -3587,6 +3599,37 @@ function setSelect(id, lista, valueKey="id", textKey="nome"){
   });
 
 }
+function carregarListaDespesas(){
+
+  jsonp({
+    action:"listarDespesas",
+    cliente_id: CLIENTE_ID
+  }, function(r){
+
+    if(!r.ok) return;
+
+    let html = "<table>";
+
+    r.itens.forEach(d => {
+
+      html += `
+      <tr>
+        <td>${d.placa}</td>
+        <td>${d.tipo_despesa}</td>
+        <td>R$ ${d.valor_despesa}</td>
+      </tr>
+      `;
+
+    });
+
+    html += "</table>";
+
+    document.getElementById("listaDespesas").innerHTML = html;
+
+  });
+
+}
+
 
 </script>
 <div id="statusIndicator"></div>
