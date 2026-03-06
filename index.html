@@ -1907,10 +1907,7 @@ function carregarPainelProprietario(){
   }
 
   // ===== DEFINIR QUAL AÇÃO USAR =====
-  const actionFinanceiro = (PLANO === "COMPLETO")
-    ? "dreCompleta"
-    : "resumoFinanceiro";
-
+  const actionFinanceiro = "dreCompleta";
   jsonp({
     action: actionFinanceiro,
     cliente_id: CLIENTE_ID,
