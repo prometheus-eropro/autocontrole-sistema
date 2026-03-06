@@ -1408,21 +1408,20 @@ function jsonp(params, callback){
   const cb = "cb_" + Date.now();
 
   window[cb] = function(data){
-    delete window[cb];
-    document.body.removeChild(script);
     callback(data);
+    delete window[cb];
   };
-
-  params.callback = cb;
 
   const query = new URLSearchParams(params).toString();
 
   const script = document.createElement("script");
-  script.src = GAS_URL + "?" + query;
+
+  script.src = GAS_URL + "?" + query + "&callback=" + cb;
 
   document.body.appendChild(script);
 
 }
+
 /* ========= LOAD LISTAS ========= */
 function carregarListas(){
 
