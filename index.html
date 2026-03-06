@@ -2169,11 +2169,11 @@ function abrirAba(id){
 
   aba.style.display = "block";
 
-  if(id === "abaVeiculo"){
+  if(id === "abaVeiculos"){
     carregarVeiculos();
   }
 
-  if(id === "abaVenda"){
+  if(id === "abaVendas"){
     carregarVendas();
   }
 
@@ -2210,11 +2210,12 @@ function abrirAba(id){
   }
 
   if(id === "abaFinanceiro"){
-    carregarResumoFinanceiro();
+    if(["PROPRIETARIO","MASTER"].includes(PERFIL)){
+      carregarPainelProprietario();
+    }
   }
 
 }
-
 
 function carregarRelatorios(){
 
@@ -2404,7 +2405,7 @@ const usuario = v("login_usuario");  const senha = v("login_senha");
     verificarParcelasVencidas();
     carregarUltimasVendas();
     abrirSistema();
-    carregarResumoFinanceiro();
+    
 
     // ===== ABRE ABA INICIAL =====
     setTimeout(function(){
@@ -2870,7 +2871,6 @@ function voltarHome(){
   document.getElementById("btnVoltar").style.display = "none";
   document.getElementById("tituloApp").innerText = "AutoControle";
 }
-window.addEventListener("DOMContentLoaded", function(){
 
   const clienteSalvo = localStorage.getItem("cliente_id");
   const perfilSalvo  = localStorage.getItem("perfil");
@@ -3708,36 +3708,59 @@ function carregarListaDespesas(){
 function carregarVeiculos(){
 
   jsonp({
-    action:"listarVeiculosEstoque",
-    cliente_id: CLIENTE_ID
-  }, function(r){
-
-    if(!r || !r.ok){
-      console.error("Erro ao carregar veículos");
-      return;
-    }
-
-    montarTabelaEstoque(r.itens || []);
-
-  });
-
-}
-function carregarResumoFinanceiro(){
-
-  mostrarLoader(true);
-
-  jsonp({
-    action:"resumoFinanceiro",
+    action:"relatorioEstoque",
     cliente_id: CLIENTE_ID,
     perfil: PERFIL
   }, function(r){
 
-    console.log("RESUMO FINANCEIRO:", r);
+    console.log("RETORNO VEICULOS:", r);
 
-    mostrarLoader(false);
+    if(!r){
+      console.error("Erro ao carregar veículos");
+      return;
+    }
+
+    const tabela = document.getElementById("tabelaEstoque");
+
+    if(!tabela) return;
+
+    tabela.innerHTML = "";
+
+    if(!r.itens || r.itens.length === 0){
+      tabela.innerHTML = "<tr><td colspan='10'>Nenhum veículo encontrado</td></tr>";
+      return;
+    }
+
+    r.itens.forEach(v=>{
+
+      tabela.innerHTML += `
+      <tr>
+        <td>${v.placa || ""}</td>
+        <td>${v.modelo || ""}</td>
+        <td>${v.ano_modelo || ""}</td>
+        <td>${v.valor_compra || ""}</td>
+        <td>${v.valor_venda || ""}</td>
+        <td>${v.status || ""}</td>
+      </tr>
+      `;
+    });
+
+  });
+
+}
+
+function carregarFinanceiro(){
+
+  jsonp({
+    action:"dreCompleta",
+    cliente_id: CLIENTE_ID,
+    perfil: PERFIL
+  }, function(r){
+
+    console.log("DRE:", r);
 
     if(!r || !r.ok){
-      console.error("Erro ao carregar resumo financeiro");
+      console.error("Erro DRE");
       return;
     }
 
@@ -3745,16 +3768,13 @@ function carregarResumoFinanceiro(){
       const el = document.getElementById(id);
       if(!el) return;
 
-      if(val === null || val === undefined)
-        val = 0;
-
-      el.value = Number(val).toLocaleString("pt-BR");
+      el.value = Number(val || 0).toLocaleString("pt-BR");
     };
 
-    set("totalInvestido", r.capital_em_estoque);
-    set("despesasEstoque", r.despesas_operacionais_estoque);
+    set("totalInvestido", r.capital_estoque);
+    set("despesasEstoque", r.despesas_estoque);
     set("totalVendas", r.total_vendido);
-    set("totalDespesasVendidos", r.total_despesas_vendidos);
+    set("lucroLiquido", r.lucro_liquido);
 
   });
 
@@ -3819,7 +3839,31 @@ function mostrarLoader(status){
   else
     l.style.display = "none";
 }
+function abrirAbaInicial(){
 
+  if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
+    abrirAba("financeiro");
+    return;
+  }
+
+  if(PERFIL === "ADMIN"){
+    abrirAba("veiculos");
+    return;
+  }
+
+  if(PERFIL === "VENDEDOR"){
+    abrirAba("estoque");
+    return;
+  }
+
+  if(PERFIL === "ESTOQUE"){
+    abrirAba("estoque");
+    return;
+  }
+
+  abrirAba("veiculos");
+
+}
 
 </script>
 <div id="statusIndicator"></div>
