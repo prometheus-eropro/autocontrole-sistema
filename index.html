@@ -871,7 +871,10 @@ display:block;
 }
 
 }
-
+.container{
+min-height:100vh;
+overflow:auto;
+}
 
 </style>
 
@@ -3097,6 +3100,16 @@ function carregarPainelProprietarioFiltrado(){
       alert(r.msg || "Erro ao carregar financeiro.");
       return;
     }
+const lucro =
+  Number(r.receita_bruta || 0)
+  - Number(r.custo_compra || 0)
+  - Number(r.despesas_veiculos || 0)
+  - Number(r.despesas_estoque || 0);
+
+const pr_lucro_total = document.getElementById("pr_lucro_total");
+if(pr_lucro_total){
+  pr_lucro_total.value = lucro.toFixed(2);
+}
 
 document.getElementById("pr_total_investido").value = r.capital_em_estoque || 0;
 document.getElementById("pr_total_despesas").value = r.total_despesas_vendidos || 0;
