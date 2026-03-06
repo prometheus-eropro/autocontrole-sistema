@@ -2932,7 +2932,6 @@ if(chkTroca){
 
 }
 
-});  // <-- FECHA DOMContentLoaded
 
 function logout(){
   localStorage.clear();
@@ -3847,7 +3846,7 @@ function abrirAbaInicial(){
   }
 
   if(PERFIL === "ADMIN"){
-    abrirAba("veiculos");
+     abrirAba("veiculos");
     return;
   }
 
@@ -3861,7 +3860,7 @@ function abrirAbaInicial(){
     return;
   }
 
-  abrirAba("veiculos");
+  abrirAbaInicial();
 
 }
 
