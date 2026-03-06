@@ -1383,7 +1383,6 @@ style="background:#0f172a;">
 </div>
   </div>
 </div>
-</div>
 
 <script>
 
@@ -1914,7 +1913,7 @@ function carregarRelatoriosProprietario(){
     const el = document.getElementById("relatorioEstoqueProprietario");
 if(el) el.innerHTML = html;
   });
-
+}
   // ==============================
   // RELATÓRIO DESPESAS
   // ==============================
@@ -2180,7 +2179,7 @@ function fazerLogin(){
 if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
   abrirAba("abaProprietario");
 }else{
-  abrirAba("abaEstoque");
+ abrirAba("abaRelatorio");
 }
     // ===== SALVA VARIÁVEIS GLOBAIS =====
     CLIENTE_ID = r.cliente_id;
@@ -2219,10 +2218,7 @@ setTimeout(function(){
 
 }, 200);
 
-   // ===== ESCONDE LOGIN / MOSTRA SISTEMA =====
 
-if(telaLogin) telaLogin.style.display = "none";
-if(sistema) sistema.style.display = "block";
     // ===== PREENCHE CABEÇALHO =====
     const elLoja = document.getElementById("nomeLoja");
     const elUser = document.getElementById("usuarioLogado");
@@ -3400,7 +3396,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
   if(CLIENTE_ID){
 
-    aplicarPermissoes();
+    aplicarPermissoes(PERFIL);
     carregarPainelProprietario();
     carregarInfoSistema();
     listarMinhasVendas();
@@ -3458,14 +3454,6 @@ function listarMinhasVendas(){
 
   });
 
-}
-function api(action, callback){
-
-  jsonp({
-    action: action,
-    cliente_id: CLIENTE_ID,
-    perfil: PERFIL
-  }, callback);
 }
 function moeda(v){
  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
