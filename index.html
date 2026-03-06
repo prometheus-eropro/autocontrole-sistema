@@ -1407,35 +1407,22 @@ function jsonp(params, callback){
 
   const cb = "cb_" + Date.now();
 
-  window[cb] = function(resp){
-    callback(resp);
+  window[cb] = function(data){
     delete window[cb];
-    script.remove();
+    document.body.removeChild(script);
+    callback(data);
   };
 
+  params.callback = cb;
+
   const query = new URLSearchParams(params).toString();
-  const url = GAS_URL + "?" + query + "&callback=" + cb;
 
   const script = document.createElement("script");
-  script.src = url;
+  script.src = API_URL + "?" + query;
 
   document.body.appendChild(script);
-}
-function setSelect(el, items, placeholder){
-  el.innerHTML = "";
-  const op0 = document.createElement("option");
-  op0.value = "";
-  op0.textContent = placeholder || "Selecione";
-  el.appendChild(op0);
 
-  items.forEach(it=>{
-    const op = document.createElement("option");
-    op.value = it.value;
-    op.textContent = it.label;
-    el.appendChild(op);
-  });
 }
-
 /* ========= LOAD LISTAS ========= */
 function carregarListas(){
 
@@ -2935,7 +2922,7 @@ jsonp({
   action:"infoSistema",
   cliente_id: CLIENTE_ID,
   perfil: PERFIL
-}, function(r){
+}, callback);
 
     if(!r.ok) return;
 
