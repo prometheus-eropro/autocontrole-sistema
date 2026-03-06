@@ -812,6 +812,9 @@ flex-direction:column;
 }
 
 }
+.menu span{
+text-transform:capitalize;
+}
 
 
 </style>
@@ -897,7 +900,7 @@ Sair
 
 <button onclick="abrirAba('abaProprietario')">📊 Financeiro</button>
 
-<button onclick="abrirAba('abaMinhasVendas')">📌 Minhas vendas</button>
+<button onclick="abrirAba('abaMinhasVendas')">📌 Minhas Vendas</button>
 
 <button onclick="abrirAba('abaMinhasCompras')">📦 Minhas compras</button>
 
@@ -3771,6 +3774,21 @@ function abrirSistema(){
   if(telaLogin) telaLogin.style.display = "none";
   if(sistema) sistema.style.display = "block";
 
+}
+function carregarVendas(){
+  console.log("Carregar vendas...");
+}
+
+function carregarListaDespesas(){
+  console.log("Carregar despesas...");
+}
+
+function carregarParcelasPendentes(){
+  console.log("Carregar parcelas...");
+}
+
+function carregarDocumentos(){
+  console.log("Carregar documentos...");
 }
 
 
