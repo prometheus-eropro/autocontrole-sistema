@@ -3376,6 +3376,14 @@ window.onerror = function(msg, url, line, col, error){
 };
 document.addEventListener("DOMContentLoaded", function(){
 
+  carregarInfoSistema();
+
+  carregarPainelProprietario();
+
+  carregarRelatoriosProprietario();
+
+});
+
   CLIENTE_ID = localStorage.getItem("cliente_id") || "";
   PERFIL = String(localStorage.getItem("perfil") || "").toUpperCase().trim();
   NOME_USUARIO = localStorage.getItem("nome_usuario") || "";
