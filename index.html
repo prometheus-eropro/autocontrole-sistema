@@ -3742,7 +3742,6 @@ function carregarResumoFinanceiro(){
     }
 
     const set = (id,val)=>{
-
       const el = document.getElementById(id);
       if(!el) return;
 
@@ -3754,26 +3753,12 @@ function carregarResumoFinanceiro(){
 
     set("totalInvestido", r.capital_em_estoque);
     set("despesasEstoque", r.despesas_operacionais_estoque);
-
     set("totalVendas", r.total_vendido);
     set("totalDespesasVendidos", r.total_despesas_vendidos);
-
-    set("totalComissoes", r.total_comissoes);
-    set("custoCapital", r.total_custo_capital);
-
-    set("lucroOperacional", r.lucro_operacional);
-    set("lucroLiquido", r.lucro_final);
-
-    set("totalRecebido", r.total_recebido);
-    set("totalAberto", r.total_em_aberto);
-
-    set("parcelasAtrasadas", r.parcelas_atrasadas);
-    set("parcelasHoje", r.parcelas_vencem_hoje);
 
   });
 
 }
-
 
 function setVal(id,valor){
 
