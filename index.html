@@ -875,6 +875,17 @@ display:block;
 min-height:100vh;
 overflow:auto;
 }
+.bottom-nav{
+display:flex;
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#0f172a;
+z-index:9999;
+}
+
+
 
 </style>
 
@@ -1090,42 +1101,72 @@ style="background:#0f172a;">
 </div>
 
 <!-- =======================
-  ABA DESPESA
+ABA DESPESAS
 ======================= -->
 <div id="abaDespesas" class="aba" style="display:none;">
 
- <div class="card">
-    <h2>Lançar Despesa</h2>
-    <small>Você pode lançar quantas despesas quiser para o mesmo veículo.</small>
-    <div class="grid">
-      <select id="d_id_veiculo"></select>
-      <div>
-  <label>Data da Despesa</label>
-  <input id="d_data" type="date">
+<div class="card">
+
+<h2>💰 Lançar Despesa</h2>
+<small>Você pode lançar várias despesas para o mesmo veículo.</small>
+
+<div class="grid">
+
+<select id="d_id_veiculo"></select>
+
+<div>
+<label>Data da Despesa</label>
+<input id="d_data" type="date">
 </div>
 
-      <input id="d_tipo" placeholder="Tipo (Ex: oficina, IPVA, transferência)">
-      <input id="d_desc" placeholder="Descrição">
-      <input id="d_valor" placeholder="Valor (R$)">
-    <select id="d_forma">
-  <option value="">Forma Pagamento</option>
-  <option>Dinheiro</option>
-  <option>Pix</option>
-  <option>Cartão</option>
-  <option>Boleto</option>
+<input id="d_tipo" placeholder="Tipo (Oficina, IPVA, transferência...)">
+
+<input id="d_desc" placeholder="Descrição">
+
+<input id="d_valor" placeholder="Valor (R$)">
+
+<select id="d_forma">
+<option value="">Forma Pagamento</option>
+<option>Dinheiro</option>
+<option>Pix</option>
+<option>Cartão</option>
+<option>Boleto</option>
 </select>
 
-<input id="d_comprovante" placeholder="Comprovante (URL / nº NF / texto)">
+<input id="d_comprovante" placeholder="Comprovante (URL / nº NF)">
+
 </div>
-    <div class="btn-acao-principal">
-  <button onclick="lancarDespesa()">
-    Lançar Despesa
-  </button>
+
+<div class="btn-acao-principal">
+<button onclick="lancarDespesa()">Lançar Despesa</button>
 </div>
-  </div>
+
 </div>
 
 
+<div class="card">
+
+<h2>📋 Despesas Lançadas</h2>
+
+<table class="tabela">
+
+<thead>
+<tr>
+<th>Data</th>
+<th>Veículo</th>
+<th>Tipo</th>
+<th>Valor</th>
+<th>Forma</th>
+</tr>
+</thead>
+
+<tbody id="listaDespesas"></tbody>
+
+</table>
+
+</div>
+
+</div>
 <!-- =======================
   ABA VENDA
 ======================= -->
@@ -2004,7 +2045,9 @@ function carregarPainelProprietario(){
     if(PLANO === "COMPLETO"){
 
       const pr_total_investido = document.getElementById("pr_total_investido");
-if(pr_total_investido) pr_total_investido.value = (r.custo_compra ?? 0);
+if(pr_total_investido){
+  pr_total_investido.value = Number(r.custo_compra || 0).toFixed(2);
+}
       const pr_total_despesas = document.getElementById("pr_total_despesas");
 if(pr_total_despesas) pr_total_despesas.value = r.despesas_veiculos || 0;
       const pr_total_vendas = document.getElementById("pr_total_vendas");
@@ -2147,12 +2190,6 @@ if(el) el.innerHTML = html;
 
 function abrirAba(id){
 
-  if(!id) return;
-
-  if(!id.startsWith("aba")){
-    id = "aba" + id.charAt(0).toUpperCase() + id.slice(1);
-  }
-
   document.querySelectorAll(".aba").forEach(el=>{
     el.style.display="none";
   });
@@ -2160,56 +2197,38 @@ function abrirAba(id){
   const aba = document.getElementById(id);
 
   if(!aba){
-    console.warn("Aba não encontrada:",id);
+    console.warn("Aba não encontrada:", id);
     return;
   }
 
   aba.style.display="block";
 
-  switch(id){
+  if(id === "abaVeiculo" || id === "abaVeiculos"){
+    carregarVeiculos();
+  }
 
-    case "abaVeiculos":
-    case "abaVeiculo":
-      carregarVeiculos();
-    break;
+  if(id === "abaVenda" || id === "abaVendas"){
+    carregarVendas();
+  }
 
-    case "abaVendas":
-    case "abaVenda":
-      carregarVendas();
-    break;
+  if(id === "abaDespesas"){
+carregarListaDespesas();
+}
 
-    case "abaDespesas":
-      carregarListaDespesas();
-    break;
+  if(id === "abaParcelas"){
+    carregarParcelasPendentes();
+  }
 
-    case "abaRelatorio":
-      carregarRelatorios();
-    break;
+  if(id === "abaMinhasVendas"){
+    carregarMinhasVendas();
+  }
 
-    case "abaParcelas":
-      carregarParcelasPendentes();
-    break;
+  if(id === "abaMinhasCompras"){
+    carregarMinhasCompras();
+  }
 
-    case "abaMinhasVendas":
-      carregarMinhasVendas();
-    break;
-
-    case "abaMinhasCompras":
-      carregarMinhasCompras();
-    break;
-
-    case "abaProprietario":
-      carregarPainelProprietario();
-    break;
-
-    case "abaDocumentos":
-      carregarDocumentos?.();
-    break;
-
-    case "abaConfiguracoes":
-      prepararConfiguracoes_();
-    break;
-
+  if(id === "abaProprietario"){
+    carregarPainelProprietario();
   }
 
 }
@@ -3704,37 +3723,40 @@ function setSelect(el, lista, placeholder){
 
 function carregarListaDespesas(){
 
-if(!CLIENTE_ID) return;
+jsonp({
+action:"listarDespesas",
+cliente_id:CLIENTE_ID,
+perfil:PERFIL
+},function(r){
 
+if(!r || !r.ok) return;
 
-  jsonp({
-    action:"listarDespesas",
-    cliente_id: CLIENTE_ID
-  }, function(r){
+const lista = document.getElementById("listaDespesas");
 
-    if(!r.ok) return;
+if(!lista) return;
 
-    let html = "<table>";
+let html="";
 
-    r.itens.forEach(d => {
+(r.itens || []).forEach(d=>{
 
-      html += `
-      <tr>
-        <td>${d.placa}</td>
-        <td>${d.tipo_despesa}</td>
-        <td>R$ ${d.valor_despesa}</td>
-      </tr>
-      `;
+html += `
+<tr>
+<td>${d.data || ""}</td>
+<td>${d.placa || ""}</td>
+<td>${d.tipo || ""}</td>
+<td>${d.valor || ""}</td>
+<td>${d.forma || ""}</td>
+</tr>
+`;
 
-    });
+});
 
-    html += "</table>";
+lista.innerHTML = html;
 
-    document.getElementById("listaDespesas").innerHTML = html;
-
-  });
+});
 
 }
+
 function carregarVeiculos(){
 
 if(!CLIENTE_ID) return;
@@ -3944,6 +3966,13 @@ function ativarNavMobile(){
     btn.style.display="flex";
   });
 
+}
+function listarDespesasGeral(){
+  carregarListaDespesas();
+}
+
+function listarDespesasVeiculo(){
+  carregarListaDespesas();
 }
 
 </script>
