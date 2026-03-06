@@ -2010,7 +2010,9 @@ function limparFormularioVenda(){
 }
 function carregarPainelProprietario(){
 
-  if(!CLIENTE_ID) return;
+  if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   if(PERFIL !== "PROPRIETARIO"){
     return;
@@ -3509,7 +3511,9 @@ function validarChassi(valor){
 }
 function validarCPF(cpf){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   cpf = cpf.replace(/\D/g,'');
 
@@ -3536,7 +3540,9 @@ if(!CLIENTE_ID) return;
 }
 function adicionarParcela(){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   const tabela = document.getElementById("tabelaParcelas");
   const row = tabela.insertRow();
@@ -3551,7 +3557,9 @@ if(!CLIENTE_ID) return;
 function validarTotalParcelas(){
 
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   const totalVenda = parseFloat(document.getElementById("valor_venda").value) || 0;
 
@@ -3640,7 +3648,9 @@ document.addEventListener("DOMContentLoaded",function(){
 
 function executarJSONP(params, callback){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   const callbackName = "cb_" + Date.now();
 
@@ -3665,7 +3675,9 @@ if(!CLIENTE_ID){
 
 function api(action, params, callback){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   params = params || {};
 
@@ -3679,7 +3691,9 @@ if(!CLIENTE_ID) return;
 
 function listarMinhasVendas(){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   jsonp({
     action:"listarVendas",
@@ -3765,7 +3779,9 @@ lista.innerHTML = html;
 
 function carregarVeiculos(){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   jsonp({
     action:"relatorioEstoque",
@@ -3811,7 +3827,9 @@ if(!CLIENTE_ID) return;
 
 function carregarFinanceiro(){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   jsonp({
     action:"dreCompleta",
@@ -3860,7 +3878,9 @@ function setVal(id,valor){
 
 function montarTabelaEstoque(lista){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   const tabela = document.getElementById("tabelaEstoque");
 
@@ -3887,7 +3907,9 @@ if(!CLIENTE_ID) return;
 }
 function abrirSistema(){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   const telaLogin = document.getElementById("telaLogin");
   const sistema = document.getElementById("sistema");
@@ -3899,7 +3921,9 @@ if(!CLIENTE_ID) return;
 
 function mostrarLoader(status){
 
-if(!CLIENTE_ID) return;
+if(!CLIENTE_ID){
+console.warn("Usuário não logado");
+}
 
   const l = document.getElementById("loaderSistema");
   if(!l) return;
