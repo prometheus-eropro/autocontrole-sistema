@@ -2149,7 +2149,9 @@ function abrirAba(id){
   if(id === "abaConfiguracoes"){
     prepararConfiguracoes_();
   }
-
+if(nome === "financeiro"){
+  carregarResumoFinanceiro();
+}
 }
 
 function carregarRelatorios(){
@@ -2339,6 +2341,8 @@ const usuario = v("login_usuario");  const senha = v("login_senha");
     carregarInfoSistema();
     verificarParcelasVencidas();
     carregarUltimasVendas();
+    abrirSistema();
+    carregarResumoFinanceiro();
 
     // ===== ABRE ABA INICIAL =====
     setTimeout(function(){
@@ -3639,6 +3643,123 @@ function carregarListaDespesas(){
   });
 
 }
+function carregarVeiculos(){
+
+  jsonp({
+    action:"listarVeiculosEstoque",
+    cliente_id: CLIENTE_ID
+  }, function(r){
+
+    if(!r || !r.ok){
+      console.error("Erro ao carregar veículos");
+      return;
+    }
+
+    montarTabelaEstoque(r.itens || []);
+
+  });
+
+}
+function carregarResumoFinanceiro(){
+
+  jsonp({
+    action:"resumoFinanceiro",
+    cliente_id: CLIENTE_ID,
+    perfil: PERFIL
+  }, function(r){
+
+    console.log("RESUMO FINANCEIRO:", r);
+
+    if(!r || !r.ok){
+      console.error("Erro ao carregar resumo financeiro");
+      return;
+    }
+
+    // ESTOQUE
+    if(document.getElementById("totalInvestido"))
+      document.getElementById("totalInvestido").value = r.capital_em_estoque;
+
+    if(document.getElementById("despesasEstoque"))
+      document.getElementById("despesasEstoque").value = r.despesas_operacionais_estoque;
+
+    // VENDAS
+    if(document.getElementById("totalVendas"))
+      document.getElementById("totalVendas").value = r.total_vendido;
+
+    // DESPESAS
+    if(document.getElementById("totalDespesasVendidos"))
+      document.getElementById("totalDespesasVendidos").value = r.total_despesas_vendidos;
+
+    // COMISSÕES
+    if(document.getElementById("totalComissoes"))
+      document.getElementById("totalComissoes").value = r.total_comissoes;
+
+    // CUSTO CAPITAL
+    if(document.getElementById("custoCapital"))
+      document.getElementById("custoCapital").value = r.total_custo_capital;
+
+    // LUCRO
+    if(document.getElementById("lucroOperacional"))
+      document.getElementById("lucroOperacional").value = r.lucro_operacional;
+
+    if(document.getElementById("lucroLiquido"))
+      document.getElementById("lucroLiquido").value = r.lucro_final;
+
+    // PARCELAS
+    if(document.getElementById("totalRecebido"))
+      document.getElementById("totalRecebido").value = r.total_recebido;
+
+    if(document.getElementById("totalAberto"))
+      document.getElementById("totalAberto").value = r.total_em_aberto;
+
+    if(document.getElementById("parcelasAtrasadas"))
+      document.getElementById("parcelasAtrasadas").value = r.parcelas_atrasadas;
+
+    if(document.getElementById("parcelasHoje"))
+      document.getElementById("parcelasHoje").value = r.parcelas_vencem_hoje;
+
+  });
+
+}
+function setVal(id,valor){
+
+  const el = document.getElementById(id);
+
+  if(!el) return;
+
+  if(el.tagName === "INPUT"){
+    el.value = valor;
+  }else{
+    el.textContent = valor;
+  }
+
+}
+function montarTabelaEstoque(lista){
+
+  const tabela = document.getElementById("tabelaEstoque");
+
+  if(!tabela) return;
+
+  tabela.innerHTML = "";
+
+  lista.forEach(v=>{
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${v.placa || ""}</td>
+      <td>${v.modelo || ""}</td>
+      <td>${v.valor_compra || ""}</td>
+      <td>${v.valor_venda || ""}</td>
+      <td>${v.status || ""}</td>
+    `;
+
+    tabela.appendChild(tr);
+
+  });
+
+}
+
 
 
 </script>
