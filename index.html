@@ -1416,7 +1416,7 @@ function jsonp(params, callback){
 
   const script = document.createElement("script");
 
-  script.src = GAS_URL + "?" + query + "&callback=" + cb;
+  script.src = GAS_URL + "?" + query + "&execAction=" + cb;
 
   document.body.appendChild(script);
 
