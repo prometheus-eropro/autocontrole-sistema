@@ -1520,11 +1520,17 @@ function num(x){
 }
 function jsonp(params, callback){
 
-  const cb = "cb_" + Date.now();
+  const cb = "cb_" + Date.now() + "_" + Math.floor(Math.random()*1000);
 
   window[cb] = function(data){
-    callback(data);
-    delete window[cb];
+
+    try{
+      callback(data);
+    }finally{
+      delete window[cb];
+      script.remove();
+    }
+
   };
 
   const query = new URLSearchParams(params).toString();
@@ -1533,12 +1539,15 @@ function jsonp(params, callback){
 
   script.src = GAS_URL + "?" + query + "&callback=" + cb;
 
+  script.onerror = function(){
+    console.error("Erro ao conectar com servidor.");
+    delete window[cb];
+  };
+
   document.body.appendChild(script);
 
-script.onerror = function(){
-  alert("Erro de comunicação com servidor.");
-};
 }
+
 /* ========= LOAD LISTAS ========= */
 function carregarListas(){
 
