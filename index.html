@@ -2153,69 +2153,63 @@ function abrirAba(id){
     id = "aba" + id.charAt(0).toUpperCase() + id.slice(1);
   }
 
-  if(id === "abaProprietario" && 
-     !["PROPRIETARIO","MASTER"].includes(PERFIL)){
-     alert("Acesso restrito ao proprietário.");
-     return;
-  }
-
   document.querySelectorAll(".aba").forEach(el=>{
-    el.style.display = "none";
+    el.style.display="none";
   });
 
   const aba = document.getElementById(id);
 
   if(!aba){
-    console.warn("Aba não encontrada:", id);
+    console.warn("Aba não encontrada:",id);
     return;
   }
 
-  aba.style.display = "block";
+  aba.style.display="block";
 
-  if(id === "abaVeiculos"){
-    carregarVeiculos();
-  }
+  switch(id){
 
-  if(id === "abaVendas"){
-    carregarVendas();
-  }
+    case "abaVeiculos":
+    case "abaVeiculo":
+      carregarVeiculos();
+    break;
 
-  if(id === "abaDespesas"){
-    carregarListaDespesas();
-  }
+    case "abaVendas":
+    case "abaVenda":
+      carregarVendas();
+    break;
 
-  if(id === "abaRelatorio"){
-    carregarRelatorios();
-  }
+    case "abaDespesas":
+      carregarListaDespesas();
+    break;
 
-  if(id === "abaParcelas"){
-    carregarParcelasPendentes();
-  }
+    case "abaRelatorio":
+      carregarRelatorios();
+    break;
 
-  if(id === "abaMinhasVendas"){
-    carregarMinhasVendas();
-  }
+    case "abaParcelas":
+      carregarParcelasPendentes();
+    break;
 
-  if(id === "abaMinhasCompras"){
-    carregarMinhasCompras();
-  }
+    case "abaMinhasVendas":
+      carregarMinhasVendas();
+    break;
 
-  if(id === "abaProprietario"){
-    carregarPainelProprietario();
-  }
+    case "abaMinhasCompras":
+      carregarMinhasCompras();
+    break;
 
-  if(id === "abaDocumentos"){
-    carregarDocumentos();
-  }
-
-  if(id === "abaConfiguracoes"){
-    prepararConfiguracoes_();
-  }
-
-  if(id === "abaFinanceiro"){
-    if(["PROPRIETARIO","MASTER"].includes(PERFIL)){
+    case "abaProprietario":
       carregarPainelProprietario();
-    }
+    break;
+
+    case "abaDocumentos":
+      carregarDocumentos?.();
+    break;
+
+    case "abaConfiguracoes":
+      prepararConfiguracoes_();
+    break;
+
   }
 
 }
@@ -2407,8 +2401,9 @@ const usuario = v("login_usuario");  const senha = v("login_senha");
     carregarInfoSistema();
     verificarParcelasVencidas();
     carregarUltimasVendas();
-    abrirSistema();
-    
+abrirSistema();
+
+ativarNavMobile();    
 
     // ===== ABRE ABA INICIAL =====
     setTimeout(function(){
@@ -3600,21 +3595,20 @@ window.onerror = function(msg, url, line, col, error){
   console.error("ERRO GLOBAL:", msg);
   hideLoading();
 };
-document.addEventListener("DOMContentLoaded", function(){
-
-  carregarInfoSistema();
-  carregarPainelProprietario();
-  carregarRelatoriosProprietario();
+document.addEventListener("DOMContentLoaded",function(){
 
   CLIENTE_ID = localStorage.getItem("cliente_id") || "";
   PERFIL = String(localStorage.getItem("perfil") || "").toUpperCase().trim();
-  NOME_USUARIO = localStorage.getItem("nome_usuario") || "";
 
   if(CLIENTE_ID){
+
     aplicarPermissoes(PERFIL);
-    carregarPainelProprietario();
+
+    carregarListas();
     carregarInfoSistema();
-    listarMinhasVendas();
+
+    abrirAbaInicial();
+
   }
 
 });
@@ -3678,28 +3672,36 @@ if(!CLIENTE_ID) return;
 function moeda(v){
  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
-function setSelect(id, lista, valueKey="id", textKey="nome"){
+function setSelect(el, lista, placeholder){
 
-  const select = typeof id === "string"
-    ? document.getElementById(id)
-    : id;
+  if(typeof el === "string"){
+    el = document.getElementById(el);
+  }
 
-  if(!select) return;
+  if(!el) return;
 
-  select.innerHTML = "";
+  el.innerHTML = "";
 
-  lista.forEach(item => {
+  if(placeholder){
+    const op = document.createElement("option");
+    op.value = "";
+    op.textContent = placeholder;
+    el.appendChild(op);
+  }
+
+  lista.forEach(item=>{
 
     const op = document.createElement("option");
 
-    op.value = item[valueKey];
-    op.textContent = item[textKey];
+    op.value = item.value ?? item.id ?? "";
+    op.textContent = item.label ?? item.nome ?? "";
 
-    select.appendChild(op);
+    el.appendChild(op);
 
   });
 
 }
+
 function carregarListaDespesas(){
 
 if(!CLIENTE_ID) return;
@@ -3881,29 +3883,66 @@ if(!CLIENTE_ID) return;
 }
 function abrirAbaInicial(){
 
-if(!CLIENTE_ID) return;
-
   if(PERFIL === "PROPRIETARIO" || PERFIL === "MASTER"){
-    abrirAba("financeiro");
+    abrirAba("abaProprietario");
     return;
   }
 
   if(PERFIL === "ADMIN"){
-     abrirAba("veiculos");
+    abrirAba("abaVeiculos");
     return;
   }
 
   if(PERFIL === "VENDEDOR"){
-    abrirAba("estoque");
+    abrirAba("abaRelatorio");
     return;
   }
 
   if(PERFIL === "ESTOQUE"){
-    abrirAba("estoque");
+    abrirAba("abaRelatorio");
     return;
   }
 
-  abrirAbaInicial();
+  abrirAba("abaRelatorio");
+
+}
+
+function carregarVendas(){
+
+  jsonp({
+    action:"relatorioVendasPorVendedor",
+    cliente_id:CLIENTE_ID,
+    perfil:PERFIL
+  },function(r){
+
+    if(!r || !r.ok) return;
+
+    const tabela = document.getElementById("tabelaVendas");
+    if(!tabela) return;
+
+    tabela.innerHTML="";
+
+    (r.itens||[]).forEach(v=>{
+
+      tabela.innerHTML += `
+      <tr>
+        <td>${v.data_venda || ""}</td>
+        <td>${v.placa || ""}</td>
+        <td>${v.valor_venda || ""}</td>
+        <td>${v.lucro || ""}</td>
+      </tr>
+      `;
+
+    });
+
+  });
+
+}
+function ativarNavMobile(){
+
+  document.querySelectorAll(".bottom-nav div").forEach(btn=>{
+    btn.style.display="flex";
+  });
 
 }
 
