@@ -3759,7 +3759,15 @@ function montarTabelaEstoque(lista){
   });
 
 }
+function abrirSistema(){
 
+  const telaLogin = document.getElementById("telaLogin");
+  const sistema = document.getElementById("sistema");
+
+  if(telaLogin) telaLogin.style.display = "none";
+  if(sistema) sistema.style.display = "block";
+
+}
 
 
 </script>
