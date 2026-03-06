@@ -2149,10 +2149,13 @@ function abrirAba(id){
   if(id === "abaConfiguracoes"){
     prepararConfiguracoes_();
   }
-if(nome === "financeiro"){
-  carregarResumoFinanceiro();
+
+  if(id === "abaFinanceiro"){
+    carregarResumoFinanceiro();
+  }
+
 }
-}
+
 
 function carregarRelatorios(){
 
@@ -3724,7 +3727,6 @@ function carregarResumoFinanceiro(){
 function setVal(id,valor){
 
   const el = document.getElementById(id);
-
   if(!el) return;
 
   if(el.tagName === "INPUT"){
@@ -3734,6 +3736,8 @@ function setVal(id,valor){
   }
 
 }
+
+
 function montarTabelaEstoque(lista){
 
   const tabela = document.getElementById("tabelaEstoque");
