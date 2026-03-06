@@ -2918,37 +2918,27 @@ function atualizarStatusConexao(){
 }
 function carregarInfoSistema(){
 
-api("infoSistema", function(r){
+  api("infoSistema", {}, function(r){
 
-  if(!r.ok) return;
+    if(!r || !r.ok) return;
 
-  document.getElementById("dataAtualizacao").textContent =
-    r.ultima_atualizacao || "--";
-
-  document.getElementById("versaoSistema").textContent =
-    r.versao || "3.0";
-
-  const bolinha = document.getElementById("statusSistema");
-
-  if(bolinha){
-    bolinha.style.background =
-      (r.sistema_online === "ON") ? "#22c55e" : "#ef4444";
-  }
-
-});
-    document.getElementById("dataAtualizacao").textContent =
-      r.ultima_atualizacao || "-";
-
-    document.getElementById("versaoSistema").textContent =
-      r.versao || "3.0";
-
+    const dataEl = document.getElementById("dataAtualizacao");
+    const versaoEl = document.getElementById("versaoSistema");
     const bolinha = document.getElementById("statusSistema");
-    bolinha.style.background =
-      (r.sistema_online === "ON") ? "#22c55e" : "#ef4444";
+
+    if(dataEl)
+      dataEl.textContent = r.ultima_atualizacao || "-";
+
+    if(versaoEl)
+      versaoEl.textContent = r.versao || "3.0";
+
+    if(bolinha)
+      bolinha.style.background =
+        (r.sistema_online === "ON") ? "#22c55e" : "#ef4444";
 
   });
 
-
+}
 function controlarFormaPagamento(){
 
   const forma = v("vd_forma_pagamento");
@@ -3473,7 +3463,7 @@ function moeda(v){
 </nav>
 
 <div id="statusIndicator"></div>
-</div>
+
 
 <div id="loadingOverlay" style="
 position:fixed;
