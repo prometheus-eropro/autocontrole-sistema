@@ -2220,7 +2220,7 @@ function abrirAba(id){
   // não carregar lista automática
 }
   if(id === "abaDespesas"){
-carregarListaDespesas();
+setTimeout(()=>{ carregarListaDespesas(); },200);
 }
 
   if(id === "abaParcelas"){
@@ -3845,18 +3845,16 @@ console.warn("Usuário não logado");
     }
 
     const set = (id,val)=>{
-
   const el = document.getElementById(id);
   if(!el) return;
-
-  el.value = Number(val || 0).toLocaleString("pt-BR");
+  el.value = Number(val || 0).toFixed(2);
 };
 
-set("pr_total_investido", r.capital_em_estoque ?? r.custo_compra);
-set("pr_total_despesas", r.total_despesas_vendidos ?? r.despesas_veiculos);
-set("pr_total_despesas_estoque", r.despesas_operacionais_estoque ?? r.despesas_estoque);
-set("pr_total_vendas", r.total_vendido ?? r.receita_bruta);
-set("pr_lucro_total", r.lucro_final ?? r.lucro_liquido);
+set("pr_total_investido", r.capital_em_estoque || r.custo_compra);
+set("pr_total_despesas", r.total_despesas_vendidos || r.despesas_veiculos);
+set("pr_total_despesas_estoque", r.despesas_operacionais_estoque || r.despesas_estoque);
+set("pr_total_vendas", r.total_vendido || r.receita_bruta);
+set("pr_lucro_total", r.lucro_final || r.lucro_liquido);
 set("pr_qtd_vendidos", r.quantidade_vendidos);
   });
 
@@ -4074,6 +4072,10 @@ font-size:18px;">
 <div onclick="abrirAba('abaRelatorio')">
 📦
 <span>Estoque</span>
+</div>
+<div onclick="abrirAba('abaConfiguracoes')">
+⚙
+<span>Config</span>
 </div>
 
 </div>
