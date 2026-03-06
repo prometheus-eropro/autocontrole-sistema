@@ -2918,10 +2918,6 @@ function atualizarStatusConexao(){
 }
 function carregarInfoSistema(){
 
-jsonp({
-  action:"infoSistema",
-  cliente_id: CLIENTE_ID,
-  perfil: PERFIL
 api("infoSistema", function(r){
 
   if(!r.ok) return;
