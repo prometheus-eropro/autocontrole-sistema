@@ -3782,9 +3782,11 @@ function carregarListaDespesas(){
 console.log("LISTAR DESPESAS - INICIO");
 
 jsonp({
- action:"listarDespesas",
- cliente_id:CLIENTE_ID
+  action:"listarDespesas",
+  cliente_id:CLIENTE_ID,
+  perfil:PERFIL
 }, function(r){
+
 
 console.log("RETORNO DESPESAS:", r);
 
