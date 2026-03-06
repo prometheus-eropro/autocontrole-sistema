@@ -2922,10 +2922,24 @@ jsonp({
   action:"infoSistema",
   cliente_id: CLIENTE_ID,
   perfil: PERFIL
-}, callback);
+api("infoSistema", function(r){
 
-    if(!r.ok) return;
+  if(!r.ok) return;
 
+  document.getElementById("dataAtualizacao").textContent =
+    r.ultima_atualizacao || "--";
+
+  document.getElementById("versaoSistema").textContent =
+    r.versao || "3.0";
+
+  const bolinha = document.getElementById("statusSistema");
+
+  if(bolinha){
+    bolinha.style.background =
+      (r.sistema_online === "ON") ? "#22c55e" : "#ef4444";
+  }
+
+});
     document.getElementById("dataAtualizacao").textContent =
       r.ultima_atualizacao || "-";
 
