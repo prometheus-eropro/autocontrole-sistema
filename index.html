@@ -3445,6 +3445,28 @@ function listarMinhasVendas(){
 function moeda(v){
  return Number(v || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
+function setSelect(id, lista, valueKey="id", textKey="nome"){
+
+  const select = typeof id === "string"
+    ? document.getElementById(id)
+    : id;
+
+  if(!select) return;
+
+  select.innerHTML = "";
+
+  lista.forEach(item => {
+
+    const op = document.createElement("option");
+
+    op.value = item[valueKey];
+    op.textContent = item[textKey];
+
+    select.appendChild(op);
+
+  });
+
+}
 
 </script>
 <nav class="bottom-nav">
