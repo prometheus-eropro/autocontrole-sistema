@@ -233,13 +233,20 @@ tr:nth-child(even){
 }
 }
 .bottom-nav{
-  display:none;
+display:none;
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#0f172a;
+z-index:9999;
 }
-/* ESCONDE POR PADRÃO */
+
+@media (max-width:900px){
 .bottom-nav{
 display:flex;
 }
-
+}
 /* MOSTRA APENAS MOBILE */
 @media (max-width: 900px){
   .bottom-nav{
@@ -2207,10 +2214,9 @@ function abrirAba(id){
     carregarVeiculos();
   }
 
-  if(id === "abaVenda" || id === "abaVendas"){
-    carregarVendas();
-  }
-
+ if(id === "abaVenda"){
+  // não carregar lista automática
+}
   if(id === "abaDespesas"){
 carregarListaDespesas();
 }
@@ -3911,7 +3917,8 @@ function abrirAbaInicial(){
   }
 
   if(PERFIL === "ADMIN"){
-    abrirAba("abaVeiculos");
+  abrirAba("abaVeiculo");
+}
     return;
   }
 
@@ -4019,6 +4026,33 @@ font-size:18px;">
 <div id="loaderSistema">
 <div class="loader"></div>
 </div>
+<div class="bottom-nav">
 
+<div onclick="abrirAba('abaVeiculo')">
+🚗
+<span>Veículos</span>
+</div>
+
+<div onclick="abrirAba('abaVenda')">
+💰
+<span>Venda</span>
+</div>
+
+<div onclick="abrirAba('abaParcelas')">
+📆
+<span>Parcelas</span>
+</div>
+
+<div onclick="abrirAba('abaDespesas')">
+💳
+<span>Despesas</span>
+</div>
+
+<div onclick="abrirAba('abaRelatorio')">
+📦
+<span>Estoque</span>
+</div>
+
+</div>
 </body>
 </html>
