@@ -37,9 +37,10 @@ body{
 
 /* ===== CONTAINER ===== */
 .container{
-  max-width:1200px;
-  margin:auto;
-  padding:25px;
+max-width:1100px;
+margin:auto;
+padding:12px;
+width:100%;
 }
 
 /* ===== CARD ===== */
@@ -814,6 +815,61 @@ flex-direction:column;
 }
 .menu span{
 text-transform:capitalize;
+}
+#loaderSistema{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(255,255,255,0.8);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.loader{
+width:60px;
+height:60px;
+border:6px solid #e5e7eb;
+border-top:6px solid #16a34a;
+border-radius:50%;
+animation:girar 1s linear infinite;
+}
+
+@keyframes girar{
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+}
+.card h2{
+font-size:22px;
+font-weight:700;
+}
+
+.card table{
+width:100%;
+font-size:15px;
+}
+@media (max-width:768px){
+
+.container{
+padding:8px;
+}
+
+.card{
+padding:14px;
+}
+
+button{
+width:100%;
+margin-bottom:10px;
+}
+
+.grid{
+display:block;
+}
+
 }
 
 
@@ -3668,6 +3724,8 @@ function carregarVeiculos(){
 }
 function carregarResumoFinanceiro(){
 
+  mostrarLoader(true);
+
   jsonp({
     action:"resumoFinanceiro",
     cliente_id: CLIENTE_ID,
@@ -3676,57 +3734,47 @@ function carregarResumoFinanceiro(){
 
     console.log("RESUMO FINANCEIRO:", r);
 
+    mostrarLoader(false);
+
     if(!r || !r.ok){
       console.error("Erro ao carregar resumo financeiro");
       return;
     }
 
-    // ESTOQUE
-    if(document.getElementById("totalInvestido"))
-      document.getElementById("totalInvestido").value = r.capital_em_estoque;
+    const set = (id,val)=>{
 
-    if(document.getElementById("despesasEstoque"))
-      document.getElementById("despesasEstoque").value = r.despesas_operacionais_estoque;
+      const el = document.getElementById(id);
+      if(!el) return;
 
-    // VENDAS
-    if(document.getElementById("totalVendas"))
-      document.getElementById("totalVendas").value = r.total_vendido;
+      if(val === null || val === undefined)
+        val = 0;
 
-    // DESPESAS
-    if(document.getElementById("totalDespesasVendidos"))
-      document.getElementById("totalDespesasVendidos").value = r.total_despesas_vendidos;
+      el.value = Number(val).toLocaleString("pt-BR");
+    };
 
-    // COMISSÕES
-    if(document.getElementById("totalComissoes"))
-      document.getElementById("totalComissoes").value = r.total_comissoes;
+    set("totalInvestido", r.capital_em_estoque);
+    set("despesasEstoque", r.despesas_operacionais_estoque);
 
-    // CUSTO CAPITAL
-    if(document.getElementById("custoCapital"))
-      document.getElementById("custoCapital").value = r.total_custo_capital;
+    set("totalVendas", r.total_vendido);
+    set("totalDespesasVendidos", r.total_despesas_vendidos);
 
-    // LUCRO
-    if(document.getElementById("lucroOperacional"))
-      document.getElementById("lucroOperacional").value = r.lucro_operacional;
+    set("totalComissoes", r.total_comissoes);
+    set("custoCapital", r.total_custo_capital);
 
-    if(document.getElementById("lucroLiquido"))
-      document.getElementById("lucroLiquido").value = r.lucro_final;
+    set("lucroOperacional", r.lucro_operacional);
+    set("lucroLiquido", r.lucro_final);
 
-    // PARCELAS
-    if(document.getElementById("totalRecebido"))
-      document.getElementById("totalRecebido").value = r.total_recebido;
+    set("totalRecebido", r.total_recebido);
+    set("totalAberto", r.total_em_aberto);
 
-    if(document.getElementById("totalAberto"))
-      document.getElementById("totalAberto").value = r.total_em_aberto;
-
-    if(document.getElementById("parcelasAtrasadas"))
-      document.getElementById("parcelasAtrasadas").value = r.parcelas_atrasadas;
-
-    if(document.getElementById("parcelasHoje"))
-      document.getElementById("parcelasHoje").value = r.parcelas_vencem_hoje;
+    set("parcelasAtrasadas", r.parcelas_atrasadas);
+    set("parcelasHoje", r.parcelas_vencem_hoje);
 
   });
 
 }
+
+
 function setVal(id,valor){
 
   const el = document.getElementById(id);
@@ -3790,6 +3838,16 @@ function carregarParcelasPendentes(){
 function carregarDocumentos(){
   console.log("Carregar documentos...");
 }
+function mostrarLoader(status){
+
+  const l = document.getElementById("loaderSistema");
+  if(!l) return;
+
+  if(status)
+    l.style.display = "flex";
+  else
+    l.style.display = "none";
+}
 
 
 </script>
@@ -3832,5 +3890,10 @@ font-size:18px;">
 </div>
 </div>
 </div>
+
+<div id="loaderSistema">
+<div class="loader"></div>
+</div>
+
 </body>
 </html>
