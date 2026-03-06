@@ -2260,6 +2260,11 @@ if(id === "abaProprietario"){
 carregarPainelProprietario();
 }
 
+if(id === "abaVendas"){
+console.log("Carregando vendas...");
+carregarVendas();
+}
+
 }catch(e){
 
 console.error("Erro ao abrir aba:", e);
@@ -3770,40 +3775,47 @@ function setSelect(el, lista, placeholder){
 
 function carregarListaDespesas(){
 
+console.log("LISTAR DESPESAS - INICIO");
+
 jsonp({
-action:"listarDespesas",
-cliente_id:CLIENTE_ID,
-perfil:PERFIL
-},function(r){
+ action:"listarDespesas",
+ cliente_id:CLIENTE_ID
+}, function(r){
 
-if(!r || !r.ok) return;
+console.log("RETORNO DESPESAS:", r);
 
-const lista = document.getElementById("listaDespesas");
-
-if(!lista) return;
-
-let html="";
-
-(r.itens || []).forEach(d=>{
-
-html += `
-<tr>
-<td>${d.data || ""}</td>
-<td>${d.placa || ""}</td>
-<td>${d.tipo || ""}</td>
-<td>${d.valor || ""}</td>
-<td>${d.forma || ""}</td>
-</tr>
-`;
-
-});
-
-lista.innerHTML = html;
-
-});
-
+if(!r || !r.ok){
+ console.error("Erro ao listar despesas");
+ return;
 }
 
+const tabela = document.getElementById("listaDespesas");
+
+if(!tabela){
+ console.error("Tabela listaDespesas não encontrada");
+ return;
+}
+
+tabela.innerHTML="";
+
+r.itens.forEach(d=>{
+
+const tr = document.createElement("tr");
+
+tr.innerHTML = `
+<td>${d.data}</td>
+<td>${d.veiculo || ""}</td>
+<td>${d.tipo}</td>
+<td>${Number(d.valor).toFixed(2)}</td>
+<td>${d.forma || ""}</td>
+`;
+
+tabela.appendChild(tr);
+
+});
+
+});
+}
 function carregarVeiculos(){
 
 if(!CLIENTE_ID){
