@@ -1618,6 +1618,18 @@ let PERFIL = localStorage.getItem("perfil") || "";
 let PLANO = localStorage.getItem("plano") || "BASICO";
 let NOME_USUARIO = localStorage.getItem("nome_usuario") || "";
 
+function logSistema(msg,data){
+
+console.log("AUTOLOG:",msg,data || "");
+
+const div = document.getElementById("logSistema");
+
+if(!div) return;
+
+div.innerHTML += "<div>"+msg+"</div>";
+
+}
+
 /* ========= HELPERS ========= */
 
 function v(id){
@@ -2010,34 +2022,25 @@ function limparFormularioVenda(){
 }
 function carregarPainelProprietario(){
 
-  if(!CLIENTE_ID){
-console.warn("Usuário não logado");
-}
+  console.log("Carregando painel proprietário...");
 
-  if(PERFIL !== "PROPRIETARIO"){
+  if(!CLIENTE_ID){
+    console.warn("CLIENTE_ID não definido");
     return;
   }
 
-  // ===== MOSTRAR OU ESCONDER AVISO DE UPGRADE =====
-  const up = document.getElementById("upgradePlano");
-
-  if(up){
-    if(PLANO !== "COMPLETO"){
-      up.style.display = "block";
-    }else{
-      up.style.display = "none";
-    }
+  if(PERFIL !== "PROPRIETARIO"){
+    console.warn("Perfil não é proprietário");
+    return;
   }
 
-  // ===== DEFINIR QUAL AÇÃO USAR =====
-  const actionFinanceiro = "dreCompleta";
   jsonp({
-    action: actionFinanceiro,
+    action: "dreCompleta",
     cliente_id: CLIENTE_ID,
     perfil: PERFIL
   }, (r)=>{
 
-    console.log("RETORNO:", r);
+    console.log("RETORNO FINANCEIRO:", r);
 
     if(!r || !r.ok){
 
@@ -2051,58 +2054,68 @@ console.warn("Usuário não logado");
       return;
     }
 
-    if(PLANO === "COMPLETO"){
+    // ===== CAPTURA ELEMENTOS =====
 
-      const pr_total_investido = document.getElementById("pr_total_investido");
-if(pr_total_investido){
-  pr_total_investido.value = Number(r.custo_compra || 0).toFixed(2);
+    const pr_total_investido = document.getElementById("pr_total_investido");
+    const pr_total_despesas = document.getElementById("pr_total_despesas");
+    const pr_total_despesas_estoque = document.getElementById("pr_total_despesas_estoque");
+    const pr_total_vendas = document.getElementById("pr_total_vendas");
+    const pr_lucro_total = document.getElementById("pr_lucro_total");
+    const pr_qtd_vendidos = document.getElementById("pr_qtd_vendidos");
+
+    // ===== VALORES =====
+
+    const totalInvestido =
+      Number(r.capital_em_estoque || r.custo_compra || 0);
+
+    const despesasVendidos =
+      Number(r.total_despesas_vendidos || r.despesas_veiculos || 0);
+
+    const despesasEstoque =
+      Number(r.despesas_operacionais_estoque || r.despesas_estoque || 0);
+
+    const totalVendas =
+      Number(r.total_vendido || r.receita_bruta || 0);
+
+    const lucro =
+      totalVendas - totalInvestido - despesasVendidos - despesasEstoque;
+
+    const qtdVendidos =
+      Number(r.quantidade_vendidos || 0);
+
+    console.log("Calculado:", {
+      totalInvestido,
+      despesasVendidos,
+      despesasEstoque,
+      totalVendas,
+      lucro,
+      qtdVendidos
+    });
+
+    // ===== PREENCHE CAMPOS =====
+
+    if(pr_total_investido)
+      pr_total_investido.value = totalInvestido.toFixed(2);
+
+    if(pr_total_despesas)
+      pr_total_despesas.value = despesasVendidos.toFixed(2);
+
+    if(pr_total_despesas_estoque)
+      pr_total_despesas_estoque.value = despesasEstoque.toFixed(2);
+
+    if(pr_total_vendas)
+      pr_total_vendas.value = totalVendas.toFixed(2);
+
+    if(pr_lucro_total)
+      pr_lucro_total.value = lucro.toFixed(2);
+
+    if(pr_qtd_vendidos)
+      pr_qtd_vendidos.value = qtdVendidos;
+
+  });
+
 }
-      const pr_total_despesas = document.getElementById("pr_total_despesas");
-if(pr_total_despesas) pr_total_despesas.value = r.despesas_veiculos || 0;
-      const pr_total_vendas = document.getElementById("pr_total_vendas");
-if(pr_total_vendas) pr_total_vendas.value = r.receita_bruta || 0;
-      const pr_lucro_total = document.getElementById("pr_lucro_total");
-if(pr_lucro_total) pr_lucro_total.value = r.lucro_liquido || 0;
-      const pr_qtd_vendidos = document.getElementById("pr_qtd_vendidos");
-if(pr_qtd_vendidos) pr_qtd_vendidos.value = r.quantidade_vendidos || 0;
-      const pr_total_despesas_estoque = document.getElementById("pr_total_despesas_estoque");
-if(pr_total_despesas_estoque) pr_total_despesas_estoque.value = r.despesas_estoque || 0;
 
-    }else{
-
-  const pr_total_investido = document.getElementById("pr_total_investido");
-  if(pr_total_investido){
-    pr_total_investido.value = Number(r.capital_em_estoque || r.custo_compra || 0).toFixed(2);
-  }
-
-  const pr_total_despesas = document.getElementById("pr_total_despesas");
-  if(pr_total_despesas){
-    pr_total_despesas.value = Number(r.total_despesas_vendidos || r.despesas_veiculos || 0).toFixed(2);
-  }
-
-  const pr_total_despesas_estoque = document.getElementById("pr_total_despesas_estoque");
-  if(pr_total_despesas_estoque){
-    pr_total_despesas_estoque.value = Number(r.despesas_operacionais_estoque || 0).toFixed(2);
-  }
-
-  const pr_total_vendas = document.getElementById("pr_total_vendas");
-  if(pr_total_vendas){
-    pr_total_vendas.value = Number(r.total_vendido || r.receita_bruta || 0).toFixed(2);
-  }
-
-  const pr_lucro_total = document.getElementById("pr_lucro_total");
-  if(pr_lucro_total){
-    pr_lucro_total.value = Number(r.lucro_final || 0).toFixed(2);
-  }
-
-  const pr_qtd_vendidos = document.getElementById("pr_qtd_vendidos");
-  if(pr_qtd_vendidos){
-    pr_qtd_vendidos.value = r.quantidade_vendidos || "";
-  }
-
-}
-});
-}
 function carregarRelatoriosProprietario(){
 
   // ==============================
@@ -2199,48 +2212,62 @@ if(el) el.innerHTML = html;
 
 function abrirAba(id){
 
-  document.querySelectorAll(".aba").forEach(el=>{
-    el.style.display="none";
-  });
+console.log("Abrindo aba:", id);
 
-  const aba = document.getElementById(id);
+const abas = document.querySelectorAll(".aba");
 
-  if(!aba){
-    console.warn("Aba não encontrada:", id);
-    return;
-  }
-
-  aba.style.display="block";
-
-  if(id === "abaVeiculo" || id === "abaVeiculos"){
-    carregarVeiculos();
-  }
-
- if(id === "abaVenda"){
-  // não carregar lista automática
-}
-  if(id === "abaDespesas"){
-setTimeout(()=>{ carregarListaDespesas(); },200);
+if(!abas.length){
+console.error("Nenhuma aba encontrada no HTML");
 }
 
-  if(id === "abaParcelas"){
-    carregarParcelasPendentes();
-  }
+abas.forEach(el=>{
+el.style.display="none";
+});
 
-  if(id === "abaMinhasVendas"){
-    carregarMinhasVendas();
-  }
+const aba = document.getElementById(id);
 
-  if(id === "abaMinhasCompras"){
-    carregarMinhasCompras();
-  }
+if(!aba){
+console.error("Aba não existe:", id);
+alert("Erro: aba não encontrada -> " + id);
+return;
+}
 
-  if(id === "abaProprietario"){
-    carregarPainelProprietario();
-  }
+aba.style.display="block";
+
+console.log("Aba aberta:", id);
+
+try{
+
+if(id === "abaDespesas"){
+console.log("Carregando despesas...");
+carregarListaDespesas();
+}
+
+if(id === "abaParcelas"){
+console.log("Carregando parcelas...");
+carregarParcelasPendentes();
+}
+
+if(id === "abaMinhasVendas"){
+carregarMinhasVendas();
+}
+
+if(id === "abaMinhasCompras"){
+carregarMinhasCompras();
+}
+
+if(id === "abaProprietario"){
+carregarPainelProprietario();
+}
+
+}catch(e){
+
+console.error("Erro ao abrir aba:", e);
+alert("Erro ao abrir aba: " + e.message);
 
 }
 
+}
 function carregarRelatorios(){
 
   jsonp({
@@ -4078,6 +4105,23 @@ font-size:18px;">
 <span>Config</span>
 </div>
 
+</div>
+<div id="logSistema"
+style="
+position:fixed;
+right:10px;
+bottom:80px;
+width:320px;
+max-height:250px;
+overflow:auto;
+background:#0f172a;
+color:#22c55e;
+font-size:12px;
+padding:10px;
+border-radius:10px;
+z-index:99999;
+">
+LOG SISTEMA
 </div>
 </body>
 </html>
