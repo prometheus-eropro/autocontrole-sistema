@@ -891,7 +891,19 @@ right:0;
 background:#0f172a;
 z-index:9999;
 }
+.log-sistema{
+display:none !important;
+}
+/* MENU MOBILE SOMENTE CELULAR */
 
+@media (min-width: 768px){
+
+.bottom-nav,
+.nav-mobile{
+display:none !important;
+}
+
+}
 
 
 </style>
@@ -3787,8 +3799,8 @@ jsonp({
   perfil:PERFIL
 }, function(r){
 
-
 console.log("RETORNO DESPESAS:", r);
+console.log("Primeira despesa:", r.itens?.[0]);
 
 if(!r || !r.ok){
  console.error("Erro ao listar despesas");
@@ -3809,11 +3821,11 @@ r.itens.forEach(d=>{
 const tr = document.createElement("tr");
 
 tr.innerHTML = `
-<td>${d.data}</td>
-<td>${d.veiculo || ""}</td>
-<td>${d.tipo}</td>
-<td>${Number(d.valor).toFixed(2)}</td>
-<td>${d.forma || ""}</td>
+<td>${d.data || d.data_despesa || ""}</td>
+<td>${d.veiculo || d.placa || ""}</td>
+<td>${d.tipo || d.tipo_despesa || ""}</td>
+<td>${Number(d.valor || d.valor_despesa || 0).toFixed(2)}</td>
+<td>${d.forma || d.forma_pagamento || ""}</td>
 `;
 
 tabela.appendChild(tr);
@@ -3822,6 +3834,7 @@ tabela.appendChild(tr);
 
 });
 }
+
 function carregarVeiculos(){
 
 if(!CLIENTE_ID){
@@ -4046,6 +4059,40 @@ function listarDespesasGeral(){
 
 function listarDespesasVeiculo(){
   carregarListaDespesas();
+}
+function carregarVeiculosDespesas(){
+
+  console.log("Carregando veículos para despesas...");
+
+  jsonp({
+    action:"listarVeiculosEstoque",
+    cliente_id:CLIENTE_ID,
+    perfil:PERFIL
+  }, function(r){
+
+    console.log("RETORNO VEICULOS:", r);
+
+    if(!r || !r.ok) return;
+
+    const select = document.getElementById("d_id_veiculo");
+
+    if(!select) return;
+
+    select.innerHTML = "<option value=''>Selecione o veículo</option>";
+
+    r.itens.forEach(v=>{
+
+      const op = document.createElement("option");
+
+      op.value = v.id_veiculo;
+      op.textContent = (v.placa || "") + " - " + (v.modelo || "");
+
+      select.appendChild(op);
+
+    });
+
+  });
+
 }
 
 </script>
