@@ -1531,12 +1531,14 @@ function jsonp(params, callback){
 
   const script = document.createElement("script");
 
-  script.src = GAS_URL + "?" + query + "&execAction=" + cb;
+  script.src = GAS_URL + "?" + query + "&callback=" + cb;
 
   document.body.appendChild(script);
 
+script.onerror = function(){
+  alert("Erro de comunicação com servidor.");
+};
 }
-
 /* ========= LOAD LISTAS ========= */
 function carregarListas(){
 
@@ -2272,10 +2274,12 @@ function abrirFichaBranca(){
 
 console.clear();
 
+
 function fazerLogin(){
 
-  const usuario = v("login_usuario");
-  const senha = v("login_senha");
+console.log("LOGIN DISPARADO");
+
+const usuario = v("login_usuario");  const senha = v("login_senha");
 
   if(!usuario || !senha) 
     return alert("Informe usuário e senha.");
