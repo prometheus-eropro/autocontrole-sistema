@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Master - AutoControle</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+body{
+  background:#0f172a;
+  font-family:Arial;
+  margin:0;
+  padding:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2>Painel Master — Nova Loja</h2>
+  <small>Cadastro de nova empresa cliente do AutoControle</small>
+
+  <div class="grid">
+    <input id="nova_loja_nome" placeholder="Nome da Loja">
+    <input id="novo_nome_proprietario" placeholder="Nome do Proprietário">
+    <input id="novo_cnpj" placeholder="CNPJ da Loja">
+    <input id="novo_ie" placeholder="Inscrição Estadual">
+  </div>
+
+  <div class="grid">
+    <input id="novo_telefone" placeholder="Telefone da Loja">
+    <input id="novo_email" placeholder="E-mail da Loja">
+    <input id="nova_cidade" placeholder="Cidade">
+    <input id="novo_estado" placeholder="UF">
+  </div>
+
+  <div class="grid">
+    <input id="novo_endereco" placeholder="Endereço Completo">
+    <input id="novo_valor_mensal" placeholder="Valor Mensal do Sistema">
+    <select id="novo_plano">
+      <option value="COMPLETO">Plano Completo</option>
+    </select>
+  </div>
+
+  <hr>
+
+  <h3>Usuário inicial da loja</h3>
+
+  <div class="grid">
+    <input id="novo_usuario" placeholder="Usuário Proprietário">
+    <input id="nova_senha" placeholder="Senha Inicial">
+  </div>
+
+  <div class="grid">
+    <button onclick="criarNovaLoja()" class="btn-primary">Criar Loja</button>
+    <button onclick="gerarContratoNovaLoja()" class="btn-primary">Gerar Contrato</button>
+  </div>
+
+</div>
+
+<div class="card">
+
+  <h2>Empresas Cadastradas</h2>
+
+  <button onclick="listarEmpresas()" class="btn-primary">
+    🔄 Atualizar lista
+  </button>
+
+  <div id="lista_empresas"></div>
+
+</div>
+
+<!-- 🔐 MODAL SENHA -->
+<div id="modalSenha" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
+background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,.3);">
+
+  <h3>Alterar Senha</h3>
+
+  <input id="senha_usuario_alvo" type="hidden">
+  <input id="nova_senha_master" placeholder="Nova senha">
+
+  <br><br>
+
+  <button onclick="confirmarTrocaSenha()">Salvar</button>
+  <button onclick="fecharModalSenha()">Cancelar</button>
+
+</div>
+
+<!-- 🔥 SCRIPTS -->
+<script src="js/helpers.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/master.js"></script>
+
+
+<button onclick="logout()" style="position:fixed; top:10px; right:10px;">
+  🚪 Sair
+</button>
+<script>
+window.onload = function(){
+  listarEmpresas();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<div class="card">
+
+  <h2>Entrada de Veículo</h2>
+  <small>Cadastro completo do veículo, proprietário e vendedor anterior</small>
+
+  <div class="grid">
+
+    <input id="v_placa" placeholder="Placa">
+
+    <select id="tipo_veiculo">
+      <option value="">Tipo Veículo</option>
+      <option value="Automóvel">Automóvel</option>
+      <option value="Moto">Moto</option>
+      <option value="Camionete">Camionete</option>
+      <option value="Caminhão">Caminhão</option>
+      <option value="Ônibus">Ônibus</option>
+      <option value="Quadriciclo">Quadriciclo</option>
+      <option value="Van">Van</option>
+      <option value="Outro">Outro</option>
+    </select>
+
+    <input id="tipo_veiculo_outro" placeholder="Se escolheu Outro, informe aqui">
+
+    <input id="v_marca" placeholder="Marca">
+    <input id="v_modelo" placeholder="Modelo">
+
+    <input id="v_ano_fabricacao" placeholder="Ano Fabricação">
+    <input id="v_ano_modelo" placeholder="Ano Modelo">
+
+    <input id="v_cor" placeholder="Cor">
+    <input id="v_combustivel" placeholder="Combustível">
+
+    <input id="v_chassi" placeholder="Chassi">
+    <input id="v_renavam" placeholder="Renavam">
+
+    <input id="v_valor_compra" placeholder="Valor Compra">
+    <input id="v_valor_venda" placeholder="Valor Venda">
+
+  </div>
+
+  <hr>
+
+  <h3>Proprietário</h3>
+
+  <div class="grid">
+    <input id="p_nome" placeholder="Nome">
+    <input id="p_cpf" placeholder="CPF/CNPJ">
+    <input id="p_rg" placeholder="RG">
+  </div>
+
+  <div class="grid">
+    <div>
+  <label>Data de Nascimento</label>
+  <input id="p_nascimento" type="date">
+</div>
+    <input id="p_telefone" placeholder="Telefone">
+    <input id="p_email" placeholder="Email">
+  </div>
+
+  <div class="grid">
+    <input id="p_endereco" placeholder="Endereço completo">
+  </div>
+
+  <div class="grid">
+    <input id="p_cidade" placeholder="Cidade">
+    <input id="p_estado" placeholder="Estado">
+  </div>
+
+  <label>Data da Compra</label>
+<input id="data_compra" type="date">
+  <hr>
+
+  <h3>Vendedor Anterior (quem vendeu para a loja)</h3>
+
+  <div class="grid">
+    <input id="va_nome" placeholder="Nome">
+    <input id="va_doc" placeholder="CPF/CNPJ">
+    <input id="va_telefone" placeholder="Telefone">
+  </div>
+
+  <div class="grid">
+    <input id="va_email" placeholder="Email">
+    <input id="va_endereco" placeholder="Endereço completo">
+  </div>
+
+  <div class="grid">
+    <input id="va_cidade" placeholder="Cidade">
+    <input id="va_estado" placeholder="Estado">
+  </div>
+
+  <hr>
+
+  <h3>Comissionado da Compra</h3>
+
+  <div class="grid">
+    <div>
+<label>Comissionado da Compra</label>
+
+<select id="comp_vendedor_loja">
+<option value="">Selecione vendedor</option>
+</select>
+
+</div>
+   <input type="text" id="comp_valor_comissao" placeholder="Comissão Compra">
+  </div>
+
+  <button onclick="salvarEntrada()" class="btn-primary">
+    Salvar Veículo
+  </button>
+
+</div>

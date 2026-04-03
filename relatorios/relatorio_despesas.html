@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório de Despesas</title>
+
+  <!-- IMPORTANTE -->
+<script src="../js/helpers.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/despesas.js"></script>
+
+</head>
+
+<body>
+
+<h2>Relatório de Despesas</h2>
+
+<input type="date" id="filtro_data_inicio">
+<input type="date" id="filtro_data_fim">
+
+<select id="filtro_placa"></select>
+
+<select id="filtro_categoria">
+  <option value="">Todas</option>
+  <option value="VEICULO">Veículo</option>
+  <option value="OPERACIONAL">Operacional</option>
+</select>
+
+<button onclick="carregarListaDespesas()">Filtrar</button>
+
+<table border="1" width="100%">
+<thead>
+<tr>
+  <th>Data</th>
+  <th>Placa</th>
+  <th>Veículo</th>
+  <th>Descrição</th>
+  <th>Valor</th>
+</tr>
+</thead>
+
+<tbody id="listaDespesas">
+<tr>
+<td colspan="5" align="center">Carregando...</td>
+</tr>
+</tbody>
+
+</table>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  carregarPlacasDespesas(); // 👈 NOVO
+  carregarListaDespesas();
+
+});
+
+function carregarPlacasDespesas(){
+
+  const cliente_id = localStorage.getItem("cliente_id");
+
+  api("listarVeiculosComDespesas", { cliente_id }, function(r){
+
+    const select = document.getElementById("filtro_placa");
+
+    select.innerHTML = `<option value="">Todas</option>`;
+
+    r.itens.forEach(v=>{
+      select.innerHTML += `<option value="${v.placa}">${v.placa}</option>`;
+    });
+
+  });
+
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<div class="card">
+
+<h2>Registrar Venda</h2>
+
+<div class="grid">
+<select name="id_veiculo" id="id_veiculo"></select>
+
+<input name="data_venda" id="vd_data_venda" type="date">
+
+<input type="text" id="vd_valor_venda" placeholder="Valor da venda">
+
+<input name="entrada" id="vd_entrada" type="text" placeholder="Valor de entrada">
+</div>
+
+
+<div class="grid">
+
+<select name="forma_pagamento" id="vd_forma_pagamento">
+<option value="">Forma de Pagamento</option>
+<option value="DINHEIRO">Dinheiro</option>
+<option value="PIX">Pix</option>
+<option value="CARTAO">Cartão</option>
+<option value="FINANCIAMENTO">Financiamento</option>
+<option value="PARCELADO_LOJA">Parcelado pela Loja</option>
+<option value="CHEQUE">Cheque</option>
+<option value="BOLETO">Boleto</option>
+<option value="PROMISSORIA">Promissória</option>
+<option value="FIADO">Fiado</option>
+</select>
+
+<select name="tem_troca" id="vd_tem_troca">
+<option value="">Tem veículo na troca?</option>
+<option value="NAO">Não</option>
+<option value="SIM">Sim</option>
+</select>
+
+</div>
+
+
+<h3>Comprador</h3>
+
+<div class="grid">
+
+<input name="comprador_nome" id="vd_cliente_nome" placeholder="Nome">
+
+<input name="comprador_doc" id="vd_cliente_cpf" placeholder="CPF/CNPJ">
+
+<input name="comprador_telefone" id="vd_cliente_telefone" placeholder="Telefone">
+
+<input name="comprador_email" id="vd_cliente_email" placeholder="Email">
+
+<input name="comprador_cidade" id="vd_cliente_cidade" placeholder="Cidade">
+
+<input name="comprador_estado" id="vd_cliente_estado" placeholder="Estado">
+
+<input name="comprador_endereco" id="vd_cliente_endereco" placeholder="Endereço">
+
+</div>
+
+
+<h3>Comissionado</h3>
+
+<div class="grid">
+
+<select name="vendedor_loja_id" id="vd_vendedor_loja"></select>
+
+<input type="text" id="vd_comissao" inputmode="decimal"placeholder="Comissão (ex: 1.000,00)">
+
+</div>
+
+
+
+<div id="bloco_financiamento" style="display:none;">
+
+<h3>Financiamento</h3>
+
+<div class="grid">
+
+<input name="banco_financiamento" id="fin_banco" placeholder="Banco">
+
+<input id="fin_valor" type="text" inputmode="decimal" placeholder="Valor financiado">
+
+<input name="numero_parcelas" id="fin_parcelas" placeholder="Parcelas">
+
+<input id="fin_valor_parcela" type="text" inputmode="decimal" placeholder="Valor parcela">
+
+</div>
+
+</div>
+
+
+
+<div id="bloco_parcelamento_loja" style="display:none;">
+
+<h3>Parcelamento pela Loja</h3>
+
+<div class="grid">
+
+<input name="parc_qtd" id="parc_qtd" type="number" placeholder="Qtd parcelas">
+
+<input type="text" id="parc_valor" placeholder="Valor da parcela">
+
+<input name="parc_primeiro_vencimento" id="parc_primeiro_vencimento" type="date">
+
+<select name="parc_forma" id="parc_forma">
+<option value="">Forma das parcelas</option>
+<option value="CARNE">Carnê</option>
+<option value="BOLETO">Boleto</option>
+<option value="CHEQUE">Cheque</option>
+<option value="PROMISSORIA">Promissória</option>
+<option value="FIADO">Fiado</option>
+</select>
+
+<button type="button" onclick="gerarParcelasPreview()" class="btn-primary">
+Gerar Parcelas
+</button>
+
+<button type="button" onclick="adicionarParcela()" class="btn-sec">
++ Adicionar Parcela
+</button>
+
+</div>
+
+
+<table>
+
+<thead>
+<tr>
+<th>Parcela</th>
+<th>Data</th>
+<th>Valor</th>
+</tr>
+</thead>
+
+<tbody id="preview_parcelas"></tbody>
+
+</table>
+
+</div>
+
+
+
+<div id="bloco_troca" style="display:none;">
+
+<h3>Veículo em Troca</h3>
+
+<div class="grid">
+
+<input name="troca_placa" id="troca_placa" placeholder="Placa">
+
+<input name="troca_marca" id="troca_marca" placeholder="Marca">
+
+<input name="troca_modelo" id="troca_modelo" placeholder="Modelo">
+
+<input name="troca_tipo_veiculo" id="troca_tipo" placeholder="Tipo">
+
+<input name="troca_ano_fabricacao" id="troca_ano_fabricacao" placeholder="Ano fabricação">
+
+<input name="troca_ano_modelo" id="troca_ano_modelo" placeholder="Ano modelo">
+
+<input name="troca_cor" id="troca_cor" placeholder="Cor">
+
+<input name="troca_combustivel" id="troca_combustivel" placeholder="Combustível">
+
+<input name="troca_chassi" id="troca_chassi" placeholder="Chassi">
+
+<input name="troca_renavam" id="troca_renavam" placeholder="Renavam">
+
+<input name="troca_valor_avaliado" id="troca_valor" placeholder="Valor avaliação">
+
+<input name="troca_valor_venda" id="troca_valor_venda" placeholder="Valor venda">
+
+<input name="troca_nome_proprietario" id="troca_nome_proprietario" placeholder="Proprietário">
+
+<input name="troca_cpf_proprietario" id="troca_cpf_proprietario" placeholder="CPF proprietário">
+
+<input name="troca_rg_proprietario" id="troca_rg_proprietario" placeholder="RG">
+<input name="troca_nascimento" id="troca_nascimento" type="date" placeholder="Nascimento">
+
+<input name="troca_email" id="troca_email" placeholder="Email">
+
+<input name="troca_telefone" id="troca_telefone" placeholder="Telefone">
+
+<input name="troca_endereco" id="troca_endereco" placeholder="Endereço">
+
+<input name="troca_cidade" id="troca_cidade" placeholder="Cidade">
+
+<input name="troca_estado" id="troca_estado" placeholder="Estado">
+
+</div>
+
+</div>
+
+
+
+<textarea name="observacoes" id="vd_observacoes" placeholder="Observações"></textarea>
+
+<button onclick="registrarVenda()" class="btn-primary">
+Registrar Venda
+</button>
+
+</div>

@@ -1,0 +1,130 @@
+<div class="card">
+
+<div class="section-title">⚙️ Configurações do Sistema</div>
+<div class="section-subtitle">
+Gerenciamento de usuários, vendedores e segurança
+</div>
+
+<hr>
+
+<!-- ===================== -->
+<!-- DADOS DA LOJA -->
+<!-- ===================== -->
+
+<h3>Dados da Loja</h3>
+
+<div class="grid">
+  <input id="cfg_nome_loja" placeholder="Nome da Loja">
+  <input id="cfg_cnpj" placeholder="CNPJ">
+  <input id="cfg_ie" placeholder="Inscrição Estadual">
+  <input id="cfg_telefone" placeholder="Telefone">
+  <input id="cfg_email" placeholder="Email">
+  <input id="cfg_endereco" placeholder="Endereço">
+  <input id="cfg_cidade" placeholder="Cidade">
+  <input id="cfg_estado" placeholder="Estado">
+</div>
+
+<button onclick="salvarConfigLoja()" class="btn-primary">
+Salvar Dados da Loja
+</button>
+
+<hr>
+
+<!-- ===================== -->
+<!-- CRIAR USUÁRIO -->
+<!-- ===================== -->
+
+<h3>Criar Novo Usuário</h3>
+
+<div class="grid">
+  <input id="cfg_usuario_novo" placeholder="Usuário">
+  <input id="cfg_senha_nova" type="password" placeholder="Senha">
+  <select id="cfg_perfil_novo">
+    <option value="">Perfil</option>
+    <option value="ADMIN">ADMIN</option>
+    <option value="VENDEDOR">VENDEDOR</option>
+    <option value="ESTOQUE">ESTOQUE</option>
+    <option value="PROPRIETARIO">PROPRIETARIO</option>
+  </select>
+</div>
+
+<button onclick="criarUsuarioSistema()">
+Criar Usuário
+</button>
+
+<hr>
+
+<!-- ===================== -->
+<!-- ATIVAR USUÁRIO -->
+<!-- ===================== -->
+
+<h3>Ativar / Desativar Usuário</h3>
+
+<div class="grid">
+  <select id="usuarioSelect"></select>
+  <select id="cfg_status_usuario">
+    <option value="SIM">Ativar</option>
+    <option value="NAO">Desativar</option>
+  </select>
+</div>
+
+<button onclick="alterarStatusUsuario()">
+Salvar Status
+</button>
+
+<hr>
+
+<!-- ===================== -->
+<!-- CADASTRAR VENDEDOR -->
+<!-- ===================== -->
+
+<h3>Cadastrar Vendedor da Loja</h3>
+
+<div class="grid">
+  <input id="vl_nome" placeholder="Nome do vendedor">
+  <input id="vl_cpf" placeholder="CPF">
+  <input id="vl_tel" placeholder="Telefone">
+  <input id="vl_email" placeholder="Email">
+  <input id="vl_cargo" placeholder="Cargo">
+  <input id="vl_valor_comissao" placeholder="Comissão padrão">
+</div>
+
+<button onclick="cadastrarVendedorLoja()">
+Salvar Vendedor
+</button>
+
+<hr>
+
+<!-- ===================== -->
+<!-- ALTERAR MINHA SENHA -->
+<!-- ===================== -->
+
+<h3>Alterar Minha Senha</h3>
+
+<div class="grid">
+  <input id="cfg_senha_atual" type="password" placeholder="Senha atual">
+  <input id="cfg_nova_senha" type="password" placeholder="Nova senha">
+</div>
+
+<button onclick="alterarMinhaSenha()">
+Alterar Minha Senha
+</button>
+
+<hr>
+
+<!-- ===================== -->
+<!-- ALTERAR SENHA OUTRO -->
+<!-- ===================== -->
+
+<h3>Alterar Senha de Outro Usuário</h3>
+
+<div class="grid">
+  <input id="cfg_usuario_alvo" placeholder="Usuário">
+  <input id="cfg_nova_senha_outro" type="password" placeholder="Nova senha">
+</div>
+
+<button onclick="alterarSenhaOutro()">
+Alterar Senha
+</button>
+
+</div>

@@ -1,11 +1,10 @@
 {
-  "name": "AutoControle - Sistema Veicular",
+  "name": "AutoControle",
   "short_name": "AutoControle",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#16a34a",
-  "theme_color": "#16a34a",
-  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
   "icons": [
     {
       "src": "icon-192.png",

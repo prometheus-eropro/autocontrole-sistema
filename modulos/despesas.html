@@ -1,0 +1,99 @@
+<div class="card">
+
+  <h2>Lançar Despesa</h2>
+  <small>Despesa vinculada ao veículo ou despesa operacional da loja</small>
+
+  <div class="grid">
+    <select id="d_categoria" onchange="toggleDespesaCategoria()">
+      <option value="VEICULO">Despesa de Veículo</option>
+      <option value="OPERACIONAL">Despesa Operacional</option>
+    </select>
+
+    <select id="d_id_veiculo"></select>
+
+    <input id="d_data" type="date">
+
+    <select id="d_tipo">
+      <option value="">Tipo da Despesa</option>
+      <option value="OFICINA">Oficina</option>
+      <option value="FUNILARIA">Funilaria</option>
+      <option value="PINTURA">Pintura</option>
+      <option value="DOCUMENTACAO">Documentação</option>
+      <option value="TRANSFERENCIA">Transferência</option>
+      <option value="IPVA">IPVA</option>
+      <option value="SEGURO">Seguro</option>
+      <option value="COMISSAO">Comissão</option>
+      <option value="ENERGIA">Energia</option>
+      <option value="AGUA">Água</option>
+      <option value="ALUGUEL">Aluguel</option>
+      <option value="INTERNET">Internet</option>
+      <option value="IMPOSTO">Imposto</option>
+      <option value="SALARIO">Salário</option>
+      <option value="OUTRO">Outro</option>
+    </select>
+
+    <input id="d_tipo_outro" placeholder="Se marcou OUTRO, informe aqui" style="display:none;">
+
+    <input id="d_desc" placeholder="Descrição">
+    <input id="d_valor" placeholder="Valor">
+
+    <select id="d_forma">
+      <option value="">Forma de Pagamento</option>
+      <option value="DINHEIRO">Dinheiro</option>
+      <option value="PIX">Pix</option>
+      <option value="CARTAO">Cartão</option>
+      <option value="BOLETO">Boleto</option>
+      <option value="CHEQUE">Cheque</option>
+      <option value="INTERNO">Interno</option>
+    </select>
+
+    <input id="d_comprovante" placeholder="Comprovante / NF / Observação">
+  </div>
+
+<button id="btnSalvarDespesa" onclick="lancarDespesa()">
+  Lançar Despesa
+</button>
+
+</div>
+<div class="grid">
+
+<div>
+<label>Data início</label>
+<input id="filtro_data_inicio" type="date">
+</div>
+
+<div>
+<label>Data fim</label>
+<input id="filtro_data_fim" type="date">
+</div>
+<select id="filtro_categoria">
+  <option value="">Todas</option>
+  <option value="VEICULO">Despesa de Veículo</option>
+  <option value="OPERACIONAL">Despesa Operacional</option>
+</select>
+
+<div>
+<label>Veículo</label>
+<select id="filtro_placa"></select>
+</div>
+
+
+<button onclick="carregarListaDespesas()">Filtrar</button>
+
+</div>
+<table>
+
+<thead>
+<tr>
+<th>Data</th>
+<th>Placa</th>        <!-- NOVA COLUNA -->
+<th>Veículo</th>
+<th>Tipo</th>
+<th>Valor</th>
+<th>Forma</th>
+</tr>
+</thead>
+
+<tbody id="listaDespesas"></tbody>
+
+</table>

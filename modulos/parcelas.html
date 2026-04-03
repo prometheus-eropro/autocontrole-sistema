@@ -1,0 +1,53 @@
+<div class="card">
+
+<h2>Parcelas</h2>
+
+<div class="grid">
+
+<input id="parc_filtro_inicio" type="date">
+
+<input id="parc_filtro_fim" type="date">
+
+<input id="parc_filtro_placa" placeholder="Placa">
+
+<input id="parc_filtro_cpf" placeholder="CPF Devedor">
+
+<button onclick="carregarParcelas()">
+Pesquisar
+</button>
+
+</div>
+<div style="margin-bottom:10px;">
+  <button onclick="carregarParcelas('PENDENTE')">Pendentes</button>
+  <button onclick="carregarParcelas('PAGO')">Recebidas</button>
+  <button onclick="carregarParcelas('VENCIDA')">Vencidas</button>
+</div>
+<table>
+
+<thead>
+
+<tr>
+<th>Cliente</th>
+<th>Placa</th>
+<th>Parcela</th>
+<th>Valor</th>
+<th>Vencimento</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>
+
+</thead>
+
+<tbody id="tb_parcelas">
+
+<tr>
+<td colspan="7" style="text-align:center;color:#888">
+Nenhuma parcela encontrada
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
