@@ -1,51 +1,49 @@
-// ==============================
-// CONTROLE DE VERSÃO DO APP
-// ==============================
-const APP_VERSION = "2.7.0";
-const CACHE_NAME = "autocontrole-" + APP_VERSION;
-
-// Arquivos essenciais
-const urlsToCache = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/icon-192.png",
-  "/icon-512.png"
-];
-
-// ==============================
-// INSTALL
-// ==============================
-self.addEventListener("install", event => {
-  self.skipWaiting();
+self.addEventListener("install", function(event){
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+    caches.open("autocontrole-v1").then(function(cache){
+      return cache.addAll([
+        "/",
+        "/index.html",
+        "/app.html",
+        "/css/style.css",
+        "/js/helpers.js",
+        "/js/api.js",
+        "/js/auth.js",
+        "/js/menu.js",
+        "/js/modulos.js",
+        "/modulos/dashboard.html",
+        "/modulos/veiculos.html",
+        "/modulos/despesas.html",
+        "/modulos/vendas.html",
+        "/modulos/parcelas.html",
+        "/modulos/estoque.html",
+        "/modulos/financeiro.html",
+        "/modulos/documentos.html",
+        "/modulos/configuracoes.html",
+        "/logo.png",
+        "/icon-192.png",
+        "/icon-512.png"
+      ]);
+    })
   );
 });
 
-// ==============================
-// ACTIVATE (Remove cache antigo)
-// ==============================
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      )
-    )
-  );
-  self.clients.claim();
-});
-
-// ==============================
-// FETCH
-// ==============================
-self.addEventListener("fetch", event => {
+self.addEventListener("fetch", function(event){
   event.respondWith(
-    fetch(event.request)
-      .catch(() => caches.match(event.request))
+    caches.match(event.request).then(function(response){
+      self.addEventListener("fetch", function(event){
+  event.respondWith(
+    caches.match(event.request).then(function(response){
+      if(response){
+        return response;
+      }
+
+      return fetch(event.request).catch(()=>{
+        return caches.match("/index.html");
+      });
+    })
+  );
+});
+    })
   );
 });
