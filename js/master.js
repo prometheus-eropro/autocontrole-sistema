@@ -44,11 +44,11 @@ function criarNovaLoja(){
     alert("✅ Loja criada!\nID: " + r.cliente_id);
 
     limparFormularioNovaLoja();
+    gerarContratoAuto(dados); // 👈 AQUI
 
   });
 
 }
-
 
 // ==============================
 // 🧹 LIMPAR FORMULÁRIO
@@ -85,7 +85,9 @@ function listarEmpresas(){
 
     let html = "";
 
-    r.itens.forEach(emp=>{
+    const lista = Array.isArray(r.itens) ? r.itens : [];
+
+lista.forEach(emp=>{
 
       html += `
         <div class="card" style="margin-bottom:10px">
@@ -101,6 +103,23 @@ function listarEmpresas(){
             Ver usuários
           </button>
 
+          <button onclick="gerarContratoCliente('${emp.cliente_id}')">
+         📄 Contrato
+        </button>
+
+           <button onclick="toggleCliente('${emp.cliente_id}', '${emp.status}')">
+  ${emp.status === "ATIVO" ? "🚫 Desativar" : "✅ Ativar"}
+</button>
+
+         <button onclick="criarUsuario('${emp.cliente_id}')">
+  ➕ Usuário
+</button>   
+
+         <button onclick="verLogs('${emp.cliente_id}')">
+  📜 Logs
+</button>
+
+          
           <div id="usuarios_${emp.cliente_id}"></div>
 
         </div>
@@ -124,7 +143,9 @@ function listarUsuariosEmpresa(clienteId){
 
     let html = "<ul>";
 
-    r.itens.forEach(u=>{
+    const lista = Array.isArray(r.itens) ? r.itens : [];
+
+lista.forEach(u=>{
       html += `
   <li>
     ${u.usuario} - ${u.perfil}
@@ -142,64 +163,6 @@ function listarUsuariosEmpresa(clienteId){
     document.getElementById("usuarios_"+clienteId).innerHTML = html;
 
   });
-
-}
-
-function listarEmpresas_(){
-
-  const sh = SpreadsheetApp
-    .openById("15NqtFk8oTUjmyiaRYvXWLwkaG-cs_KeZHbjwza-CGmQ")
-    .getSheetByName("clientes_AutoControle");
-
-  const dados = sh.getDataRange().getValues();
-
-  const itens = [];
-
-  for(let i=1;i<dados.length;i++){
-
-    itens.push({
-      cliente_id: dados[i][0],
-      nome: dados[i][1],
-      status: dados[i][3]
-    });
-
-  }
-
-  return { ok:true, itens };
-
-}
-
-function listarUsuariosPorCliente_(e){
-
-  const clienteId = e.parameter.cliente_id;
-
-  const sh = SpreadsheetApp
-    .openById("15NqtFk8oTUjmyiaRYvXWLwkaG-cs_KeZHbjwza-CGmQ")
-    .getSheetByName("usuarios_AutoControle");
-
-  const dados = sh.getDataRange().getValues();
-  const headers = dados[0];
-
-  const idxUsuario = headers.indexOf("usuario");
-  const idxPerfil = headers.indexOf("perfil");
-  const idxCliente = headers.indexOf("cliente_id");
-
-  const itens = [];
-
-  for(let i=1;i<dados.length;i++){
-
-    if(String(dados[i][idxCliente]) === clienteId){
-
-      itens.push({
-        usuario: dados[i][idxUsuario],
-        perfil: dados[i][idxPerfil]
-      });
-
-    }
-
-  }
-
-  return { ok:true, itens };
 
 }
 
@@ -299,6 +262,8 @@ function confirmarTrocaSenha(){
 function entrarEmpresa(clienteId){
 
   localStorage.setItem("cliente_id", clienteId);
+localStorage.setItem("modo_master", "1"); // 🔥 ESSENCIAL
+
   localStorage.setItem("perfil", "MASTER");
 
   // 🔥 ADICIONE ISSO
@@ -312,3 +277,160 @@ window.addEventListener("online", ()=>{
   console.log("🌐 Internet voltou");
   sincronizarFila();
 });
+
+function gerarContratoCliente(clienteId){
+
+  api("obterCliente", {
+    cliente_id: clienteId
+  }, function(r){
+
+    if(!r || !r.ok){
+      alert("Erro ao buscar cliente");
+      return;
+    }
+
+    gerarContratoAuto(r.dados);
+
+  });
+
+}
+
+function toggleCliente(clienteId, statusAtual){
+
+  const novoStatus = statusAtual === "ATIVO" ? "INATIVO" : "ATIVO";
+
+  api("toggleCliente", {
+    cliente_id: clienteId,
+    status: novoStatus
+  }, function(r){
+
+    if(!r || !r.ok){
+      alert("Erro ao atualizar status");
+      return;
+    }
+
+    listarEmpresas();
+
+  });
+
+}
+
+function criarUsuario(clienteId){
+
+  const usuario = prompt("Nome do usuário:");
+  const senha = prompt("Senha:");
+
+  if(!usuario || !senha) return;
+
+  api("criarUsuarioMaster", {
+    cliente_id: clienteId,
+    usuario,
+    senha
+  }, function(r){
+
+    if(!r || !r.ok){
+      alert("Erro ao criar usuário");
+      return;
+    }
+
+    alert("Usuário criado");
+
+  });
+
+}
+
+function verLogs(clienteId){
+
+  api("listarLogs", {
+    cliente_id: clienteId
+  }, function(r){
+
+    if(!r || !r.ok){
+      alert("Erro ao carregar logs");
+      return;
+    }
+
+    let html = "<h3>Logs</h3><ul>";
+
+    r.itens.forEach(l=>{
+      html += `<li>${l.data} - ${l.acao} - ${l.usuario}</li>`;
+    });
+
+    html += "</ul>";
+
+    const w = window.open("", "_blank");
+    w.document.write(html);
+
+  });
+
+}
+
+function gerarContratoAuto(d){
+
+  const html = `
+  <html>
+  <head>
+    <style>
+      body{font-family:Arial;padding:40px;line-height:1.6;}
+      h2{text-align:center;}
+    </style>
+  </head>
+  <body>
+
+  <h2>CONTRATO DE LICENÇA DE USO DE SOFTWARE</h2>
+
+  <p><b>CONTRATADA:</b><br>
+  PROMETHEUS EROPRO SOLUÇÕES INTELIGENTE LTDA<br>
+  CNPJ: 58.584.332/0001-40<br>
+  Guaçuí – ES</p>
+
+  <p><b>CONTRATANTE:</b><br>
+  ${d.nome_loja}<br>
+  ${d.nome_proprietario}<br>
+  CNPJ/CPF: ${d.cnpj}<br>
+  Endereço: ${d.endereco_loja}<br>
+  Telefone: ${d.telefone_loja}</p>
+
+  <p><b>VALOR:</b> R$ ${d.valor_mensal} / mês</p>
+
+  <br><br>
+
+  <p>Declaro estar de acordo com os termos.</p>
+
+  <br><br><br>
+
+  ____________________________<br>
+  CONTRATANTE
+
+  <br><br>
+
+  ____________________________<br>
+  CONTRATADA
+
+  <script>window.print()</script>
+
+  </body>
+  </html>
+  `; // 🔥 FECHA A STRING AQUI
+
+  const w = window.open("", "_blank");
+  w.document.write(html);
+  w.document.close();
+
+}
+
+function carregarResumoMaster(){
+
+  api("resumoFinanceiroMaster", {}, function(r){
+
+    if(!r || !r.ok) return;
+
+    document.getElementById("total_faturamento")
+      .innerText = "R$ " + r.total;
+
+    document.getElementById("total_clientes")
+      .innerText = r.ativos;
+
+  });
+
+}

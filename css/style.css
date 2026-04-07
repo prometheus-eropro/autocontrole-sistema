@@ -383,3 +383,52 @@ font-weight:600;
 .btnLogout:hover{
 background:#dc2626;
 }
+/* =========================
+📱 RESPONSIVO PROFISSIONAL
+========================= */
+
+.btn-group{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.btn-group button{
+  flex:1;
+  min-width:140px;
+}
+
+/* MOBILE AJUSTE FORTE */
+@media (max-width:768px){
+
+  .grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .card{
+    padding:16px;
+  }
+
+  h2{
+    font-size:18px;
+  }
+
+  button{
+    width:100%;
+  }
+
+  .topbar{
+    padding:12px;
+  }
+
+  .topbar-left{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .topbar-logo{
+    width:40px;
+  }
+
+}

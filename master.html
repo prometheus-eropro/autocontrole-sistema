@@ -16,6 +16,35 @@ body{
   margin:0;
   padding:20px;
 }
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  color:#fff;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+
+input, select{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:#0f172a;
+  color:#fff;
+}
+
+.btn-primary{
+  background:#3b82f6;
+  color:#fff;
+  border:none;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.btn-primary:hover{
+  background:#2563eb;
+}
 </style>
 
 </head>
@@ -61,6 +90,7 @@ body{
   <div class="grid">
     <button onclick="criarNovaLoja()" class="btn-primary">Criar Loja</button>
     <button onclick="gerarContratoNovaLoja()" class="btn-primary">Gerar Contrato</button>
+    <button onclick="abrirBackups()">Abrir Backups</button>
   </div>
 
 </div>
@@ -107,6 +137,15 @@ background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,
 window.onload = function(){
   listarEmpresas();
 }
+function abrirBackups(){
+  api("getLinkBackup", {}, (res)=>{
+    if(res.ok){
+      window.open(res.url, "_blank");
+    }
+  });
+}
+
+
 </script>
 
 </body>

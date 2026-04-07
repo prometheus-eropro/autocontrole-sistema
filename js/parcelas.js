@@ -101,13 +101,19 @@ function receberParcela(id, parcela, valor){
     valor: valor
   },function(r){
 
-    if(!r || !r.ok){
-      alert("Erro ao receber parcela");
-      return;
-    }
+    if(!r){
+  alert("Sem resposta da API");
+  return;
+}
+
+if(r.ok !== true){
+  alert(r.msg || "Erro ao receber parcela");
+  return;
+}
 
     alert("Parcela recebida com sucesso");
-
+    
+    listarParcelas(); // recarrega lista
     carregarParcelas("PENDENTE"); 
 
   });

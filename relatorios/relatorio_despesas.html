@@ -57,19 +57,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function carregarPlacasDespesas(){
 
+
   const cliente_id = localStorage.getItem("cliente_id");
 
-  api("listarVeiculosComDespesas", { cliente_id }, function(r){
+api("listarVeiculosComDespesas", { cliente_id }, function(r){
 
-    const select = document.getElementById("filtro_placa");
+  console.log("RESPOSTA VEICULOS:", r);
 
-    select.innerHTML = `<option value="">Todas</option>`;
+  const select = document.getElementById("filtro_placa");
 
-    r.itens.forEach(v=>{
-      select.innerHTML += `<option value="${v.placa}">${v.placa}</option>`;
-    });
+  select.innerHTML = `<option value="">Todas</option>`;
 
-  });
+  const lista = r.itens || r.lista || r.dados || [];
+
+  lista.forEach(v=>{
+  select.innerHTML += `<option value="${v.id_veiculo}">${v.placa}</option>`;
+});
+
+});
 
 }
 </script>

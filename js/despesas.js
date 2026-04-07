@@ -7,44 +7,68 @@ function init_despesas(){
 
 function carregarVeiculosDespesa(){
 
+  const selCadastro = document.getElementById("d_id_veiculo")
+  const selFiltro = document.getElementById("filtro_placa")
+
+  if(selCadastro){
+    selCadastro.innerHTML = '<option value="">Selecione o veículo</option>'
+  }
+
+  if(selFiltro){
+    selFiltro.innerHTML = '<option value="">Todos</option>'
+  }
+
+  // 🔹 1 - ESTOQUE (cadastro)
   jsonp({
     action:"listarVeiculosEstoque",
     cliente_id:CLIENTE_ID,
     perfil:PERFIL
-  }, function(r){
+ }, function(r){
 
-    if(!r || !r.ok) return
+  console.log("VEICULOS COM DESPESAS:", r);
 
-    const selCadastro = document.getElementById("d_id_veiculo")
-    const selFiltro = document.getElementById("filtro_placa")
-
-    if(selCadastro){
-      selCadastro.innerHTML = '<option value="">Selecione o veículo</option>'
-    }
-
-    if(selFiltro){
-      selFiltro.innerHTML = '<option value="">Todos</option>'
-    }
+  if(!r || !r.ok) return
 
     r.itens.forEach(v => {
 
       if(selCadastro){
         const op1 = document.createElement("option")
-        op1.value = v.id
-        op1.textContent = v.placa + " - " + v.marca + " " + v.modelo
+        op1.value = v.id // ✅ CORRIGIDO
+        op1.textContent = `${v.placa} - ${v.marca || ""} ${v.modelo || ""}`
         selCadastro.appendChild(op1)
-      }
-
-      if(selFiltro){
-        const op2 = document.createElement("option")
-        op2.value = v.id
-        op2.textContent = v.placa
-        selFiltro.appendChild(op2)
       }
 
     })
 
   })
+
+  // 🔹 2 - VEÍCULOS COM DESPESAS (filtro)
+  jsonp({
+  action:"listarVeiculosComDespesas",
+  cliente_id:CLIENTE_ID,
+  perfil:PERFIL
+}, function(r){
+
+  if(!r || !r.ok) return
+
+  r.itens.forEach(v => {
+
+    if(selFiltro){
+      const op2 = document.createElement("option")
+      op2.value = v.id_veiculo
+      op2.textContent = `${v.placa}`
+      selFiltro.appendChild(op2)
+    }
+
+  })
+
+  // ✅ seleciona automaticamente
+  if(selFiltro && selFiltro.options.length > 1){
+  selFiltro.selectedIndex = 1
+  carregarListaDespesas() // 🔥 ESSENCIAL
+}
+
+})
 
 }
 
@@ -52,20 +76,25 @@ function carregarListaDespesas(){
 
   const inicio = document.getElementById("filtro_data_inicio").value;
   const fim = document.getElementById("filtro_data_fim").value;
-  const placa = document.getElementById("filtro_placa").value;
+  const elVeiculo = document.getElementById("filtro_placa");
+
+const veiculo_id = (elVeiculo && elVeiculo.value && elVeiculo.value !== "undefined")
+  ? elVeiculo.value
+  : "";
+
+console.log("SELECT VALOR:", veiculo_id); // ✅ exatamente esse nome
+
   const categoria = document.getElementById("filtro_categoria").value;
 
   console.log("ENVIANDO FILTRO:", {
-    inicio, fim, placa, categoria
+    inicio, fim, veiculo_id, categoria
   });
-
-const veiculo_id = document.getElementById("filtro_placa").value;
-
- api("listarDespesas", {
+console.log("SELECT VALOR:", veiculo_id);
+  api("listarDespesas", {
   cliente_id: CLIENTE_ID,
   inicio: inicio,
   fim: fim,
-  veiculo_id: placa,
+  veiculo_id: veiculo_id, // ✅ CERTO
   categoria: categoria
 }, function(res){
 
@@ -76,7 +105,7 @@ const veiculo_id = document.getElementById("filtro_placa").value;
 
     const lista = document.getElementById("listaDespesas");
 
-    if(!res.itens.length){
+    if(!res.itens || !res.itens.length){
       lista.innerHTML = "<tr><td colspan='5'>Sem dados</td></tr>";
       return;
     }
@@ -92,6 +121,7 @@ const veiculo_id = document.getElementById("filtro_placa").value;
           <td>${d.marca || ""} ${d.modelo || ""}</td>
           <td>${d.descricao_despesa || ""}</td>
           <td>${moeda(d.valor_despesa)}</td>
+          <td>${d.forma_pagamento}</td>
         </tr>
       `;
 
@@ -102,6 +132,7 @@ const veiculo_id = document.getElementById("filtro_placa").value;
   });
 
 }
+
 function toggleDespesaCategoria(){
 
   const categoria = document.getElementById("d_categoria")

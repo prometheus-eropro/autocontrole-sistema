@@ -210,17 +210,20 @@ function apiGet(params){
   return fetch(url).then(r => r.json());
 }
 
-function carregarResumo() {
-  api("resumoDashboard").then(res => {
+function carregarResumo(){
+
+  api("resumoDashboard", {}, function(res){
+
     console.log(res);
 
-    // salva globalmente (ou em state)
     window.usuario = res.nome_usuario;
     window.perfil = res.perfil;
     window.cliente = res.cliente_id;
 
     atualizarHeader();
+
   });
+
 }
 
 function apiSafe(action, data, callback){

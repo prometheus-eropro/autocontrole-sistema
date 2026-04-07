@@ -44,7 +44,7 @@ th,td { border:1px solid #000; padding:4px; }
   <div><b>Chassi</b><div class="linha" id="chassi"></div></div>
   <div><b>Renavam</b><div class="linha" id="renavam"></div></div>
 
-  <div><b>Data Entrada</b><div class="linha" id="entrada"></div></div>
+  <div><b>Data Entrada</b><div class="linha" id="data_entrada"></div></div>
   <div><b>Valor Compra</b><div class="linha" id="valor_compra"></div></div>
 
   <div><b>Valor Pretendido</b><div class="linha" id="valor_pretendido"></div></div>
@@ -117,8 +117,20 @@ th,td { border:1px solid #000; padding:4px; }
 
 <script>
 
+console.log("VERSAO NOVA CARREGADA");
+
 function moeda(v){
   return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
+}
+
+function formatarDataBR(data){
+  if(!data) return "";
+  try{
+    const d = new Date(data);
+    return d.toLocaleDateString("pt-BR");
+  }catch(e){
+    return data;
+  }
 }
 
 const id = new URLSearchParams(location.search).get("id")
@@ -132,10 +144,13 @@ console.log("PARAMS:", {
 });
 console.log("cliente_id:", CLIENTE_ID);
 
+
 api("buscarFichaCompleta", {
   cliente_id: String(CLIENTE_ID),
   id_veiculo: String(id)
 }, function(r){
+
+console.log("RESPOSTA API:", r);
 
   if(!r || !r.ok){
     alert(r?.msg || "Erro ao carregar ficha");
@@ -165,37 +180,54 @@ document.getElementById("valor_compra").innerText = moeda(d.valor_compra);
 document.getElementById("valor_pretendido").innerText = moeda(d.valor_pretendido);
  
  // PROPRIETARIO
-  prop_nome.innerText = d.proprietario_nome || ""
-  prop_tel.innerText = d.proprietario_telefone || ""
-  prop_doc.innerText = d.proprietario_cpf || ""
-  prop_rg.innerText = d.proprietario_rg || ""
-  prop_end.innerText = d.proprietario_endereco || ""
+  document.getElementById("prop_nome").innerText = d.proprietario_nome || ""
+document.getElementById("prop_tel").innerText = d.proprietario_telefone || ""
+document.getElementById("prop_doc").innerText = d.proprietario_cpf || ""
+document.getElementById("prop_rg").innerText = d.proprietario_rg || ""
+document.getElementById("prop_end").innerText = d.proprietario_endereco || ""
 
   // VENDA
-  comprador.innerText = d.comprador_nome || ""
-  cpf.innerText = d.comprador_cpf || ""
-  valor_venda.innerText = moeda(d.valor_venda)
-  data_venda.innerText = formatarDataBR(d.data_venda)
-  document.getElementById("entrada").innerText = formatarDataBR(d.data_entrada)
-  forma.innerText = d.forma_pagamento || ""
-  parcelas.innerText = d.parcelas || ""
-  entrada_pag.innerText = moeda(d.entrada || 0)
-  banco.innerText = d.banco || ""
+document.getElementById("comprador").innerText = d.comprador_nome || "";
+document.getElementById("cpf").innerText = d.comprador_cpf || "";
 
-  comp_tel.innerText = d.comprador_telefone || ""
-  email.innerText = d.comprador_email || ""
-  cidade.innerText = d.comprador_cidade || ""
-  estado.innerText = d.comprador_estado || ""
-  endereco.innerText = d.comprador_endereco || ""
+document.getElementById("valor_venda").innerText = moeda(d.valor_venda);
+document.getElementById("data_venda").innerText = formatarDataBR(d.data_venda);
+document.getElementById("entrada_pag").innerText = moeda(d.entrada || 0);
 
-  // DESPESAS
-  document.getElementById("total").innerText = moeda(d.total_despesas)
+document.getElementById("forma").innerText = d.forma_pagamento || "";
+document.getElementById("parcelas").innerText = d.parcelas || "";
+
+document.getElementById("entrada_pag").innerText = moeda(d.entrada || 0);
+document.getElementById("banco").innerText = d.banco || "";
+
+document.getElementById("comp_tel").innerText = d.comprador_telefone || "";
+document.getElementById("email").innerText = d.comprador_email || "";
+document.getElementById("cidade").innerText = d.comprador_cidade || "";
+document.getElementById("estado").innerText = d.comprador_estado || "";
+document.getElementById("endereco").innerText = d.comprador_endereco || "";
+
+// DESPESAS
 
 const tabela = document.getElementById("tabela");
+
+tabela.innerHTML = `
+<tr>
+<th>Data</th>
+<th>Tipo</th>
+<th>Descrição</th>
+<th>Valor</th>
+</tr>
+`;
+
+let totalDespesas = 0;
 
 if(d.despesas && d.despesas.length){
 
   d.despesas.forEach(dep => {
+
+    const valor = Number(dep.valor_despesa || 0);
+
+    totalDespesas += valor;
 
     const tr = document.createElement("tr");
 
@@ -203,7 +235,7 @@ if(d.despesas && d.despesas.length){
       <td>${formatarDataBR(dep.data_despesa)}</td>
       <td>${dep.tipo_despesa || ""}</td>
       <td>${dep.descricao_despesa || ""}</td>
-      <td>${moeda(dep.valor_despesa)}</td>
+      <td>${moeda(valor)}</td>
     `;
 
     tabela.appendChild(tr);
@@ -218,16 +250,7 @@ if(d.despesas && d.despesas.length){
 
 }
 
-  function parseMoeda(v){
-  if(!v) return 0;
-  return Number(
-    String(v)
-      .replace("R$","")
-      .replace(/\./g,"")
-      .replace(",",".")
-      .trim()
-  )
-}
+document.getElementById("total").innerText = moeda(totalDespesas);
 
 // DESPESAS
 
@@ -275,21 +298,6 @@ if(d.parcelas_lista && d.parcelas_lista.length){
 
 }
 
-function formatarDataBR(data){
-
-  if(!data) return "";
-
-  try{
-
-    const d = new Date(data);
-
-    return d.toLocaleDateString("pt-BR");
-
-  }catch(e){
-    return data;
-  }
-
-}
 // ===== TRATAR FINANCIAMENTO =====
 if(d.forma_pagamento === "FINANCIAMENTO"){
   document.getElementById("tb_parcelas_ficha").innerHTML =

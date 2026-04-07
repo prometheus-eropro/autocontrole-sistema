@@ -74,13 +74,14 @@
 
 <div>
 <label>Veículo</label>
-<select id="filtro_placa"></select>
+<select id="filtro_placa" onchange="carregarListaDespesas()"></select>
 </div>
 
 
 <button onclick="carregarListaDespesas()">Filtrar</button>
 
 </div>
+<div class="table-wrapper">
 <table>
 
 <thead>
@@ -97,3 +98,9 @@
 <tbody id="listaDespesas"></tbody>
 
 </table>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  init_despesas();
+});
+</script>
