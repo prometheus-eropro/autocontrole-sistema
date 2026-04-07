@@ -1,49 +1,72 @@
-self.addEventListener("install", function(event){
+const CACHE_NAME = "autocontrole-v3";
+const STATIC_ASSETS = [
+  "/",
+  "/index.html",
+  "/app.html",
+  "/css/style.css",
+  "/logo.png",
+  "/icon-192.png",
+  "/icon-512.png"
+];
+
+// 🔹 INSTALAÇÃO (cache inicial)
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
   event.waitUntil(
-    caches.open("autocontrole-v1").then(function(cache){
-      return cache.addAll([
-        "/",
-        "/index.html",
-        "/app.html",
-        "/css/style.css",
-        "/js/helpers.js",
-        "/js/api.js",
-        "/js/auth.js",
-        "/js/menu.js",
-        "/js/modulos.js",
-        "/modulos/dashboard.html",
-        "/modulos/veiculos.html",
-        "/modulos/despesas.html",
-        "/modulos/vendas.html",
-        "/modulos/parcelas.html",
-        "/modulos/estoque.html",
-        "/modulos/financeiro.html",
-        "/modulos/documentos.html",
-        "/modulos/configuracoes.html",
-        "/logo.png",
-        "/icon-192.png",
-        "/icon-512.png"
-      ]);
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_ASSETS);
     })
   );
 });
 
-self.addEventListener("fetch", function(event){
-  event.respondWith(
-    caches.match(event.request).then(function(response){
-      self.addEventListener("fetch", function(event){
-  event.respondWith(
-    caches.match(event.request).then(function(response){
-      if(response){
-        return response;
-      }
+// 🔹 ATIVAÇÃO (limpa cache antigo)
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
 
-      return fetch(event.request).catch(()=>{
-        return caches.match("/index.html");
+// 🔹 FETCH (INTELIGENTE)
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+
+  // 👉 HTML → NETWORK FIRST (sempre tenta atualizar)
+  if (req.headers.get("accept")?.includes("text/html")) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(req, clone);
+          });
+          return res;
+        })
+        .catch(() => caches.match(req).then(res => res || caches.match("/index.html")))
+    );
+    return;
+  }
+
+  // 👉 JS/CSS/IMG → CACHE FIRST (rápido)
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      if (cached) return cached;
+
+      return fetch(req).then((res) => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(req, clone);
+        });
+        return res;
       });
-    })
-  );
-});
     })
   );
 });
