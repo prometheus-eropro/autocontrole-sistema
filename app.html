@@ -94,8 +94,8 @@ window.addEventListener("load", function(){
   carregarSessao();
   atualizarStatusInternet();
 
-  const perfil = localStorage.getItem("perfil");
-  const cliente_id = localStorage.getItem("cliente_id");
+  const perfil = (localStorage.getItem("perfil") || "").toUpperCase();
+const cliente_id = localStorage.getItem("cliente_id");
 
   if(perfil === "MASTER" && !cliente_id){
     window.location.href = "master.html";
@@ -118,7 +118,13 @@ window.addEventListener("load", function(){
     limpar(localStorage.getItem("perfil"));
 
   aplicarPermissoesUI();
+  
+
+if(perfil === "ESTOQUE"){
+  abrirModulo("estoque");
+}else{
   abrirModulo("dashboard");
+}
 
 });
 </script>

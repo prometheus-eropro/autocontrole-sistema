@@ -283,7 +283,7 @@ if(d.parcelas_lista && d.parcelas_lista.length){
     tr.innerHTML = `
       <td>${p.parcela || ""}</td>
       <td>${moeda(p.valor)}</td>
-      <td>${p.vencimento || ""}</td>
+      <td>${formatarDataBR(p.vencimento)}</td>
       <td>${p.status || ""}</td>
     `;
 

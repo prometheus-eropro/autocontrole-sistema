@@ -4,6 +4,11 @@ async function abrirModulo(nome){
     .replace(/"/g, "")
     .toUpperCase();
 
+  if(perfil === "ESTOQUE" && nome !== "estoque"){
+    console.warn("Bloqueado:", nome);
+    return;
+  }
+
   if(perfil === "ESTOQUE"){
     const permitidos = ["dashboard","estoque"];
     if(!permitidos.includes(nome)){
@@ -20,28 +25,30 @@ async function abrirModulo(nome){
     }
   }
 
-  showLoading(); // 🔥 TEM QUE FICAR AQUI DENTRO
+  if(perfil === "ADMIN"){
+    const permitidos = ["dashboard","veiculos","vendas","parcelas","estoque","despesas","documentos"]; 
+    if(!permitidos.includes(nome)){
+      alert("Acesso negado para este perfil.");
+      return;
+    }
+  }
 
-  try{
+  showLoading();
 
+  try {
     setStatus("Carregando módulo: " + nome + "...");
 
     const resp = await fetch("modulos/" + nome + ".html?v=" + Date.now());
 
     if(!resp.ok){
       alert("Aba não encontrada: " + nome);
-      hideLoading();
       return;
     }
 
     const html = await resp.text();
-
     const alvo = document.getElementById("conteudoModulo");
 
-    if(!alvo){
-      hideLoading();
-      return;
-    }
+    if(!alvo) return;
 
     alvo.innerHTML = html;
 
@@ -53,34 +60,27 @@ async function abrirModulo(nome){
 
     setStatus("Módulo carregado: " + nome);
 
-  }catch(e){
-
+  } catch(e){
     console.error(e);
     alert("Erro ao abrir módulo: " + nome);
-    setStatus("Erro ao carregar módulo.");
-
-  }finally{
-    aplicarPermissoesUI(); // 🔥 AQUI
+  } finally {
+    aplicarPermissoesUI();
     hideLoading();
   }
 }
-
 
 document.addEventListener("DOMContentLoaded", function(){
 
   if(!validarSessaoApp()) return;
 
+  aplicarPermissoesUI();
+
   const nomeLoja = localStorage.getItem("nome_loja") || "";
   const nomeUsuario = localStorage.getItem("nome_usuario") || "";
   const perfil = localStorage.getItem("perfil") || "";
 
-  setText("usuarioLogado",
-    nomeLoja + " | " + nomeUsuario
-  );
-
-  setText("perfilLogado",
-    "(" + perfil + ")"
-  );
+  setText("usuarioLogado", nomeLoja + " | " + nomeUsuario);
+  setText("perfilLogado", "(" + perfil + ")");
 
 });
 
@@ -100,33 +100,42 @@ function abrirAba(nome){
 
 function aplicarPermissoesUI(){
 
-  const perfil = (localStorage.getItem("perfil") || "")
-    .replace(/"/g, "")
-    .toUpperCase();
+  const perfil = (localStorage.getItem("perfil") || "").toUpperCase();
 
-  console.log("🔐 Perfil atual:", perfil);
+  console.log("Aplicando UI:", perfil);
 
-  // 🔴 ESTOQUE
-  if(perfil === "ESTOQUE"){
-    [
-      "menu_veiculos",
-      "menu_despesas",
-      "menu_vendas",
-      "menu_parcelas",
-      "menu_financeiro",
-      "menu_documentos"
-    ].forEach(id => {
-      document.getElementById(id)?.style.setProperty("display","none","important");
-    });
+  const esconder = (id) => {
+    const el = document.getElementById(id);
+    if(el){
+      el.style.setProperty("display","none","important");
+    }
+  };
+
+  // MASTER e PROPRIETARIO ve tudo
+  if(perfil === "MASTER" || perfil === "PROPRIETARIO"){
+    return;
   }
 
-  // 🔵 ADMIN
+  // ADMIN (sem financeiro)
   if(perfil === "ADMIN"){
-    [
-      "menu_financeiro"
-    ].forEach(id => {
-      document.getElementById(id)?.style.setProperty("display","none","important");
-    });
+    esconder("menu_financeiro");
+  }
+
+  // ESTOQUE (só estoque)
+  if(perfil === "ESTOQUE"){
+    esconder("menu_veiculos");
+    esconder("menu_despesas");
+    esconder("menu_vendas");
+    esconder("menu_parcelas");
+    esconder("menu_financeiro");
+    esconder("menu_documentos");
+  }
+
+  // VENDEDOR (limitado)
+  if(perfil === "VENDEDOR"){
+    esconder("menu_despesas");
+    esconder("menu_financeiro");
+    esconder("menu_documentos");
   }
 
 }
@@ -136,21 +145,3 @@ function esconderMenu(id){
   if(el) el.style.setProperty("display", "none", "important");
 }
 
-function aplicarPermissoesMenu(){
-
-  const perfil = localStorage.getItem("perfil");
-
-  console.log("Aplicando permissões:", perfil);
-
-  if(perfil === "MASTER"){
-
-    // mostra botão master
-    document.querySelectorAll("[data-modulo]").forEach(el=>{
-      el.style.display = "block";
-    });
-
-    abrirModulo("master");
-    return;
-  }
-
-}
