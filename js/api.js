@@ -43,6 +43,11 @@ function jsonp(params, callback){
 
 function api(action, params, callback){
 
+
+  if(action === "listarLogs" && !clienteFinal){
+    console.error("⛔ BLOQUEADO: cliente_id obrigatório para logs");
+    return;
+  }
   const clienteLS = (localStorage.getItem("cliente_id") || "").trim();
 
   console.log("API SEND:", action);
@@ -51,16 +56,63 @@ function api(action, params, callback){
     params.cliente_id = params.cliente_id.id;
   }
 
-  const payload = Object.assign({}, params || {}, {
-    action: action,
-    cliente_id: (
-      typeof params?.cliente_id === "object"
-        ? params.cliente_id.id
-        : params?.cliente_id
-    ) || clienteLS,
-    perfil: PERFIL,
-    nome_usuario: NOME_USUARIO
-  });
+if(PERFIL === "MASTER" && !params?.cliente_id){
+  console.warn("MASTER sem cliente_id definido");
+}
+
+
+  let clienteFinal = null;
+
+// 1. prioridade
+if(params?.cliente_id){
+  clienteFinal = params.cliente_id;
+}
+
+// 2. fallback
+if(!clienteFinal && PERFIL !== "MASTER"){
+  clienteFinal = clienteLS;
+}
+
+// 👇 AGORA SIM faz sentido validar
+if(action === "listarLogs" && !clienteFinal){
+  console.error("⛔ BLOQUEADO: cliente_id obrigatório para logs");
+  return;
+}
+
+// 3. MASTER sem cliente_id só é permitido em ações específicas
+if(PERFIL === "MASTER" && !clienteFinal){
+  const actionsSemCliente = ["listarEmpresas"];
+
+  if(!actionsSemCliente.includes(action)){
+    console.error("MASTER tentou ação sem cliente_id:", action);
+  }
+}
+
+const perfil = (localStorage.getItem("perfil") || "").toUpperCase();
+
+let nome_usuario = "";
+
+// 🚫 MASTER NÃO USA NOME DE USUÁRIO
+if(perfil !== "MASTER"){
+  nome_usuario = localStorage.getItem("nome_usuario") || "";
+}
+console.log("DEBUG cliente_id:", params?.cliente_id);
+
+if(typeof params?.cliente_id === "object"){
+  console.warn("⚠️ cliente_id veio errado:", params.cliente_id);
+  params.cliente_id = params.cliente_id?.id || "";
+}
+
+const payload = Object.assign({}, params || {}, {
+  action: action,
+  cliente_id: clienteFinal,
+  perfil: (localStorage.getItem("perfil") || "").toUpperCase()
+});
+
+// 👇 AQUI É O PULO DO GATO
+if(perfil !== "MASTER"){
+  payload.nome_usuario = nome_usuario;
+}
 
   showLoading();
 
@@ -69,7 +121,13 @@ function api(action, params, callback){
   // 🔥 AQUI MUDA TUDO
   jsonp(payload, function(resp){
 
-    hideLoading();
+  if(resp.ok){
+    console.log("✅ SUCESSO:", resp);
+  }else{
+    console.error("❌ ERRO:", resp);
+  }
+
+  hideLoading();
 
     if(!resp){
       alert("Erro de comunicação com o servidor.");
@@ -77,10 +135,12 @@ function api(action, params, callback){
     }
 
     if(resp.ok === false){
-      alert(typeof resp.msg === "object"
-        ? JSON.stringify(resp.msg)
-        : resp.msg
-      );
+      alert(
+  typeof resp.msg === "object"
+    ? JSON.stringify(resp.msg, null, 2)
+    : resp.msg
+);
+
       callback && callback(resp);
       return;
     }

@@ -74,8 +74,11 @@ function carregarVeiculosDespesa(){
 
 function carregarListaDespesas(){
 
-  const inicio = document.getElementById("filtro_data_inicio").value;
-  const fim = document.getElementById("filtro_data_fim").value;
+  const elInicio = document.getElementById("filtro_data_inicio");
+const elFim = document.getElementById("filtro_data_fim");
+
+const inicio = elInicio ? elInicio.value : "";
+const fim = elFim ? elFim.value : "";
   const elVeiculo = document.getElementById("filtro_placa");
 
 const veiculo_id = (elVeiculo && elVeiculo.value && elVeiculo.value !== "undefined")
@@ -84,7 +87,8 @@ const veiculo_id = (elVeiculo && elVeiculo.value && elVeiculo.value !== "undefin
 
 console.log("SELECT VALOR:", veiculo_id); // ✅ exatamente esse nome
 
-  const categoria = document.getElementById("filtro_categoria").value;
+  const elCategoria = document.getElementById("filtro_categoria");
+const categoria = elCategoria ? elCategoria.value : "";
 
   console.log("ENVIANDO FILTRO:", {
     inicio, fim, veiculo_id, categoria
@@ -104,6 +108,7 @@ console.log("SELECT VALOR:", veiculo_id);
     }
 
     const lista = document.getElementById("listaDespesas");
+if(!lista) return;
 
     if(!res.itens || !res.itens.length){
       lista.innerHTML = "<tr><td colspan='5'>Sem dados</td></tr>";

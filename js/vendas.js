@@ -65,7 +65,9 @@ function jsonp(params, callback){
   window[cb] = function(data){
 
     try{
-      callback(data);
+      console.log("DATA:", data);
+callback(data);
+console.log("PASSOU CALLBACK");
     }catch(err){
       console.error("Erro callback:",err);
     }
@@ -435,7 +437,19 @@ observacoes:v("vd_observacoes")
 
 console.log("DADOS VENDA:",dados);
 
+const btn = document.getElementById("btnRegistrarVenda");
+
+if(btn){
+  btn.disabled = true;
+  btn.innerText = "⏳ Registrando...";
+}
+
 jsonp(dados, function(r){
+
+if(btn){
+  btn.disabled = false;
+  btn.innerText = "Registrar Venda";
+}
 
   console.log("RETORNO:", r);
 
@@ -573,3 +587,4 @@ el.value = v;
 const campo = document.getElementById("vd_comissao");
 
 if(campo) mascaraMoeda(campo);
+

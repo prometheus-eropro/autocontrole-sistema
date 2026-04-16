@@ -10,29 +10,38 @@
 <link rel="stylesheet" href="css/style.css">
 
 <style>
+
 body{
-  background:#0f172a;
-  font-family:Arial;
+  background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+  font-family: Arial;
   margin:0;
   padding:20px;
+  max-width: 1200px;
+margin: auto;
 }
+
+/* CARDS */
 .card{
-  background:#1e293b;
+  background:#ffffff;
   padding:20px;
   border-radius:12px;
   margin-bottom:20px;
-  color:#fff;
-  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  color:#1e293b;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
-
+.card h2{
+  color:#1d4ed8;
+}
+/* INPUTS */
 input, select{
   padding:10px;
   border-radius:8px;
-  border:none;
-  background:#0f172a;
-  color:#fff;
+  border:1px solid #cbd5e1;
+  background:#f8fafc;
+  color:#1e293b;
 }
 
+/* BOTÃO PRINCIPAL */
 .btn-primary{
   background:#3b82f6;
   color:#fff;
@@ -45,6 +54,20 @@ input, select{
 .btn-primary:hover{
   background:#2563eb;
 }
+
+/* BOTÕES SECUNDÁRIOS */
+button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #cbd5e1;
+  background:#f1f5f9;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#e2e8f0;
+}
+
 </style>
 
 </head>
@@ -90,7 +113,7 @@ input, select{
   <div class="grid">
     <button onclick="criarNovaLoja()" class="btn-primary">Criar Loja</button>
     <button onclick="gerarContratoNovaLoja()" class="btn-primary">Gerar Contrato</button>
-    <button onclick="abrirBackups()">Abrir Backups</button>
+    <button onclick="abrirBackups()" class="btn-primary">Abrir Backups</button>
   </div>
 
 </div>
@@ -123,6 +146,8 @@ background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,
 
 </div>
 
+<button onclick="salvarTeste()">TESTE SIMPLES</button>
+
 <!-- 🔥 SCRIPTS -->
 <script src="js/helpers.js"></script>
 <script src="js/api.js"></script>
@@ -133,10 +158,21 @@ background:#fff; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,
 <button onclick="logout()" style="position:fixed; top:10px; right:10px;">
   🚪 Sair
 </button>
+
 <script>
 window.onload = function(){
+
+  const perfil = (localStorage.getItem("perfil") || "").toUpperCase();
+
+  if(perfil === "MASTER"){
+  localStorage.removeItem("cliente_id");
+  localStorage.removeItem("nome_loja");
+  // NÃO remove nome_usuario
+}
+
   listarEmpresas();
 }
+
 function abrirBackups(){
   api("getLinkBackup", {}, (res)=>{
     if(res.ok){

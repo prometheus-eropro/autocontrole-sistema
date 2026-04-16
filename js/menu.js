@@ -1,6 +1,26 @@
 async function abrirModulo(nome){
 
-  showLoading();
+  const perfil = (localStorage.getItem("perfil") || "")
+    .replace(/"/g, "")
+    .toUpperCase();
+
+  if(perfil === "ESTOQUE"){
+    const permitidos = ["dashboard","estoque"];
+    if(!permitidos.includes(nome)){
+      alert("Acesso restrito.");
+      return;
+    }
+  }
+
+  if(perfil === "VENDEDOR"){
+    const permitidos = ["dashboard","estoque","vendas"];
+    if(!permitidos.includes(nome)){
+      alert("Acesso restrito.");
+      return;
+    }
+  }
+
+  showLoading(); // 🔥 TEM QUE FICAR AQUI DENTRO
 
   try{
 
@@ -40,11 +60,9 @@ async function abrirModulo(nome){
     setStatus("Erro ao carregar módulo.");
 
   }finally{
-
+    aplicarPermissoesUI(); // 🔥 AQUI
     hideLoading();
-
   }
-
 }
 
 
@@ -52,21 +70,20 @@ document.addEventListener("DOMContentLoaded", function(){
 
   if(!validarSessaoApp()) return;
 
-const nomeLoja = localStorage.getItem("nome_loja") || "";
-const nomeUsuario = localStorage.getItem("nome_usuario") || "";
-const perfil = localStorage.getItem("perfil") || "";
+  const nomeLoja = localStorage.getItem("nome_loja") || "";
+  const nomeUsuario = localStorage.getItem("nome_usuario") || "";
+  const perfil = localStorage.getItem("perfil") || "";
 
-setText("usuarioLogado",
-  nomeLoja + " | " + nomeUsuario
-);
+  setText("usuarioLogado",
+    nomeLoja + " | " + nomeUsuario
+  );
 
-setText("perfilLogado",
-  "(" + perfil + ")"
-);
-
-  abrirModulo("dashboard");
+  setText("perfilLogado",
+    "(" + perfil + ")"
+  );
 
 });
+
 function abrirAba(nome){
 
   document.querySelectorAll(".aba").forEach(a=>{
@@ -83,60 +100,40 @@ function abrirAba(nome){
 
 function aplicarPermissoesUI(){
 
-  const perfil = (localStorage.getItem("perfil") || "").toUpperCase();
+  const perfil = (localStorage.getItem("perfil") || "")
+    .replace(/"/g, "")
+    .toUpperCase();
 
-  console.log("🔒 Aplicando permissões:", perfil);
+  console.log("🔐 Perfil atual:", perfil);
 
-  function esconder(id){
-    const el = document.getElementById(id);
-    if(el) el.style.display = "none";
-  }
-
-  // ===== ESTOQUE =====
+  // 🔴 ESTOQUE
   if(perfil === "ESTOQUE"){
-
-    esconder("menu_veiculos"); // 🔥 FALTAVA ESSE
-    esconder("menu_vendas");
-    esconder("menu_despesas");
-    esconder("menu_financeiro");
-    esconder("menu_documentos");
-    esconder("menu_parcelas");
-
-    esconder("menu_mobile_veiculos"); // 🔥 FALTAVA ESSE
-    esconder("menu_mobile_vendas");
-    esconder("menu_mobile_despesas");
-    esconder("menu_mobile_financeiro");
-    esconder("menu_mobile_parcelas");
-
+    [
+      "menu_veiculos",
+      "menu_despesas",
+      "menu_vendas",
+      "menu_parcelas",
+      "menu_financeiro",
+      "menu_documentos"
+    ].forEach(id => {
+      document.getElementById(id)?.style.setProperty("display","none","important");
+    });
   }
 
-  // ===== VENDEDOR =====
-if(perfil === "VENDEDOR"){
-
-  esconder("menu_despesas");
-  esconder("menu_financeiro");
-  esconder("menu_documentos");
-  esconder("menu_parcelas");
-
-  esconder("menu_mobile_despesas");
-  esconder("menu_mobile_financeiro");
-  esconder("menu_mobile_parcelas");
-
-}
-
-  // ===== ADMIN =====
+  // 🔵 ADMIN
   if(perfil === "ADMIN"){
-
-    esconder("menu_financeiro");
-    esconder("menu_mobile_financeiro");
-
+    [
+      "menu_financeiro"
+    ].forEach(id => {
+      document.getElementById(id)?.style.setProperty("display","none","important");
+    });
   }
 
 }
 
 function esconderMenu(id){
   const el = document.getElementById(id);
-  if(el) el.style.display = "none";
+  if(el) el.style.setProperty("display", "none", "important");
 }
 
 function aplicarPermissoesMenu(){

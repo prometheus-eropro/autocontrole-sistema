@@ -76,23 +76,25 @@ function limparFormularioNovaLoja(){
 }
 function listarEmpresas(){
 
-  api("listarEmpresas", {}, function(r){
+  api("listarEmpresas", {}, function(resp){
 
-    if(!r || !r.ok){
-      alert("Erro ao carregar empresas");
+    console.log("ITEM 0:", resp.itens[0]);
+
+    if(!resp || !resp.itens){
+      console.warn("sem dados");
       return;
     }
 
     let html = "";
 
-    const lista = Array.isArray(r.itens) ? r.itens : [];
+    const lista = Array.isArray(resp.itens) ? resp.itens : [];
 
-lista.forEach(emp=>{
+    lista.forEach(emp=>{
 
       html += `
         <div class="card" style="margin-bottom:10px">
 
-          <b>${emp.nome}</b><br>
+          <b>${emp.nome_loja || "SEM NOME"}</b>
           ID: ${emp.cliente_id}<br>
 
           <button onclick="entrarEmpresa('${emp.cliente_id}')">
@@ -104,22 +106,21 @@ lista.forEach(emp=>{
           </button>
 
           <button onclick="gerarContratoCliente('${emp.cliente_id}')">
-         📄 Contrato
-        </button>
+            📄 Contrato
+          </button>
 
-           <button onclick="toggleCliente('${emp.cliente_id}', '${emp.status}')">
-  ${emp.status === "ATIVO" ? "🚫 Desativar" : "✅ Ativar"}
-</button>
+          <button onclick="toggleCliente('${emp.cliente_id}', '${emp.status}')">
+            ${emp.status === "ATIVO" ? "🚫 Desativar" : "✅ Ativar"}
+          </button>
 
-         <button onclick="criarUsuario('${emp.cliente_id}')">
-  ➕ Usuário
-</button>   
+          <button onclick="criarUsuario('${emp.cliente_id}')">
+            ➕ Usuário
+          </button>
 
-         <button onclick="verLogs('${emp.cliente_id}')">
-  📜 Logs
-</button>
+          <button onclick="verLogs('${emp.cliente_id}')">
+            📜 Logs
+          </button>
 
-          
           <div id="usuarios_${emp.cliente_id}"></div>
 
         </div>
@@ -132,11 +133,11 @@ lista.forEach(emp=>{
   });
 
 }
+
 function listarUsuariosEmpresa(clienteId){
 
   api("listarUsuariosPorCliente", {
-  cliente_id: clienteId,
-  perfil: "MASTER"
+  cliente_id: clienteId
 }, function(r){
 
     if(!r || !r.ok) return;
@@ -432,5 +433,49 @@ function carregarResumoMaster(){
       .innerText = r.ativos;
 
   });
+
+}
+
+function sairMaster(){
+
+  localStorage.removeItem("cliente_id"); // 👈 ESSENCIAL
+
+  localStorage.setItem("perfil", "MASTER");
+  localStorage.setItem("nome_usuario", "MASTER");
+
+  window.location.href = "master.html";
+}
+
+function logout(){
+
+  localStorage.clear(); // 👈 para de brincar
+
+  console.log("🚪 Logout REAL feito");
+
+  window.location.href = "index.html"; // 👈 manda pra login
+}
+
+function salvarTeste(){
+
+  const url = "https://script.google.com/macros/s/AKfycbyDSdfY9ILeSHuqg08mo1ruDA1DzgkN7CKDIswZFwXeoa4d9064m_KrxVI_o1j1_AMn/exec";
+
+  const params = {
+    action: "criarClienteNovo",
+    nome_loja: "TESTE SIMPLES",
+    cliente_id: "AC-007"
+  };
+
+  const query = new URLSearchParams(params).toString();
+
+  fetch(url + "?" + query)
+    .then(r => r.json())
+    .then(resp => {
+      console.log("RESPOSTA:", resp);
+      alert("Enviado!");
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Erro!");
+    });
 
 }

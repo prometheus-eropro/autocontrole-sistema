@@ -100,6 +100,8 @@ async function init_dashboard(){
     carregarResumo();
     carregarEstoque();
     carregarCardEstoque();
+    carregarDadosLoja();
+
   }else{
     console.warn("Usuário não logado");
     window.location.href = "index.html"; // volta pro login
@@ -111,3 +113,20 @@ document.addEventListener("DOMContentLoaded", init_dashboard);
 function carregarResumo(){
   console.log("carregarResumo chamado");
 }
+
+function carregarDadosLoja(){
+
+  api("dadosLoja", {
+    cliente_id: CLIENTE_ID,
+    perfil: PERFIL
+  }, function(r){
+
+    if(!r || !r.ok) return;
+
+    document.querySelector(".empresa-nome").innerText =
+      r.nome_loja || "SEM NOME";
+
+  });
+
+}
+
