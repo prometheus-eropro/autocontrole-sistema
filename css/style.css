@@ -432,3 +432,36 @@ background:#dc2626;
   }
 
 }
+.mobile-nav{
+  display:none;
+}
+
+@media(max-width:768px){
+
+  .sidebar{
+    display:none;
+  }
+
+  .mobile-nav{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#0f172a;
+    justify-content:space-around;
+    padding:10px 0;
+    z-index:9999;
+  }
+
+  .mobile-nav button{
+    background:none;
+    border:none;
+    color:white;
+    font-size:20px;
+  }
+
+  .main-content{
+    padding-bottom:70px;
+  }
+}

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../js/api.js"></script>
+<title>FICHA VEICULAR</title>
+
+<style>
+body { font-family: Arial; font-size: 12px; }
+.titulo { background:#000; color:#fff; padding:5px; margin-top:12px; font-weight:bold; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px 30px; }
+.linha { border-bottom:1px solid #000; min-height:18px; }
+
+table { width:100%; border-collapse:collapse; }
+th,td { border:1px solid #000; padding:4px; }
+
+@media print {
+  button { display:none; }
+}
+</style>
+</head>
+
+<body>
+
+<button onclick="window.print()">🖨️ Imprimir</button>
+
+<h2 id="titulo"></h2>
+
+<!-- ================= VEICULO ================= -->
+<div class="titulo">DADOS DO VEÍCULO</div>
+<div class="grid-2">
+  <div><b>Placa</b><div class="linha" id="placa"></div></div>
+  <div><b>Tipo</b><div class="linha" id="tipo"></div></div>
+
+  <div><b>Marca</b><div class="linha" id="marca"></div></div>
+  <div><b>Modelo</b><div class="linha" id="modelo"></div></div>
+
+  <div><b>Ano Fabricação</b><div class="linha" id="ano_fab"></div></div>
+  <div><b>Ano Modelo</b><div class="linha" id="ano_mod"></div></div>
+
+  <div><b>Cor</b><div class="linha" id="cor"></div></div>
+  <div><b>Combustível</b><div class="linha" id="combustivel"></div></div>
+
+  <div><b>Chassi</b><div class="linha" id="chassi"></div></div>
+  <div><b>Renavam</b><div class="linha" id="renavam"></div></div>
+
+  <div><b>Data Entrada</b><div class="linha" id="data_entrada"></div></div>
+  <div><b>Valor Compra</b><div class="linha" id="valor_compra"></div></div>
+
+  <div><b>Valor Pretendido</b><div class="linha" id="valor_pretendido"></div></div>
+</div>
+
+<!-- ================= PROPRIETARIO ================= -->
+<div class="titulo">PROPRIETÁRIO</div>
+<div class="grid-2">
+  <div><b>Nome</b><div class="linha" id="prop_nome"></div></div>
+  <div><b>Telefone</b><div class="linha" id="prop_tel"></div></div>
+
+  <div><b>CPF/CNPJ</b><div class="linha" id="prop_doc"></div></div>
+  <div><b>RG</b><div class="linha" id="prop_rg"></div></div>
+
+  <div style="grid-column:span 2"><b>Endereço</b><div class="linha" id="prop_end"></div></div>
+</div>
+
+<!-- ================= DESPESAS ================= -->
+<div class="titulo">CONTROLE DE DESPESAS</div>
+<table id="tabela">
+<tr>
+<th>Data</th>
+<th>Tipo</th>
+<th>Descrição</th>
+<th>Valor</th>
+</tr>
+</table>
+
+<br>
+<b>Total Despesas:</b> <span id="total"></span>
+
+<!-- ================= VENDA ================= -->
+<div class="titulo">FICHA DE VENDA</div>
+<div class="grid-2">
+  <div><b>Data Venda</b><div class="linha" id="data_venda"></div></div>
+  <div><b>Valor Venda</b><div class="linha" id="valor_venda"></div></div>
+
+  <div><b>Forma Pagamento</b><div class="linha" id="forma"></div></div>
+  <div><b>Parcelas</b><div class="linha" id="parcelas"></div></div>
+<table border="1" width="100%">
+<thead>
+<tr>
+<th>Parcela</th>
+<th>Valor</th>
+<th>Vencimento</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="tb_parcelas_ficha"></tbody>
+</table>
+
+  <div><b>Entrada</b><div class="linha" id="entrada_pag"></div></div>
+  <div><b>Banco</b><div class="linha" id="banco"></div></div>
+</div>
+
+<!-- ================= COMPRADOR ================= -->
+<div class="titulo">COMPRADOR</div>
+<div class="grid-2">
+  <div><b>Nome</b><div class="linha" id="comprador"></div></div>
+  <div><b>Telefone</b><div class="linha" id="comp_tel"></div></div>
+
+  <div><b>CPF/CNPJ</b><div class="linha" id="cpf"></div></div>
+  <div><b>Email</b><div class="linha" id="email"></div></div>
+
+  <div><b>Cidade</b><div class="linha" id="cidade"></div></div>
+  <div><b>Estado</b><div class="linha" id="estado"></div></div>
+
+  <div style="grid-column:span 2"><b>Endereço</b><div class="linha" id="endereco"></div></div>
+</div>
+
+<script>
+
+console.log("VERSAO NOVA CARREGADA");
+
+function moeda(v){
+  return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})
+}
+
+function formatarDataBR(data){
+  if(!data) return "";
+  try{
+    const d = new Date(data);
+    return d.toLocaleDateString("pt-BR");
+  }catch(e){
+    return data;
+  }
+}
+
+const id = new URLSearchParams(location.search).get("id")
+
+console.log("ENVIANDO:", {
+  veiculo_id: id
+});
+console.log("PARAMS:", {
+  veiculo_id: id,
+  cliente_id: CLIENTE_ID
+});
+console.log("cliente_id:", CLIENTE_ID);
+
+
+api("buscarFichaCompleta", {
+  cliente_id: String(CLIENTE_ID),
+  id_veiculo: String(id)
+}, function(r){
+
+console.log("RESPOSTA API:", r);
+
+  if(!r || !r.ok){
+    alert(r?.msg || "Erro ao carregar ficha");
+    return;
+  }
+
+  const d = r.item || {};
+
+  document.getElementById("titulo").innerText = "Ficha - " + (d.placa || "");
+
+  document.getElementById("placa").innerText = d.placa || "";
+  document.getElementById("tipo").innerText = d.tipo || "";
+
+
+  // VEICULO
+  document.getElementById("placa").innerText = d.placa || "";
+document.getElementById("tipo").innerText = d.tipo || "";
+document.getElementById("marca").innerText = d.marca || "";
+document.getElementById("modelo").innerText = d.modelo || "";
+document.getElementById("ano_fab").innerText = d.ano_fabricacao || "";
+document.getElementById("ano_mod").innerText = d.ano_modelo || "";
+document.getElementById("cor").innerText = d.cor || "";
+document.getElementById("combustivel").innerText = d.combustivel || "";
+document.getElementById("chassi").innerText = d.chassi || "";
+document.getElementById("renavam").innerText = d.renavam || "";
+document.getElementById("valor_compra").innerText = moeda(d.valor_compra);
+document.getElementById("valor_pretendido").innerText = moeda(d.valor_pretendido);
+ 
+ // PROPRIETARIO
+  document.getElementById("prop_nome").innerText = d.proprietario_nome || ""
+document.getElementById("prop_tel").innerText = d.proprietario_telefone || ""
+document.getElementById("prop_doc").innerText = d.proprietario_cpf || ""
+document.getElementById("prop_rg").innerText = d.proprietario_rg || ""
+document.getElementById("prop_end").innerText = d.proprietario_endereco || ""
+
+  // VENDA
+document.getElementById("comprador").innerText = d.comprador_nome || "";
+document.getElementById("cpf").innerText = d.comprador_cpf || "";
+
+document.getElementById("valor_venda").innerText = moeda(d.valor_venda);
+document.getElementById("data_venda").innerText = formatarDataBR(d.data_venda);
+document.getElementById("entrada_pag").innerText = moeda(d.entrada || 0);
+
+document.getElementById("forma").innerText = d.forma_pagamento || "";
+document.getElementById("parcelas").innerText = d.parcelas || "";
+
+document.getElementById("entrada_pag").innerText = moeda(d.entrada || 0);
+document.getElementById("banco").innerText = d.banco || "";
+
+document.getElementById("comp_tel").innerText = d.comprador_telefone || "";
+document.getElementById("email").innerText = d.comprador_email || "";
+document.getElementById("cidade").innerText = d.comprador_cidade || "";
+document.getElementById("estado").innerText = d.comprador_estado || "";
+document.getElementById("endereco").innerText = d.comprador_endereco || "";
+
+// DESPESAS
+
+const tabela = document.getElementById("tabela");
+
+tabela.innerHTML = `
+<tr>
+<th>Data</th>
+<th>Tipo</th>
+<th>Descrição</th>
+<th>Valor</th>
+</tr>
+`;
+
+let totalDespesas = 0;
+
+if(d.despesas && d.despesas.length){
+
+  d.despesas.forEach(dep => {
+
+    const valor = Number(dep.valor_despesa || 0);
+
+    totalDespesas += valor;
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${formatarDataBR(dep.data_despesa)}</td>
+      <td>${dep.tipo_despesa || ""}</td>
+      <td>${dep.descricao_despesa || ""}</td>
+      <td>${moeda(valor)}</td>
+    `;
+
+    tabela.appendChild(tr);
+
+  });
+
+}else{
+
+  tabela.innerHTML += `
+    <tr><td colspan="4">Sem despesas</td></tr>
+  `;
+
+}
+
+document.getElementById("total").innerText = moeda(totalDespesas);
+
+// DESPESAS
+
+let htmlParcelas = "";
+
+(d.parcelas_lista || []).forEach(p => {
+
+  htmlParcelas += `
+    <tr>
+      <td>${p.parcela}</td>
+      <td>${moeda(p.valor)}</td>
+      <td>${formatarDataBR(p.vencimento)}</td>
+      <td>${p.status}</td>
+    </tr>
+  `;
+
+});
+
+// ===== LISTAR PARCELAS =====
+const tabelaParcelas = document.getElementById("tb_parcelas_ficha");
+
+tabelaParcelas.innerHTML = "";
+
+if(d.parcelas_lista && d.parcelas_lista.length){
+
+  d.parcelas_lista.forEach(p => {
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${p.parcela || ""}</td>
+      <td>${moeda(p.valor)}</td>
+      <td>${formatarDataBR(p.vencimento)}</td>
+      <td>${p.status || ""}</td>
+    `;
+
+    tabelaParcelas.appendChild(tr);
+
+  });
+
+}else{
+
+  tabelaParcelas.innerHTML =
+    "<tr><td colspan='4'>Sem parcelas</td></tr>";
+
+}
+
+// ===== TRATAR FINANCIAMENTO =====
+if(d.forma_pagamento === "FINANCIAMENTO"){
+  document.getElementById("tb_parcelas_ficha").innerHTML =
+    "<tr><td colspan='4'>Financiamento via banco</td></tr>";
+}
+}); // 🔥 FECHA O API
+</script>
+
+<br><br>
+
+<div class="titulo">ASSINATURA</div>
+
+<div style="margin-top:40px;">
+_________________________________________<br>
+Assinatura do Comprador
+</div>
+
+</body>
+</html>
